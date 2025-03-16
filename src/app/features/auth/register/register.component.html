@@ -20,7 +20,8 @@
                     <label for="password1" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">Password</label>
                     <p-password id="password1" [(ngModel)]="registerDto.password" placeholder="Password" [toggleMask]="true" styleClass="mb-4" [fluid]="true" [feedback]="false" required></p-password>
 
-                    <p-button (click)="register()" [disabled]="loading" label="Create Account" styleClass="w-full" severity="success" raised></p-button>
+                    <p-button (click)="register()" [disabled]="loading" label="Create Account" styleClass="w-full mb-4" severity="success" raised></p-button>
+                    <p style="text-align: center">Already have an account? <a class="font-medium no-underline ml-2 text-right cursor-pointer text-primary" routerLink="/auth/login">Log In</a></p>
 
                     <div *ngIf="errorMessage" class="mt-4 p-3 border-round bg-red-50 dark:bg-red-900/20 border-1 border-red-200 dark:border-red-800">
                         <ul class="list-none p-0 m-0 text-left">

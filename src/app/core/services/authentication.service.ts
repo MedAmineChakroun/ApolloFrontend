@@ -1,10 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, catchError, map, throwError } from 'rxjs';
-import { environment } from '../../environments/environment.development';
-import { JwtAuth } from '../models/JwtAuth';
-import { Login } from '../models/Login';
-import { Register } from '../models/Register';
+import { environment } from '../../../environments/environment.development';
+import { JwtAuth } from '../../models/JwtAuth';
+import { Login } from '../../models/Login';
+import { Register } from '../../models/Register';
 
 @Injectable({
     providedIn: 'root'
@@ -48,7 +48,11 @@ export class AuthenticationService {
         const token = this.getToken();
         return token ? !this.isTokenExpired(token) : false;
     }
+    getUserRole(): string {
+        // return this.user.role;
 
+        return 'customer'; //test with customer role
+    }
     private storeToken(token: string): void {
         localStorage.setItem('jwtToken', token);
     }

@@ -7,7 +7,7 @@ import { ButtonModule } from 'primeng/button';
 @Component({
     selector: 'topbar-widget',
     imports: [RouterModule, StyleClassModule, ButtonModule, RippleModule],
-    template: `<a class="flex items-center" href="#">
+    template: /*html*/ `<a class="flex items-center" href="#">
             <svg viewBox="0 0 54 40" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-12 mr-2">
                 <path
                     fill-rule="evenodd"

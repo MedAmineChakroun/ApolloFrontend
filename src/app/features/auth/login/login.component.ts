@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { JwtAuth } from '../../../models/JwtAuth';
 import { Login } from '../../../models/Login';
-import { AuthenticationService } from '../../../services/authentication.service';
+import { AuthenticationService } from '../../../core/services/authentication.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
@@ -49,5 +49,8 @@ export class LoginComponent {
                 this.loading = false;
             }
         });
+    }
+    register() {
+        this.router.navigate(['auth/register']);
     }
 }

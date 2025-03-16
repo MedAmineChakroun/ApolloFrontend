@@ -8,7 +8,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { RippleModule } from 'primeng/ripple';
 import { AppFloatingConfigurator } from '../../../layout/component/app.floatingconfigurator';
-import { AuthenticationService } from '../../../services/authentication.service';
+import { AuthenticationService } from '../../../core/services/authentication.service';
 import { Register } from '../../../models/Register';
 
 @Component({

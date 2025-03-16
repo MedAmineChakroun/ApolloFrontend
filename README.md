@@ -1,59 +1,55 @@
-# Sakai19
+# Blimbe B2C Web App
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.0.6.
+Blimbe is a dynamic B2C web application designed for seamless buying and selling experiences. Users can post products, engage with other users, and manage transactions in an intuitive social marketplace environment.
 
-## Development server
+## Features
 
-To start a local development server, run:
+- **Product Listings** – Users can post items for sale with images, descriptions, and pricing.
+- **Social Interactions** – comment
+- **Intelligent Recommendations** – AI-powered suggestions to enhance user experience.
+- **Order & Invoice Management** – Automated invoice generation for purchases.
+- **KPI Dashboard** – Insights into user activity, sales, and marketplace trends.
+- **User Badges & Product Ratings** – Gamification elements for trust and credibility.
+- **Notifications** – Stay updated with order status, messages, and new offers.
+
+## Getting Started
+
+### Development Server
+
+Run the following command to start the local development server:
 
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Once the server is running, open your browser and navigate to `http://localhost:4200/` to access the app.
 
-## Code scaffolding
+### Build for Production
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+To create an optimized production build:
 
 ```bash
-ng generate --help
+ng build --prod
 ```
 
-## Building
+This generates the compiled files in the `dist/` directory, ready for deployment.
 
-To build the project run:
 
-```bash
-ng build
-```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
 
-## Running unit tests
+## Tech Stack
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+- **Frontend:** Angular, TypeScript
+- **Backend:** ASP.NET Core API
+- **Database:** SQL Server
+- **Authentication:** JWT & Identity
 
-```bash
-ng test
-```
+## Contributing
 
-## Running end-to-end tests
+We welcome contributions! Feel free to submit issues, pull requests, or feature suggestions.
 
-For end-to-end (e2e) testing, run:
 
-```bash
-ng e2e
-```
+## Contact
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+For support or inquiries, reach out via email or open an issue in the repository.
 
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.

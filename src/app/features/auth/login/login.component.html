@@ -6,7 +6,7 @@
             <div class="w-full bg-surface-0 dark:bg-surface-900 py-20 px-8 sm:px-20" style="border-radius: 53px">
                 <div class="text-center mb-8">
                     <img class="mb-8 w-16 shrink-0 mx-auto" src="assets/general/ApolloLogo.PNG" style="width: 80px" />
-                    <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">Welcome to Apollo Store!</div>
+                    <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">Welcome Back!</div>
                     <span class="text-muted-color font-medium">Sign in to continue</span>
                 </div>
 
@@ -25,8 +25,8 @@
                         <span class="font-medium no-underline ml-2 text-right cursor-pointer text-primary">Forgot password?</span>
                     </div>
 
-                    <p-button (click)="login()" [disabled]="loading" label="Sign In" styleClass="w-full" severity="primary" raised></p-button>
-
+                    <p-button (click)="login()" [disabled]="loading" label="Sign In" styleClass="w-full mb-4" severity="success" raised></p-button>
+                    <p style="text-align: center">Dont have an Account? <a class="font-medium no-underline ml-2 text-right cursor-pointer text-primary" routerLink="/auth/register">Register</a></p>
                     <div *ngIf="errorMessage" class="mt-4 p-3 border-round bg-red-50 dark:bg-red-900/20 border-1 border-red-200 dark:border-red-800">
                         <ul class="list-none p-0 m-0 text-left">
                             <li *ngFor="let error of errorMessage.split('\n')" class="text-red-500 dark:text-red-300 mb-1 flex align-items-center">

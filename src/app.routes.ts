@@ -1,25 +1,40 @@
 import { Routes } from '@angular/router';
-import { AppLayout } from './app/layout/component/app.layout';
-import { Landing } from './app/pages/landing/landing';
+import { AppLayout } from './app/layout/component/app.layout'; // Import Layout
+import { Landing } from './app/features/landing/landing';
 import { Notfound } from './app/pages/notfound/notfound';
+import { AuthGuard } from './app/core/guards/auth.guard';
+import { RoleGuard } from './app/core/guards/role.guard';
 
 export const appRoutes: Routes = [
+    { path: 'landing', component: Landing },
+    { path: 'auth', loadChildren: () => import('./app/features/auth/auth.routes') },
+
+    // Layout Wrapper for Admin, Business, and Customer
     {
         path: '',
-        component: AppLayout,
-        children: []
+        component: AppLayout, // Layout applied to all child routes
+        children: [
+            {
+                path: 'admin',
+                loadChildren: () => import('./app/features/admin/admin.routes'),
+                canActivate: [AuthGuard, RoleGuard],
+                data: { roles: ['admin'] }
+            },
+            {
+                path: 'business',
+                loadChildren: () => import('./app/features/business/business.routes'),
+                canActivate: [AuthGuard, RoleGuard],
+                data: { roles: ['business'] }
+            },
+            {
+                path: 'customer',
+                loadChildren: () => import('./app/features/customer/customer.routes'),
+                canActivate: [AuthGuard, RoleGuard],
+                data: { roles: ['customer'] }
+            }
+        ]
     },
-    { path: 'auth', loadChildren: () => import('./app/pages/auth/auth.routes') },
-    { path: 'landing', component: Landing },
+
     { path: 'notfound', component: Notfound },
-    { path: '**', redirectTo: '/notfound' }
-    // {
-    //     path: '',
-    //     component: AppLayout,
-    //     children: [
-    //         { path: '', component: Dashboard },
-    //         { path: 'uikit', loadChildren: () => import('./app/pages/uikit/uikit.routes') },
-    //         { path: 'pages', loadChildren: () => import('./app/pages/pages.routes') }
-    //     ]
-    // },
+    { path: '**', redirectTo: '/landing' }
 ];

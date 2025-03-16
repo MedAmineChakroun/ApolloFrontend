@@ -37,7 +37,7 @@ import { InputIcon, InputIconModule } from 'primeng/inputicon';
         IconField,
         InputIcon
     ],
-    template: `
+    template: /*html*/ `
         <div class="card">
             <div class="font-semibold text-xl mb-4">Menubar</div>
             <p-menubar [model]="nestedMenuItems">
