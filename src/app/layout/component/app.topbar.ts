@@ -6,6 +6,10 @@ import { StyleClassModule } from 'primeng/styleclass';
 import { AppConfigurator } from './app.configurator';
 import { LayoutService } from '../service/layout.service';
 import { AuthenticationService } from '../../core/services/authentication.service';
+import { Store } from '@ngrx/store';
+import { User } from '../../models/user';
+import { selectUser } from '../../store/user/user.selectors';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'app-topbar',
@@ -65,11 +69,13 @@ import { AuthenticationService } from '../../core/services/authentication.servic
 export class AppTopbar {
     items!: MenuItem[];
     isConnected = false;
+
     constructor(
         public layoutService: LayoutService,
         private authService: AuthenticationService,
         private router: Router
     ) {}
+
     ngOnInit() {
         this.isConnected = this.authService.isAuthenticated(); // Check login status
     }

@@ -5,6 +5,19 @@ import { environment } from '../../../environments/environment.development';
 import { JwtAuth } from '../../models/JwtAuth';
 import { Login } from '../../models/Login';
 import { Register } from '../../models/Register';
+import { User } from '../../models/user';
+import { Store } from '@ngrx/store';
+import { clearUser, setUser } from '../../store/user/user.actions';
+import { jwtDecode } from 'jwt-decode';
+
+interface DecodedToken {
+    Id: string;
+    UserName: string;
+    sub: string;
+    email: string;
+    exp: number;
+    jti: string;
+}
 
 @Injectable({
     providedIn: 'root'
@@ -15,7 +28,10 @@ export class AuthenticationService {
     private authStatusSubject = new BehaviorSubject<boolean>(this.isAuthenticated());
     authStatus$ = this.authStatusSubject.asObservable();
 
-    constructor(private http: HttpClient) {}
+    constructor(
+        private http: HttpClient,
+        private store: Store
+    ) {}
 
     register(registerDto: Register): Observable<JwtAuth> {
         return this.http.post<JwtAuth>(this.registerUrl, registerDto).pipe(
@@ -32,6 +48,7 @@ export class AuthenticationService {
         return this.http.post<JwtAuth>(this.loginUrl, loginDto).pipe(
             map((response) => {
                 this.storeToken(response.token);
+                this.StoreUser();
                 this.authStatusSubject.next(true);
                 return response;
             }),
@@ -41,6 +58,7 @@ export class AuthenticationService {
 
     logout(): void {
         localStorage.removeItem('jwtToken');
+        this.store.dispatch(clearUser());
         this.authStatusSubject.next(false);
     }
 
@@ -51,7 +69,7 @@ export class AuthenticationService {
     getUserRole(): string {
         // return this.user.role;
 
-        return 'customer'; //test with customer role
+        return 'user'; //test with customer role
     }
     private storeToken(token: string): void {
         localStorage.setItem('jwtToken', token);
@@ -94,5 +112,18 @@ export class AuthenticationService {
 
         // Fallback
         return throwError(() => 'An unexpected error occurred');
+    }
+
+    private StoreUser() {
+        //decode JWt to user
+        const token = this.getToken();
+        const decodedToken = jwtDecode<DecodedToken>(token!);
+
+        const user: User = {
+            id: decodedToken.Id,
+            userName: decodedToken.UserName,
+            email: decodedToken.email
+        };
+        this.store.dispatch(setUser({ user }));
     }
 }

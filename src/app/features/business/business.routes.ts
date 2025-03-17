@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
 
 export default [
-    // { path: 'access', component: Access },
-    // { path: 'error', component: Error },
-    // { path: 'login', component: LoginComponent },
-    // { path: 'register', component: RegisterComponent }
+    //exemple
+    // { path: 'products', component: ProductsComponent },
+    // { path: 'product/:id', component: ProductComponent },
+    // { path: "dashboard", component: DashboardComponent },
 ] as Routes;
