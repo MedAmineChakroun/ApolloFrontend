@@ -17,6 +17,7 @@ interface DecodedToken {
     email: string;
     exp: number;
     jti: string;
+    role: string;
 }
 
 @Injectable({
@@ -67,9 +68,10 @@ export class AuthenticationService {
         return token ? !this.isTokenExpired(token) : false;
     }
     getUserRole(): string {
-        // return this.user.role;
-
-        return 'user'; //test with customer role
+        const token = this.getToken();
+        const decodedToken = jwtDecode<DecodedToken>(token!);
+        console.log(decodedToken.role);
+        return decodedToken.role;
     }
     private storeToken(token: string): void {
         localStorage.setItem('jwtToken', token);

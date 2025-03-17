@@ -13,6 +13,9 @@ export const appRoutes: Routes = [
     {
         path: '',
         component: AppLayout, // Layout applied to all child routes
+        //test role for layout page
+        // canActivate: [AuthGuard, RoleGuard],
+        //data: { roles: ['customer'] },
         children: [
             {
                 path: 'admin',

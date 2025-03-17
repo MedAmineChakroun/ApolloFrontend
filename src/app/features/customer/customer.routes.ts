@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { AppLayout } from '../../layout/component/app.layout';
 
 export default [
     //exemple
