@@ -5,10 +5,10 @@ import { environment } from '../../../environments/environment.development';
 import { JwtAuth } from '../../models/JwtAuth';
 import { Login } from '../../models/Login';
 import { Register } from '../../models/Register';
-import { User } from '../../models/user';
 import { Store } from '@ngrx/store';
 import { clearUser, setUser } from '../../store/user/user.actions';
 import { jwtDecode } from 'jwt-decode';
+import { User } from '../../models/user';
 
 interface DecodedToken {
     Id: string;

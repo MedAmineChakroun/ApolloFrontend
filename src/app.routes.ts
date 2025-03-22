@@ -6,17 +6,20 @@ import { AuthGuard } from './app/core/guards/auth.guard';
 import { RoleGuard } from './app/core/guards/role.guard';
 
 export const appRoutes: Routes = [
-    { path: 'landing', component: Landing },
+    { path: '', component: Landing },
     { path: 'auth', loadChildren: () => import('./app/features/auth/auth.routes') },
 
     // Layout Wrapper for Admin, Business, and Customer
     {
-        path: '',
+        path: 'store',
         component: AppLayout, // Layout applied to all child routes
         //test role for layout page
-        // canActivate: [AuthGuard, RoleGuard],
-        //data: { roles: ['customer'] },
+
         children: [
+            {
+                path: 'products',
+                loadChildren: () => import('./app/features/products/products.routes')
+            },
             {
                 path: 'admin',
                 loadChildren: () => import('./app/features/admin/admin.routes'),
@@ -39,5 +42,5 @@ export const appRoutes: Routes = [
     },
 
     { path: 'notfound', component: Notfound },
-    { path: '**', redirectTo: '/landing' }
+    { path: '**', redirectTo: '/' }
 ];

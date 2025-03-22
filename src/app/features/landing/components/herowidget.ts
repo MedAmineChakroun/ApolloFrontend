@@ -5,27 +5,31 @@ import { Router, RouterModule } from '@angular/router';
 
 @Component({
     selector: 'hero-widget',
+    standalone: true,
     imports: [ButtonModule, RippleModule, RouterModule],
     template: /*html*/ `
-        <div
-            id="hero"
-            class="flex flex-col pt-6 px-6 lg:px-20 overflow-hidden"
-            style="background: linear-gradient(0deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)), radial-gradient(77.36% 256.97% at 77.36% 57.52%, rgb(238, 239, 175) 0%, rgb(195, 227, 250) 100%); clip-path: ellipse(150% 87% at 93% 13%)"
-        >
-            <div class="mx-6 md:mx-20 mt-0 md:mt-6">
-                <h1 class="text-6xl font-bold text-gray-900 leading-tight"><span class="font-light block">Eu sem integer</span>eget magna fermentum</h1>
-                <p class="font-normal text-2xl leading-normal md:mt-4 text-gray-700">Sed blandit libero volutpat sed cras. Fames ac turpis egestas integer. Placerat in egestas erat...</p>
-                <button (click)="navigate()" pButton pRipple [rounded]="true" type="button" label="Get Started" class="!text-xl mt-8 !px-4"></button>
-            </div>
-            <div class="flex justify-center md:justify-end">
-                <img src="https://primefaces.org/cdn/templates/sakai/landing/screen-1.png" alt="Hero Image" class="w-9/12 md:w-auto" />
+        <div class="relative h-screen overflow-hidden bg-gradient-to-br from-gray-900 to-indigo-900">
+            <div class="absolute inset-0 bg-[url('https://public.readdy.ai/ai/img_res/eeb199e695d4efd5daaa5c17d08fd570.jpg')] opacity-40 bg-cover bg-center "></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent"></div>
+            <div class="max-w-7xl mx-auto px-8 h-full relative">
+                <div class="flex items-center h-full">
+                    <div class="w-1/2 text-white">
+                        <h1 class="text-7xl font-bold leading-tight mb-8 text-white">Smart Shopping, Smarter Choices</h1>
+                        <p class="text-xl opacity-100 leading-relaxed mb-12 text-white">Discover the future of e-commerce with AI-powered recommendations that personalize your shopping experience.</p>
+                        <div class="flex gap-6">
+                            <button (click)="navigate()" class="h-14 px-10 bg-white text-black hover:bg-gray-200 text-lg font-medium rounded-lg cursor-pointer">Start Shopping</button>
+                            <button class="h-14 px-10 border-2 border-white text-white hover:bg-white/10 text-lg font-medium rounded-lg cursor-pointer">Explore Features</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     `
 })
 export class HeroWidget {
     constructor(private router: Router) {}
+
     navigate() {
-        this.router.navigate(['/']);
+        this.router.navigate(['/store/products']);
     }
 }

@@ -38,7 +38,7 @@ export class LoginComponent {
             next: (jwtDto) => {
                 localStorage.setItem('jwtToken', jwtDto.token);
                 console.log('Login successful');
-                this.router.navigate(['/']);
+                this.router.navigate(['/store/products']);
             },
             error: (err) => {
                 console.error('Login failed', err);
