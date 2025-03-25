@@ -15,6 +15,7 @@ import { ButtonModule } from 'primeng/button';
 export class UserProfileComponent implements OnInit {
     profileForm: FormGroup;
     userId: string | null = null;
+    isAvatarLoading: boolean = false;
 
     constructor(
         private fb: FormBuilder,
@@ -77,7 +78,6 @@ export class UserProfileComponent implements OnInit {
     }
 
     avatarUrl: string = 'assets/general/default-avatar.jpg';
-    isLoading: boolean = false;
 
     triggerFileInput() {
         const fileInput = document.getElementById('avatarInput') as HTMLInputElement;
@@ -89,18 +89,33 @@ export class UserProfileComponent implements OnInit {
     onAvatarChange(event: any) {
         const file = event.target.files?.[0];
         if (file) {
+            this.isAvatarLoading = true;
             const reader = new FileReader();
+
             reader.onload = () => {
-                this.avatarUrl = reader.result as string;
-                this.toastr.success('Avatar mis à jour avec succès !');
+                setTimeout(() => {
+                    this.avatarUrl = reader.result as string;
+                    this.toastr.success('Avatar updated successfully!');
+                    this.isAvatarLoading = false;
+                }, 1000);
             };
+
+            reader.onerror = (error) => {
+                this.toastr.error('Error updating avatar');
+                this.isAvatarLoading = false;
+            };
+
             reader.readAsDataURL(file);
         }
     }
 
     removeAvatar() {
-        this.avatarUrl = 'assets/general/default-avatar.jpg';
-        this.toastr.info('Avatar supprimé avec succès !');
+        this.isAvatarLoading = true;
+        setTimeout(() => {
+            this.avatarUrl = 'assets/user-avatar.png';
+            this.toastr.success('Avatar removed successfully!');
+            this.isAvatarLoading = false;
+        }, 1000);
     }
 
     onSubmit() {

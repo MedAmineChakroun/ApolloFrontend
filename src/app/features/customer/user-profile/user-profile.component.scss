@@ -97,3 +97,34 @@
     font-size: 14px;
     font-weight: bold;
 }
+
+.avatar-wrapper {
+    position: relative;
+    width: fit-content;
+    margin: auto;
+}
+
+.avatar-loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 50%;
+    z-index: 1;
+}
+
+.avatar-image {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    transition: opacity 0.3s ease;
+}
+
+.opacity-50 {
+    opacity: 0.5;
+}

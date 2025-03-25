@@ -18,13 +18,22 @@ import { Product } from '../../../models/Product';
     providers: [ProductsService]
 })
 export class products {
+    // Default product image to use when product image is not available
+    private readonly DEFAULT_PRODUCT_IMAGE = 'assets/general/product-default.png';
+
     layout: 'list' | 'grid' = 'grid';
 
     options = ['list', 'grid'];
 
     products: Product[] = [];
-    productDefaultImage = 'assets/generale/product-default.png';
+
     constructor(private productService: ProductsService) {}
+
+    // Method to handle image loading errors
+    handleProductImageError(event: any): void {
+        event.target.src = this.DEFAULT_PRODUCT_IMAGE;
+    }
+
     ngOnInit() {
         this.productService.getProducts().subscribe({
             next: (response: any) => {
@@ -44,5 +53,9 @@ export class products {
 
     getStockSeverity(stockValue: number): string {
         return stockValue > 0 ? 'success' : 'danger';
+    }
+
+    isOutOfStock(stockValue: number): boolean {
+        return stockValue === 0;
     }
 }
