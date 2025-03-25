@@ -28,7 +28,7 @@ export class products {
     ngOnInit() {
         this.productService.getProducts().subscribe({
             next: (response: any) => {
-                this.products = response.data.produits || []; // Safely access produits
+                this.products = response.data.produits || []; //testMerge
                 console.log('Products loaded:', this.products);
             },
             error: (err) => {
