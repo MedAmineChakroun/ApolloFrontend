@@ -112,7 +112,7 @@ export class UserProfileComponent implements OnInit {
     removeAvatar() {
         this.isAvatarLoading = true;
         setTimeout(() => {
-            this.avatarUrl = 'assets/user-avatar.png';
+            this.avatarUrl = 'assets/general/default-avatar.jpg';
             this.toastr.success('Avatar removed successfully!');
             this.isAvatarLoading = false;
         }, 1000);

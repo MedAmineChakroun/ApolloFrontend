@@ -9,6 +9,10 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { TagModule } from 'primeng/tag';
 import { ProductsService } from '../../../core/services/products.service';
 import { Product } from '../../../models/Product';
+
+
+type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' | undefined;
+
 @Component({
     selector: 'app-products-list',
     standalone: true,
@@ -51,7 +55,7 @@ export class products {
         return stockValue > 0 ? 'IN STOCK' : 'OUT OF STOCK';
     }
 
-    getStockSeverity(stockValue: number): string {
+    getStockSeverity(stockValue: number): TagSeverity {
         return stockValue > 0 ? 'success' : 'danger';
     }
 
