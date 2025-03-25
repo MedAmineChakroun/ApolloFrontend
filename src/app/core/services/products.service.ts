@@ -9,6 +9,6 @@ export class ProductsService {
     constructor(private http: HttpClient) {}
 
     getProducts() {
-        return this.http.get<Product[]>('https://localhost:7257/api/products');
+        return this.http.get<Product[]>('https://localhost:7257/api/Produits/GetListeProduit');
     }
 }

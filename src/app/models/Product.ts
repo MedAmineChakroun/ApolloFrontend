@@ -1,10 +1,8 @@
-export class Product {
-    id!: number;
-    name!: string;
-    description!: string;
-    price!: number;
-    image!: string;
-    category!: string;
-    quantity!: number;
-    rating!: number;
+export interface Product {
+    Id: string;
+    Code: string;
+    Intitule: string;
+    Famille: string;
+    PrixVente: number;
+    Barcode: string;
 }

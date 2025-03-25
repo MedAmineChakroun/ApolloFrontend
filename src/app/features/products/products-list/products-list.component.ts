@@ -7,15 +7,15 @@ import { OrderListModule } from 'primeng/orderlist';
 import { PickListModule } from 'primeng/picklist';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { TagModule } from 'primeng/tag';
-import { Product, ProductService } from './product.service';
-
+import { ProductsService } from '../../../core/services/products.service';
+import { Product } from '../../../models/Product';
 @Component({
     selector: 'app-products-list',
     standalone: true,
     imports: [CommonModule, DataViewModule, FormsModule, SelectButtonModule, PickListModule, OrderListModule, TagModule, ButtonModule],
     templateUrl: './products-list.component.html',
     styleUrls: ['./products-list.component.css'],
-    providers: [ProductService]
+    providers: [ProductsService]
 })
 export class products {
     layout: 'list' | 'grid' = 'grid';
@@ -23,26 +23,26 @@ export class products {
     options = ['list', 'grid'];
 
     products: Product[] = [];
-
-    constructor(private productService: ProductService) {}
-
+    productDefaultImage = 'assets/generale/product-default.png';
+    constructor(private productService: ProductsService) {}
     ngOnInit() {
-        this.productService.getProductsSmall().then((data) => (this.products = data));
+        this.productService.getProducts().subscribe({
+            next: (response: any) => {
+                this.products = response.data.produits || []; // Safely access produits
+                console.log('Products loaded:', this.products);
+            },
+            error: (err) => {
+                console.error('Error loading products:', err);
+                this.products = []; // Fallback empty array
+            }
+        });
     }
 
-    getSeverity(product: Product) {
-        switch (product.inventoryStatus) {
-            case 'INSTOCK':
-                return 'success';
+    getStockStatus(stockValue: number): string {
+        return stockValue > 0 ? 'IN STOCK' : 'OUT OF STOCK';
+    }
 
-            case 'LOWSTOCK':
-                return 'warn';
-
-            case 'OUTOFSTOCK':
-                return 'danger';
-
-            default:
-                return 'info';
-        }
+    getStockSeverity(stockValue: number): string {
+        return stockValue > 0 ? 'success' : 'danger';
     }
 }
