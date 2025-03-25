@@ -1,0 +1,62 @@
+<div class="container">
+    <div class="card shadow-lg animate__animated animate__fadeIn" style="max-width: 600px; margin: 0 auto">
+        <!-- Header -->
+        <div class="card-header" style="background-color: var(--primary-color); color: white; text-align: center">
+            <h3 class="mb-0">Mon Profil</h3>
+        </div>
+
+        <!-- Body -->
+        <div class="card-body d-flex flex-column align-items-center text-center">
+            <!-- Avatar section -->
+            <div class="position-relative mb-3">
+                <img [src]="avatarUrl" alt="avatar" class="rounded-circle img-fluid border border-3" style="width: 130px; height: 130px; object-fit: cover" />
+                <input type="file" id="avatarInput" (change)="onAvatarChange($event)" accept="image/*" style="display: none" />
+                <button type="button" (click)="triggerFileInput()" class="btn btn-sm btn-primary rounded-circle position-absolute bottom-0 end-0 translate-middle">
+                    <i class="fas fa-pen"></i>
+                </button>
+            </div>
+
+            <!-- Liste des avatars prédéfinis -->
+            <!--<div class="mt-4 w-100">
+        <h6 class="mb-3 text-center">Choisissez un avatar :</h6>
+        <div class="d-flex flex-wrap justify-content-center gap-3">
+          <img *ngFor="let avatar of predefinedAvatars" 
+              [src]="avatar" 
+              alt="avatar option" 
+              class="rounded-circle img-thumbnail avatar-option"
+              style="width: 80px; height: 80px; object-fit: cover; cursor: pointer; transition: 0.3s ease;"
+              (click)="selectAvatar(avatar)">
+        </div>
+      </div>-->
+
+            <!-- User info -->
+            <h5 class="mb-1 mt-4">{{ profileForm.get('userName')?.value || 'Nom utilisateur' }}</h5>
+
+            <!-- Boutons Avatar -->
+            <div class="d-flex justify-content-center gap-2 mb-4">
+                <p-button label="Changer Avatar" (click)="triggerFileInput()" severity="contrast"></p-button>
+                <p-button label="Supprimer" (click)="removeAvatar()" severity="contrast" outlined></p-button>
+            </div>
+            <!-- Formulaire -->
+            <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="w-100 px-4">
+                <div class="mb-3">
+                    <label for="userName" class="form-label">Nom d'utilisateur</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                        <input id="userName" formControlName="userName" type="text" class="form-control" placeholder="Entrer votre nom d'utilisateur" />
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                        <input id="email" formControlName="email" type="email" class="form-control" placeholder="Entrer votre email" />
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end">
+                    <p-button type="submit" raised>Mettre à jour</p-button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -32,7 +32,7 @@ import { AuthenticationService } from '../../../core/services/authentication.ser
                 </nav>
 
                 <ng-container *ngIf="authService.isAuthenticated(); else notAuthenticated">
-                    <p-button icon="pi pi-user" [ngClass]="{ 'text-white': !scrolled, 'text-black': scrolled }" severity="primary" raised rounded />
+                    <p-button (click)="navigateToProfile()" icon="pi pi-user" [ngClass]="{ 'text-white': !scrolled, 'text-black': scrolled }" severity="primary" raised rounded />
                 </ng-container>
                 <ng-template #notAuthenticated>
                     <div class="flex gap-2">
@@ -65,5 +65,8 @@ export class TopbarWidget {
     @HostListener('window:scroll', [])
     onScroll(): void {
         this.scrolled = window.scrollY > 50;
+    }
+    navigateToProfile() {
+        this.router.navigate(['/store/customer/profile']);
     }
 }

@@ -6,10 +6,6 @@ import { StyleClassModule } from 'primeng/styleclass';
 import { AppConfigurator } from './app.configurator';
 import { LayoutService } from '../service/layout.service';
 import { AuthenticationService } from '../../core/services/authentication.service';
-import { Store } from '@ngrx/store';
-import { User } from '../../models/user';
-import { selectUser } from '../../store/user/user.selectors';
-import { Observable } from 'rxjs';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 
@@ -57,7 +53,7 @@ import { ConfirmationService } from 'primeng/api';
 
                 <div *ngIf="isConnected" class="layout-topbar-menu hidden lg:block">
                     <div class="layout-topbar-menu-content">
-                        <button type="button" class="layout-topbar-action">
+                        <button (click)="navigateToProfile()" type="button" class="layout-topbar-action">
                             <i class="pi pi-user"></i>
                             <span>Profile</span>
                         </button>
@@ -91,6 +87,9 @@ export class AppTopbar {
 
     ngOnInit() {
         this.isConnected = this.authService.isAuthenticated();
+    }
+    navigateToProfile() {
+        this.router.navigate(['/store/customer/profile']);
     }
     navigateToLogin() {
         this.router.navigate(['/auth/login']);

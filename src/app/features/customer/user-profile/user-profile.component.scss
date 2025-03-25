@@ -1,0 +1,99 @@
+.user-profile {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 2rem;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+    .avatar-option {
+        width: 70px;
+        height: 70px;
+        cursor: pointer;
+        transition:
+            transform 0.3s,
+            box-shadow 0.3s;
+    }
+    .avatar-option:hover {
+        transform: scale(1.1);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .blur-overlay {
+        filter: blur(2px);
+        transition: filter 0.3s ease-in-out;
+    }
+
+    /* Custom toast animation */
+    #profileToast {
+        animation: slideFade 0.8s ease-in-out;
+    }
+
+    @keyframes slideFade {
+        0% {
+            opacity: 0;
+            transform: translateX(100%);
+        }
+        100% {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        color: #333;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 1rem;
+            color: #333;
+
+            &::placeholder {
+                color: #aaa;
+            }
+        }
+    }
+
+    .form-actions {
+        text-align: center;
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+
+            &.btn-primary {
+                background-color: #007bff;
+                color: #fff;
+
+                &:hover {
+                    background-color: #0056b3;
+                }
+            }
+        }
+    }
+}
+.toast-container {
+    font-size: 14px;
+    font-weight: bold;
+}

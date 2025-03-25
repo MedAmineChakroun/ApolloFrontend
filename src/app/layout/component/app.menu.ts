@@ -115,6 +115,7 @@ export class AppMenu implements OnInit {
             {
                 label: 'Account',
                 icon: 'pi pi-fw pi-user',
+
                 items: this.getAccountMenuItems()
             },
             {
@@ -145,7 +146,7 @@ export class AppMenu implements OnInit {
                 {
                     label: 'Profile',
                     icon: 'pi pi-fw pi-user-edit',
-                    routerLink: ['/account/profile']
+                    routerLink: ['/store/customer/profile']
                 },
                 {
                     label: 'Orders',
@@ -156,6 +157,11 @@ export class AppMenu implements OnInit {
                     label: 'Wishlist',
                     icon: 'pi pi-fw pi-heart',
                     routerLink: ['/account/wishlist']
+                },
+                {
+                    label: 'Logout',
+                    icon: 'pi pi-fw pi-sign-out',
+                    command: () => this.logout()
                 }
             ];
         } else {
@@ -177,8 +183,8 @@ export class AppMenu implements OnInit {
     /**
      * Logs out the user and redirects to the login page.
      */
-    //     logout() {
-    //         this.authService.logout();
-    //         this.router.navigate(['/auth/login']);
-    //     }
+    logout() {
+        this.authService.logout();
+        this.router.navigate(['/auth/login']);
+    }
 }

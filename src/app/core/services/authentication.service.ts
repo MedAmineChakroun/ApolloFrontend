@@ -116,6 +116,7 @@ export class AuthenticationService {
         return throwError(() => 'An unexpected error occurred');
     }
 
+    //store user in store
     private StoreUser() {
         //decode JWt to user
         const token = this.getToken();
