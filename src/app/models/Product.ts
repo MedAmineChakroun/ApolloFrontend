@@ -1,8 +1,12 @@
 export interface Product {
-    Id: string;
-    Code: string;
-    Intitule: string;
-    Famille: string;
-    PrixVente: number;
-    Barcode: string;
+    artId: number;
+    artCode: string;
+    artIntitule: string;
+    artFamille: string;
+    artPrixVente: number;
+    artPrixAchat: number;
+    //stock 0/1
+    artEtat: number;
+    artUnite: string;
+    artImageUrl: string;
 }

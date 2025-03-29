@@ -17,8 +17,8 @@ import { AuthenticationService } from '../../../core/services/authentication.ser
                     <span [ngClass]="{ 'text-white': !scrolled, 'text-black': scrolled }" class="font-medium text-2xl leading-normal whitespace-nowrap transition">Apollo Store</span>
                 </a>
 
-                <a pButton [text]="true" severity="secondary" [rounded]="true" pRipple class="lg:!hidden">
-                    <i class="pi pi-bars !text-2xl"></i>
+                <a pButton [text]="true" severity="secondary" [rounded]="true" pRipple class="lg:!hidden" (click)="toggleMobileMenu()">
+                    <i class="pi" [ngClass]="mobileMenuOpen ? 'pi-times' : 'pi-bars'" [style.fontSize.rem]="1.5"></i>
                 </a>
 
                 <nav class="hidden lg:flex space-x-8">
@@ -41,6 +41,24 @@ import { AuthenticationService } from '../../../core/services/authentication.ser
                     </div>
                 </ng-template>
             </div>
+
+            <!-- Mobile Menu -->
+            <div *ngIf="mobileMenuOpen" class="lg:hidden mobile-menu">
+                <div class="flex flex-col p-4 bg-white/95 shadow-lg backdrop-blur-md">
+                    <a (click)="navigateMobile(['/landing'], { fragment: 'home' })" class="mobile-menu-item">Home</a>
+                    <a (click)="navigateMobile(['/store/products'])" class="mobile-menu-item">Store</a>
+                    <a (click)="navigateMobile(['/landing'], { fragment: 'highlights' })" class="mobile-menu-item">About Us</a>
+                    <a (click)="navigateMobile(['/landing'], { fragment: 'pricing' })" class="mobile-menu-item">Contact</a>
+
+                    <div class="flex flex-col mt-4 space-y-2" *ngIf="!authService.isAuthenticated()">
+                        <button pButton pRipple label="Login" routerLink="/auth/login" [rounded]="true" class="w-full"></button>
+                        <button pButton pRipple label="Register" routerLink="/auth/login" [rounded]="true" severity="secondary" class="w-full"></button>
+                    </div>
+                    <div class="mt-4" *ngIf="authService.isAuthenticated()">
+                        <button pButton pRipple label="My Profile" (click)="navigateMobile(['/store/customer/profile'])" icon="pi pi-user" class="w-full"></button>
+                    </div>
+                </div>
+            </div>
         </header>
     `,
     styles: [
@@ -51,11 +69,43 @@ import { AuthenticationService } from '../../../core/services/authentication.ser
             nav a:hover {
                 color: var(--primary-color);
             }
+            .mobile-menu {
+                position: absolute;
+                width: 100%;
+                z-index: 100;
+                top: 100%;
+                left: 0;
+                right: 0;
+                animation: slideDown 0.3s ease-out;
+            }
+            .mobile-menu-item {
+                padding: 12px 16px;
+                font-size: 18px;
+                color: var(--text-color);
+                border-bottom: 1px solid #f0f0f0;
+                cursor: pointer;
+                transition: all 0.2s ease;
+            }
+            .mobile-menu-item:hover {
+                background-color: rgba(0, 0, 0, 0.05);
+                color: var(--primary-color);
+            }
+            @keyframes slideDown {
+                from {
+                    opacity: 0;
+                    transform: translateY(-10px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
         `
     ]
 })
 export class TopbarWidget {
     scrolled = false;
+    mobileMenuOpen = false;
 
     constructor(
         public router: Router,
@@ -66,7 +116,18 @@ export class TopbarWidget {
     onScroll(): void {
         this.scrolled = window.scrollY > 50;
     }
+
     navigateToProfile() {
         this.router.navigate(['/store/customer/profile']);
+        this.mobileMenuOpen = false;
+    }
+
+    toggleMobileMenu() {
+        this.mobileMenuOpen = !this.mobileMenuOpen;
+    }
+
+    navigateMobile(route: string[], extras?: any) {
+        this.router.navigate(route, extras);
+        this.mobileMenuOpen = false; // Close the mobile menu after navigation
     }
 }

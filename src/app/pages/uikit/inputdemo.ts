@@ -63,7 +63,7 @@ import { Country } from '../service/customer.service';
         InputGroupAddonModule,
         TextareaModule
     ],
-    template: ` <p-fluid class="flex flex-col md:flex-row gap-8">
+    template: /*html*/ ` <p-fluid class="flex flex-col md:flex-row gap-8">
             <div class="md:w-1/2">
                 <div class="card flex flex-col gap-4">
                     <div class="font-semibold text-xl">InputText</div>
