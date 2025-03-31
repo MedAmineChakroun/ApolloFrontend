@@ -1,0 +1,102 @@
+<div class="product-detail-container">
+    <div class="product-detail-content">
+        <div class="product-header">
+            <div class="product-title">
+                <h1>{{ product?.artIntitule }}</h1>
+                <div class="product-category">
+                    <i class="pi pi-tag"></i>
+                    <span>{{ product?.artFamille }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="product-main">
+            <div class="product-image-container">
+                <img [src]="product?.imageUrl || DEFAULT_PRODUCT_IMAGE" 
+                     [alt]="product?.artIntitule" 
+                     class="product-image"
+                     (error)="handleImageError($event)">
+                <div *ngIf="isOutOfStock(product?.artSuiviStock || 0)" class="out-of-stock-overlay">
+                    <p-tag value="OUT OF STOCK" severity="danger"></p-tag>
+                </div>
+            </div>
+
+            <div class="product-info">
+                <div class="price-section">
+                    <div class="current-price">
+                        <span class="price-label">Price</span>
+                        <span class="price-value">{{ product?.artPrixVente | currency: 'TND' : 'symbol' : '1.2-2' }}</span>
+                    </div>
+                    <div class="original-price">
+                        <span class="price-label">Cost</span>
+                        <span class="price-value">{{ product?.artPrixAchat | currency: 'TND' : 'symbol' : '1.2-2' }}</span>
+                    </div>
+                    <p-tag [value]="getStockStatus(product?.artSuiviStock || 0)" 
+                           [severity]="getStockSeverity(product?.artSuiviStock || 0)"
+                           class="mt-2"></p-tag>
+                </div>
+
+                <div class="product-details">
+                    <div class="detail-item">
+                        <i class="pi pi-barcode"></i>
+                        <span>Barcode: {{ product?.artBarcode }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="pi pi-box"></i>
+                        <span>Unit: {{ product?.artUnite }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="pi pi-tag"></i>
+                        <span>Category: {{ product?.artFamille }}</span>
+                    </div>
+                </div>
+
+                <div class="add-to-cart-section">
+                    <div class="quantity-selector">
+                        <span class="quantity-label">Quantity:</span>
+                        <p-inputNumber [(ngModel)]="quantity" 
+                                     [min]="1" 
+                                     [max]="product?.artSuiviStock || 1"
+                                     [showButtons]="true"
+                                     class="quantity-input"></p-inputNumber>
+                    </div>
+                    <div class="action-buttons">
+                        <p-button label="Add to Cart" 
+                                 icon="pi pi-shopping-cart"
+                                 (onClick)="addToCart()"
+                                 [disabled]="isOutOfStock(product?.artSuiviStock || 0)"
+                                 styleClass="add-to-cart-btn"></p-button>
+                        <p-button label="Buy Now" 
+                                 icon="pi pi-arrow-right"
+                                 (onClick)="buyNow()"
+                                 [disabled]="isOutOfStock(product?.artSuiviStock || 0)"
+                                 severity="success"
+                                 styleClass="wishlist-btn"></p-button>
+                    </div>
+                </div>
+
+                <div class="additional-info">
+                    <div class="info-section">
+                        <h3>Product Information</h3>
+                        <div class="status-grid">
+                            <div class="status-item">
+                                <i class="pi pi-check-circle"></i>
+                                <span>Free Shipping</span>
+                            </div>
+                            <div class="status-item">
+                                <i class="pi pi-undo"></i>
+                                <span>30 Days Return</span>
+                            </div>
+                            <div class="status-item">
+                                <i class="pi pi-shield"></i>
+                                <span>Secure Payment</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p-toast></p-toast>

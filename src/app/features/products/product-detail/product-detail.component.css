@@ -1,0 +1,247 @@
+.product-detail-container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.product-detail-content {
+    background: var(--surface-card);
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+}
+
+/* Product Header Styles */
+.product-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--surface-border);
+    background: var(--surface-section);
+}
+
+.product-title {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.product-title h1 {
+    margin: 0;
+    font-size: 1.875rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.product-category {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-color-secondary);
+    font-size: 0.875rem;
+}
+
+/* Main Content Styles */
+.product-main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    padding: 2rem;
+}
+
+/* Product Image Styles */
+.product-image-container {
+    position: relative;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    background: var(--surface-ground);
+}
+
+.product-image {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.product-image:hover {
+    transform: scale(1.05);
+}
+
+.out-of-stock-overlay {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+}
+
+/* Product Info Styles */
+.product-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* Price Section Styles */
+.price-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.current-price {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.price-label {
+    font-size: 0.875rem;
+    color: var(--text-color-secondary);
+}
+
+.price-value {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.original-price {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.original-price .price-value {
+    font-size: 1.25rem;
+    color: var(--text-color-secondary);
+    text-decoration: line-through;
+}
+
+.discount-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--green-100);
+    color: var(--green-700);
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    width: fit-content;
+}
+
+/* Product Details Styles */
+.product-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--surface-section);
+    border-radius: 0.5rem;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--text-color);
+}
+
+.detail-item i {
+    color: var(--primary-color);
+}
+
+/* Add to Cart Section Styles */
+.add-to-cart-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.quantity-selector {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.quantity-label {
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.quantity-input {
+    width: 120px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+}
+
+.add-to-cart-btn {
+    flex: 1;
+}
+
+.wishlist-btn {
+    width: 48px;
+    height: 48px;
+    padding: 0;
+}
+
+/* Additional Info Styles */
+.additional-info {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--surface-border);
+}
+
+.info-section h3 {
+    margin: 0 0 1rem 0;
+    font-size: 1.25rem;
+    color: var(--text-color);
+}
+
+.status-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.status-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: var(--surface-section);
+    border-radius: 0.5rem;
+    color: var(--text-color);
+}
+
+.status-item i {
+    color: var(--primary-color);
+    font-size: 1.25rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .product-main {
+        grid-template-columns: 1fr;
+    }
+
+    .product-image {
+        height: 300px;
+    }
+
+    .status-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .wishlist-btn {
+        width: 100%;
+    }
+}

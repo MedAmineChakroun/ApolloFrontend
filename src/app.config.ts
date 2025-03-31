@@ -9,6 +9,7 @@ import { provideStore } from '@ngrx/store';
 import { userReducer } from './app/store/user/user.reducers';
 import { provideToastr } from 'ngx-toastr';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { DialogService } from 'primeng/dynamicdialog';
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -27,6 +28,7 @@ export const appConfig: ApplicationConfig = {
             easing: 'ease-in-out', // Smooth entrance and exit
             easeTime: 300, // Animation duration
             extendedTimeOut: 1000
-        })
+        }),
+        DialogService
     ]
 };

@@ -2,19 +2,36 @@
 
 .layout-sidebar {
     position: fixed;
-    width: 20rem;
+    width: 25rem;
     height: calc(100vh - 8rem);
     z-index: 999;
     overflow-y: auto;
     user-select: none;
     top: 6rem;
     left: 2rem;
-    transition:
-        transform var(--layout-section-transition-duration),
-        left var(--layout-section-transition-duration);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     background-color: var(--surface-overlay);
     border-radius: var(--content-border-radius);
-    padding: 0.5rem 1.5rem;
+    padding: 1rem 2rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+
+    &::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: var(--surface-section);
+        border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: var(--surface-border);
+        border-radius: 4px;
+        
+        &:hover {
+            background: var(--surface-hover);
+        }
+    }
 }
 
 .layout-menu {
@@ -28,7 +45,14 @@
             text-transform: uppercase;
             font-weight: 700;
             color: var(--text-color);
-            margin: 0.75rem 0;
+            margin: 1rem 0;
+            padding: 0.5rem 1rem;
+            border-radius: var(--content-border-radius);
+            transition: all 0.3s ease;
+            
+            &:hover {
+                background-color: var(--surface-hover);
+            }
         }
 
         > a {
@@ -68,31 +92,27 @@
             cursor: pointer;
             padding: 0.75rem 1rem;
             border-radius: var(--content-border-radius);
-            transition:
-                background-color var(--element-transition-duration),
-                box-shadow var(--element-transition-duration);
-
-            .layout-menuitem-icon {
-                margin-right: 0.5rem;
-            }
-
-            .layout-submenu-toggler {
-                font-size: 75%;
-                margin-left: auto;
-                transition: transform var(--element-transition-duration);
-            }
-
-            &.active-route {
-                font-weight: 700;
-                color: var(--primary-color);
-            }
+            transition: all 0.3s ease;
+            margin: 0.25rem 0;
 
             &:hover {
                 background-color: var(--surface-hover);
+                transform: translateX(5px);
             }
 
-            &:focus {
-                @include focused-inset();
+            &.active-route {
+                background-color: var(--primary-color);
+                color: var(--primary-contrast-color);
+            }
+
+            .layout-menuitem-icon {
+                margin-right: 0.75rem;
+                font-size: 1.25rem;
+                transition: transform 0.3s ease;
+            }
+
+            &:hover .layout-menuitem-icon {
+                transform: scale(1.1);
             }
         }
 

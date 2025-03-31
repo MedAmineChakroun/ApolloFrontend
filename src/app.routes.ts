@@ -18,7 +18,7 @@ export const appRoutes: Routes = [
         children: [
             {
                 path: 'products',
-                loadChildren: () => import('./app/features/products/products.routes')
+                loadChildren: () => import('./app/features/products/products.routes').then(m => m.routes)
             },
             {
                 path: 'admin',

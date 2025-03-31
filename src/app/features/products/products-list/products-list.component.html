@@ -1,9 +1,13 @@
 <div class="flex flex-col">
     <div class="card">
         <div class="font-semibold text-xl">All Products</div>
-        <p-dataview [value]="products" [layout]="layout">
+        <p-dataview [value]="filteredProducts" [layout]="layout">
             <ng-template #header>
-                <div class="flex justify-end">
+                <div class="flex justify-between items-center gap-4">
+                    <span class="p-input-icon-left w-full md:w-96">
+                        <i class="pi pi-search"></i>
+                        <input type="text" pInputText [(ngModel)]="searchText" (ngModelChange)="filterProducts()" placeholder="Search products..." class="w-full" />
+                    </span>
                     <p-select-button [(ngModel)]="layout" [options]="options" [allowEmpty]="false">
                         <ng-template #item let-option>
                             <i class="pi" [ngClass]="{ 'pi-bars': option === 'list', 'pi-table': option === 'grid' }"></i>
@@ -49,7 +53,15 @@
                                     </div>
                                     <div class="flex flex-row-reverse md:flex-row gap-2">
                                         <p-button icon="pi pi-heart" styleClass="h-full" [outlined]="true"></p-button>
-                                        <p-button icon="pi pi-shopping-cart" label="Buy Now" [disabled]="isOutOfStock(product.artSuiviStock)" styleClass="flex-auto md:flex-initial whitespace-nowrap"></p-button>
+                                        <p-button 
+                                            icon="pi pi-shopping-cart" 
+                                            label="Add to Cart" 
+                                            [disabled]="isOutOfStock(product.artSuiviStock)"
+                                            (onClick)="addToCart(product)"
+                                            pRipple
+                                            [loading]="false"
+                                            styleClass="flex-auto md:flex-initial whitespace-nowrap">
+                                        </p-button>
                                     </div>
                                 </div>
                             </div>
@@ -96,7 +108,16 @@
                                         <span class="text-2xl font-semibold">{{ product.artPrixVente | currency: 'TND' : 'symbol' : '1.2-2' }}</span>
                                     </div>
                                     <div class="flex gap-2 mt-auto">
-                                        <p-button icon="pi pi-shopping-cart" label="Buy Now" [disabled]="isOutOfStock(product.artSuiviStock)" class="flex-auto whitespace-nowrap" styleClass="w-full" raised></p-button>
+                                        <p-button 
+                                            icon="pi pi-shopping-cart" 
+                                            label="Add to Cart" 
+                                            [disabled]="isOutOfStock(product.artSuiviStock)"
+                                            (onClick)="addToCart(product)"
+                                            pRipple
+                                            [loading]="false"
+                                            styleClass="flex-auto whitespace-nowrap" 
+                                            raised>
+                                        </p-button>
                                         <p-button icon="pi pi-heart" styleClass="h-full" [outlined]="true"></p-button>
                                     </div>
                                 </div>
