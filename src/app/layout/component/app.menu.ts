@@ -261,7 +261,6 @@ export class AppMenu implements OnInit {
         this.productsService.getUniqueFamilies().subscribe({
             next: (families) => {
                 this.productFamilies = families;
-                console.log('Product families loaded:', families);
             },
             error: (err) => {
                 console.error('Error loading product families:', err);

@@ -1,36 +1,116 @@
-<app-floating-configurator></app-floating-configurator>
+<div class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-[100vw] overflow-hidden p-4">
+    <div class="flex flex-col md:flex-row w-full max-w-7xl bg-surface-0 dark:bg-surface-900 shadow-lg rounded-xl overflow-hidden">
+        <!-- Left Column: Branding and Welcome Section -->
+        <div class="w-full md:w-2/5 p-8 flex flex-col justify-center items-center" style="background-color: #fefae0">
+            <img class="w-24 mb-8" src="assets/general/ApolloLogo.PNG" alt="Apollo Logo" />
+            <h1 class="text-3xl font-bold mb-4 text-center text-gray-800">Welcome to Apollo Store!</h1>
+            <p class="text-lg mb-6 text-center text-gray-700">Create an account to start shopping with us.</p>
+            <div class="bg-white/70 p-6 rounded-lg w-full max-w-sm shadow-sm">
+                <h3 class="text-xl font-medium mb-3 text-gray-800">Benefits of joining:</h3>
+                <ul class="space-y-3">
+                    <li class="flex items-center">
+                        <i class="pi pi-check-circle mr-2 text-primary"></i>
+                        <span class="text-gray-700">Fast checkout process</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="pi pi-check-circle mr-2 text-primary"></i>
+                        <span class="text-gray-700">Order tracking</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="pi pi-check-circle mr-2 text-primary"></i>
+                        <span class="text-gray-700">Exclusive deals & offers</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="pi pi-check-circle mr-2 text-primary"></i>
+                        <span class="text-gray-700">Save shipping addresses</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
 
-<div class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-[100vw] overflow-hidden">
-    <div class="flex flex-col items-center justify-center">
-        <div style="border-radius: 56px; padding: 0.3rem; background: linear-gradient(360deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%)">
-            <div class="w-full bg-surface-0 dark:bg-surface-900 py-20 px-8 sm:px-20" style="border-radius: 53px">
-                <div class="text-center mb-8">
-                    <img class="mb-8 w-16 shrink-0 mx-auto" src="assets/general/ApolloLogo.PNG" style="width: 80px" />
-                    <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">Welcome to Apollo Store!</div>
-                    <span class="text-muted-color font-medium">Sign in to continue</span>
+        <!-- Right Column: Registration Form -->
+        <div class="w-full md:w-3/5 p-8 overflow-y-auto" style="max-height: 90vh">
+            <h2 class="text-surface-900 dark:text-surface-0 text-2xl font-medium mb-6">Create Your Account</h2>
+
+            <div class="p-fluid">
+                <!-- Account Information Section -->
+                <div class="mb-5">
+                    <div class="text-surface-900 dark:text-surface-0 text-lg font-medium mb-3">Account Information</div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="field">
+                            <label for="name" class="block text-surface-900 dark:text-surface-0 text-sm font-medium mb-2">Username*</label>
+                            <input pInputText id="name" type="text" placeholder="Choose a username" class="w-full" [(ngModel)]="registerDto.name" required />
+                        </div>
+                        <div class="field">
+                            <label for="email" class="block text-surface-900 dark:text-surface-0 text-sm font-medium mb-2">Email*</label>
+                            <input pInputText id="email" type="email" placeholder="Email address" class="w-full" [(ngModel)]="registerDto.email" required />
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
+                        <div class="field">
+                            <label for="password" class="block text-surface-900 dark:text-surface-0 text-sm font-medium mb-2">Password*</label>
+                            <p-password id="password" [(ngModel)]="registerDto.password" placeholder="Create a password" [toggleMask]="true" styleClass="w-full" [feedback]="true" required></p-password>
+                        </div>
+                        <div class="field">
+                            <label for="confirmPassword" class="block text-surface-900 dark:text-surface-0 text-sm font-medium mb-2">Confirm Password*</label>
+                            <p-password id="confirmPassword" [(ngModel)]="registerDto.confirmPassword" placeholder="Confirm your password" [toggleMask]="true" styleClass="w-full" [feedback]="false" required></p-password>
+                        </div>
+                    </div>
                 </div>
 
-                <div>
-                    <label for="name1" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Name</label>
-                    <input pInputText id="name1" type="text" placeholder="enter name" class="w-full md:w-[30rem] mb-8" [(ngModel)]="registerDto.name" required />
-
-                    <label for="email1" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Email</label>
-                    <input pInputText id="email1" type="text" placeholder="Email address" class="w-full md:w-[30rem] mb-8" [(ngModel)]="registerDto.email" required />
-
-                    <label for="password1" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">Password</label>
-                    <p-password id="password1" [(ngModel)]="registerDto.password" placeholder="Password" [toggleMask]="true" styleClass="mb-4" [fluid]="true" [feedback]="false" required></p-password>
-
-                    <p-button (click)="register()" [disabled]="loading" label="Create Account" styleClass="w-full mb-4" severity="success" raised></p-button>
-                    <p style="text-align: center">Already have an account? <a class="font-medium no-underline ml-2 text-right cursor-pointer text-primary" routerLink="/auth/login">Log In</a></p>
-
-                    <div *ngIf="errorMessage" class="mt-4 p-3 border-round bg-red-50 dark:bg-red-900/20 border-1 border-red-200 dark:border-red-800">
-                        <ul class="list-none p-0 m-0 text-left">
-                            <li *ngFor="let error of errorMessage.split('\n')" class="text-red-500 dark:text-red-300 mb-1 flex align-items-center">
-                                <i class="pi pi-exclamation-circle mr-2"></i>
-                                {{ error }}
-                            </li>
-                        </ul>
+                <!-- Contact Information Section -->
+                <div class="mb-5">
+                    <div class="text-surface-900 dark:text-surface-0 text-lg font-medium mb-3">Contact Information</div>
+                    <div class="field mb-3">
+                        <label for="phone" class="block text-surface-900 dark:text-surface-0 text-sm font-medium mb-2">Phone Number*</label>
+                        <p-inputMask id="phone" mask="(999) 999-9999" placeholder="(555) 555-5555" [(ngModel)]="registerDto.phone" styleClass="w-full" required></p-inputMask>
                     </div>
+                </div>
+
+                <!-- Address Information Section -->
+                <div class="mb-5">
+                    <div class="text-surface-900 dark:text-surface-0 text-lg font-medium mb-3">Shipping Address</div>
+                    <div class="field mb-3">
+                        <label for="address" class="block text-surface-900 dark:text-surface-0 text-sm font-medium mb-2">Street Address*</label>
+                        <input pInputText id="address" type="text" placeholder="123 Main St" class="w-full" [(ngModel)]="registerDto.address" required />
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="field">
+                            <label for="city" class="block text-surface-900 dark:text-surface-0 text-sm font-medium mb-2">City*</label>
+                            <input pInputText id="city" type="text" placeholder="Your city" class="w-full" [(ngModel)]="registerDto.city" required />
+                        </div>
+                        <div class="field">
+                            <label for="postalCode" class="block text-surface-900 dark:text-surface-0 text-sm font-medium mb-2">Postal Code*</label>
+                            <input pInputText id="postalCode" type="text" placeholder="Postal code" class="w-full" [(ngModel)]="registerDto.postalCode" required />
+                        </div>
+                        <div class="field">
+                            <label for="country" class="block text-surface-900 dark:text-surface-0 text-sm font-medium mb-2">Country*</label>
+                            <p-dropdown id="country" [options]="countries" [(ngModel)]="registerDto.country" optionLabel="name" placeholder="Select Country" styleClass="w-full" required></p-dropdown>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Terms and Conditions -->
+                <div class="field-checkbox mb-4">
+                    <p-checkbox id="agreeTerms" [(ngModel)]="registerDto.agreeTerms" [binary]="true" required></p-checkbox>
+                    <label for="agreeTerms" class="ml-2 text-surface-700 dark:text-surface-300"
+                        >I agree to the <a href="#" class="text-primary font-medium">Terms of Service</a> and <a href="#" class="text-primary font-medium">Privacy Policy</a></label
+                    >
+                </div>
+
+                <!-- Buttons and Navigation -->
+                <p-button (click)="register()" [disabled]="loading" label="Create Account" styleClass="w-full mb-4" severity="success" raised></p-button>
+
+                <p style="text-align: center">Already have an account? <a class="font-medium no-underline ml-2 text-right cursor-pointer text-primary" routerLink="/auth/login">Log In</a></p>
+
+                <!-- Error Messages Section -->
+                <div *ngIf="errorMessage" class="mt-4 p-3 border-round bg-red-50 dark:bg-red-900/20 border-1 border-red-200 dark:border-red-800">
+                    <ul class="list-none p-0 m-0 text-left">
+                        <li *ngFor="let error of errorMessage.split('\n')" class="text-red-500 dark:text-red-300 mb-1 flex items-center">
+                            <i class="pi pi-exclamation-circle mr-2"></i>
+                            {{ error }}
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>

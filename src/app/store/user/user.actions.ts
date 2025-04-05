@@ -1,11 +1,11 @@
 import { createAction, props } from '@ngrx/store';
-import { User } from '../../models/user';
+import { Client } from '../../models/Client';
 
-// Set user (e.g., after login)
-export const setUser = createAction('[User] Set User', props<{ user: User }>());
+// Set client (e.g., after login)
+export const setUser = createAction('[User] Set User', props<{ client: Client }>());
 
-// Update user (e.g., after profile edit)
-export const updateUser = createAction('[User] Update User', props<{ user: Partial<User> }>());
+// Update client (e.g., after profile edit)
+export const updateUser = createAction('[User] Update User', props<{ client: Partial<Client> }>());
 
-// Clear user (e.g., after logout)
+// Clear client (e.g., after logout)
 export const clearUser = createAction('[User] Clear User');

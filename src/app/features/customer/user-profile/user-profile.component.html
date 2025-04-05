@@ -8,7 +8,7 @@
         <!-- Body -->
         <div class="card-body d-flex flex-column align-items-center text-center">
             <!-- Avatar section -->
-            <div class="position-relative mb-3">
+            <div class="position-relative mb-4">
                 <div *ngIf="isAvatarLoading" class="avatar-loading-overlay">
                     <div class="spinner-border text-primary" role="status">
                         <span class="visually-hidden">Loading...</span>
@@ -16,50 +16,108 @@
                 </div>
                 <img [src]="avatarUrl" alt="avatar" class="rounded-circle img-fluid border border-3" style="width: 130px; height: 130px; object-fit: cover" [class.opacity-50]="isAvatarLoading" />
                 <input type="file" id="avatarInput" (change)="onAvatarChange($event)" accept="image/*" style="display: none" />
+                <!-- Edit button (bottom right) -->
                 <button type="button" (click)="triggerFileInput()" class="btn btn-sm btn-primary rounded-circle position-absolute bottom-0 end-0 translate-middle">
                     <i class="fas fa-pen"></i>
                 </button>
+                <!-- Delete button (bottom left) -->
+                <button type="button" (click)="removeAvatar()" class="btn btn-sm btn-danger rounded-circle position-absolute bottom-0 start-8 translate-middle">
+                    <i class="fas fa-repeat"></i>
+                </button>
             </div>
-
-            <!-- Liste des avatars prédéfinis -->
-            <!--<div class="mt-4 w-100">
-        <h6 class="mb-3 text-center">Choisissez un avatar :</h6>
-        <div class="d-flex flex-wrap justify-content-center gap-3">
-          <img *ngFor="let avatar of predefinedAvatars" 
-              [src]="avatar" 
-              alt="avatar option" 
-              class="rounded-circle img-thumbnail avatar-option"
-              style="width: 80px; height: 80px; object-fit: cover; cursor: pointer; transition: 0.3s ease;"
-              (click)="selectAvatar(avatar)">
-        </div>
-      </div>-->
 
             <!-- User info -->
-            <h5 class="mb-1 mt-4">{{ profileForm.get('userName')?.value || 'Nom utilisateur' }}</h5>
+            <h5 class="mb-1">{{ clientData?.tiersIntitule || 'Nom utilisateur' }}</h5>
+            <p class="text-muted mb-4">{{ clientData?.tiersCode || 'Code client' }}</p>
 
-            <!-- Boutons Avatar -->
-            <div class="d-flex justify-content-center gap-2 mb-4">
-                <p-button label="Changer Avatar" (click)="triggerFileInput()" severity="contrast"></p-button>
-                <p-button label="Supprimer" (click)="removeAvatar()" severity="contrast" outlined></p-button>
-            </div>
             <!-- Formulaire -->
-            <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="w-100 px-4">
-                <div class="mb-3">
-                    <label for="userName" class="form-label">Nom d'utilisateur</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-user"></i></span>
-                        <input id="userName" formControlName="userName" type="text" class="form-control" placeholder="Entrer votre nom d'utilisateur" />
+            <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="w-100">
+                <div class="px-4">
+                    <div class="mb-3">
+                        <label for="userName" class="form-label">Nom d'utilisateur</label>
+                        <div class="input-group has-validation">
+                            <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            <input
+                                id="userName"
+                                formControlName="userName"
+                                type="text"
+                                class="form-control"
+                                placeholder="Entrer votre nom d'utilisateur"
+                                [class.is-invalid]="profileForm.get('userName')?.invalid && profileForm.get('userName')?.touched"
+                            />
+                            <div class="invalid-feedback" *ngIf="profileForm.get('userName')?.invalid && profileForm.get('userName')?.touched">
+                                <div *ngIf="profileForm.get('userName')?.errors?.['required']">Le nom d'utilisateur est requis</div>
+                                <div *ngIf="profileForm.get('userName')?.errors?.['minlength']">Le nom d'utilisateur doit contenir au moins 2 caractères</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email (non modifiable)</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                            <input id="email" formControlName="email" type="email" class="form-control" readonly />
+                        </div>
                     </div>
                 </div>
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-                        <input id="email" formControlName="email" type="email" class="form-control" placeholder="Entrer votre email" />
+
+                <!-- Additional client info with better spacing -->
+                <div class="bg-light p-4 rounded mb-4">
+                    <h6 class="mb-3 text-start">Informations supplémentaires</h6>
+
+                    <div class="mb-3">
+                        <label class="form-label text-start w-100">Adresse</label>
+                        <div class="input-group has-validation">
+                            <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                            <input type="text" class="form-control" formControlName="address" [class.is-invalid]="profileForm.get('address')?.invalid && profileForm.get('address')?.touched" />
+                            <div class="invalid-feedback" *ngIf="profileForm.get('address')?.invalid && profileForm.get('address')?.touched">L'adresse est requise</div>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label text-start w-100">Code Postal</label>
+                            <div class="input-group has-validation">
+                                <input type="text" class="form-control" formControlName="postalCode" [class.is-invalid]="profileForm.get('postalCode')?.invalid && profileForm.get('postalCode')?.touched" />
+                                <div class="invalid-feedback" *ngIf="profileForm.get('postalCode')?.invalid && profileForm.get('postalCode')?.touched">Le code postal est requis</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-start w-100">Ville</label>
+                            <div class="input-group has-validation">
+                                <input type="text" class="form-control" formControlName="city" [class.is-invalid]="profileForm.get('city')?.invalid && profileForm.get('city')?.touched" />
+                                <div class="invalid-feedback" *ngIf="profileForm.get('city')?.invalid && profileForm.get('city')?.touched">La ville est requise</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label text-start w-100">Pays</label>
+                            <div class="input-group has-validation">
+                                <input type="text" class="form-control" formControlName="country" [class.is-invalid]="profileForm.get('country')?.invalid && profileForm.get('country')?.touched" />
+                                <div class="invalid-feedback" *ngIf="profileForm.get('country')?.invalid && profileForm.get('country')?.touched">Le pays est requis</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-start w-100">Téléphone</label>
+                            <div class="input-group has-validation">
+                                <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                <p-inputMask
+                                    mask="+216 99 999 999"
+                                    formControlName="phone"
+                                    placeholder="+216 XX XXX XXX"
+                                    [class.is-invalid]="profileForm.get('phone')?.invalid && profileForm.get('phone')?.touched"
+                                    inputStyleClass="form-control"
+                                ></p-inputMask>
+                                <div class="invalid-feedback" *ngIf="profileForm.get('phone')?.invalid && profileForm.get('phone')?.touched">Le numéro de téléphone est requis</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="d-flex justify-content-end">
-                    <p-button type="submit" raised>Mettre à jour</p-button>
+
+                <div class="d-flex justify-content-end px-4">
+                    <p-button type="submit" raised styleClass="px-4">Mettre à jour</p-button>
                 </div>
             </form>
         </div>

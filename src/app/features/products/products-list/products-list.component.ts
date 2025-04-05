@@ -13,7 +13,6 @@ import { Product } from '../../../models/Product';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputGroupModule } from 'primeng/inputgroup';
-import { finalize } from 'rxjs/operators';
 
 // Define the allowed severity types for p-tag
 type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' | undefined;
@@ -145,7 +144,6 @@ export class products implements OnInit {
                         console.warn('Unexpected API response format:', response);
                     }
 
-                    console.log('Products loaded by category:', this.products);
                     this.applyFilters(); // Apply additional filters
                 },
                 error: (err) => {
@@ -171,7 +169,6 @@ export class products implements OnInit {
                         console.warn('Unexpected API response format:', response);
                     }
 
-                    console.log('Products loaded:', this.products);
                     this.applyFilters(); // Apply initial filters
                 },
                 error: (err) => {

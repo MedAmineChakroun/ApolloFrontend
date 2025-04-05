@@ -8,10 +8,10 @@ import { Register } from '../../models/Register';
 import { Store } from '@ngrx/store';
 import { clearUser, setUser } from '../../store/user/user.actions';
 import { jwtDecode } from 'jwt-decode';
-import { User } from '../../models/user';
-
+import { Client } from '../../models/Client';
+import { UserService } from './client-service.service';
 interface DecodedToken {
-    Id: string;
+    ClientId: string;
     UserName: string;
     sub: string;
     email: string;
@@ -31,8 +31,14 @@ export class AuthenticationService {
 
     constructor(
         private http: HttpClient,
-        private store: Store
-    ) {}
+        private store: Store,
+        private userService: UserService
+    ) {
+        // Check if user is already logged in on service initialization
+        if (this.isAuthenticated()) {
+            this.StoreUser();
+        }
+    }
 
     register(registerDto: Register): Observable<JwtAuth> {
         return this.http.post<JwtAuth>(this.registerUrl, registerDto).pipe(
@@ -117,16 +123,24 @@ export class AuthenticationService {
     }
 
     //store user in store
-    private StoreUser() {
+    StoreUser() {
         //decode JWt to user
         const token = this.getToken();
         const decodedToken = jwtDecode<DecodedToken>(token!);
 
-        const user: User = {
-            id: decodedToken.Id,
-            userName: decodedToken.UserName,
-            email: decodedToken.email
-        };
-        this.store.dispatch(setUser({ user }));
+        this.userService.getUserById(Number(decodedToken.ClientId)).subscribe((client) => {
+            const clientData: Client = {
+                tiersId: client.tiersId,
+                tiersCode: client.tiersCode,
+                tiersIntitule: client.tiersIntitule,
+                tiersAdresse1: client.tiersAdresse1,
+                tiersCodePostal: client.tiersCodePostal,
+                tiersVille: client.tiersVille,
+                tiersPays: client.tiersPays,
+                tiersTel1: client.tiersTel1
+            };
+            console.log('clientData:', clientData);
+            this.store.dispatch(setUser({ client: clientData }));
+        });
     }
 }

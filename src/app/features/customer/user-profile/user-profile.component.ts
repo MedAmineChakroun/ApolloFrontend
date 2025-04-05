@@ -1,79 +1,107 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { UserService } from '../../../core/services/user-service.service';
+import { UserService } from '../../../core/services/client-service.service';
 import { ToastrService } from 'ngx-toastr';
 import { ButtonModule } from 'primeng/button';
+import { Store } from '@ngrx/store';
+import { selectUser } from '../../../store/user/user.selectors';
+import { Client } from '../../../models/Client';
+import { jwtDecode } from 'jwt-decode';
+import { updateUser } from '../../../store/user/user.actions';
+import { InputMaskModule } from 'primeng/inputmask';
+interface DecodedToken {
+    Id: string;
+    ClientId: string;
+    UserName: string;
+    sub: string;
+    email: string;
+    exp: number;
+    jti: string;
+    role: string;
+}
+
 @Component({
     selector: 'app-user-profile',
     standalone: true,
-    imports: [ReactiveFormsModule, CommonModule, ButtonModule],
+    imports: [ReactiveFormsModule, CommonModule, ButtonModule, InputMaskModule],
     templateUrl: './user-profile.component.html',
     styleUrls: ['./user-profile.component.scss']
 })
 export class UserProfileComponent implements OnInit {
     profileForm: FormGroup;
-    userId: string | null = null;
+    userId: number | null = null;
     isAvatarLoading: boolean = false;
+    clientData: Client | null = null;
+    userEmail: string = '';
 
     constructor(
         private fb: FormBuilder,
         private userService: UserService,
-        private toastr: ToastrService
+        private toastr: ToastrService,
+        private store: Store
     ) {
         this.profileForm = this.fb.group({
             id: [''],
-            userName: [''],
-            email: ['']
+            userName: ['', [Validators.required, Validators.minLength(2)]],
+            email: ['', [Validators.required, Validators.email]],
+            address: ['', Validators.required],
+            postalCode: ['', Validators.required],
+            city: ['', Validators.required],
+            country: ['', Validators.required],
+            phone: ['', Validators.required]
         });
     }
 
     ngOnInit(): void {
-        this.userId = this.getUserIdFromToken();
+        // Get email from JWT token
+        this.getUserEmailFromToken();
 
-        if (this.userId) {
-            this.userService.getUserProfile(this.userId).subscribe(
-                (user) => {
+        // Get user data from store
+        this.store.select(selectUser).subscribe(
+            (client) => {
+                if (client) {
+                    this.clientData = client;
+                    this.userId = typeof client.tiersId === 'string' ? parseInt(client.tiersId, 10) : client.tiersId;
+
                     this.profileForm.patchValue({
-                        id: this.userId,
-                        userName: user.userName,
-                        email: user.email
+                        id: client.tiersId,
+                        userName: client.tiersIntitule,
+                        email: this.userEmail, // Use email from token
+                        address: client.tiersAdresse1,
+                        postalCode: client.tiersCodePostal,
+                        city: client.tiersVille,
+                        country: client.tiersPays,
+                        phone: client.tiersTel1
                     });
-                },
-                () => {
-                    this.toastr.error('Erreur lors du chargement du profil.');
                 }
-            );
-        } else {
-            this.toastr.error("Impossible de récupérer l'ID utilisateur.");
-        }
+            },
+            (error) => {
+                this.toastr.error('Erreur lors du chargement des données utilisateur.');
+                console.error('Store error:', error);
+            }
+        );
     }
 
-    private getUserIdFromToken(): string | null {
+    private getUserEmailFromToken(): void {
         const token = localStorage.getItem('jwtToken');
         if (!token) {
             this.toastr.warning('Token JWT non trouvé.');
-            return null;
+            return;
         }
 
-        const decodedToken = this.decodeToken(token);
-        if (decodedToken && decodedToken.Id) {
-            return decodedToken.Id;
-        } else {
-            this.toastr.error('ID utilisateur non trouvé dans le token.');
-            return null;
-        }
-    }
-
-    private decodeToken(token: string): any {
         try {
-            const payload = token.split('.')[1];
-            const decoded = atob(payload);
-            return JSON.parse(decoded);
+            const decodedToken = jwtDecode<DecodedToken>(token);
+            if (decodedToken && decodedToken.email) {
+                this.userEmail = decodedToken.email;
+                this.profileForm.get('email')?.disable(); // Disable email field since it can't be changed
+            } else {
+                this.toastr.warning('Email non trouvé dans le token.');
+            }
         } catch (error) {
             this.toastr.error('Erreur lors du décodage du token.');
-            return null;
+            console.error('Token decode error:', error);
         }
     }
 
@@ -119,17 +147,50 @@ export class UserProfileComponent implements OnInit {
     }
 
     onSubmit() {
-        if (this.userId) {
-            this.userService.updateUserProfile(this.userId, this.profileForm.value).subscribe(
-                () => {
-                    this.toastr.success('Profil mis à jour avec succès', 'Succès !');
-                },
-                () => {
-                    this.toastr.error('Erreur lors de la mise à jour du profil.');
-                }
-            );
-        } else {
-            this.toastr.error('Impossible de mettre à jour le profil : ID utilisateur non trouvé.');
+        if (!this.userId) {
+            this.toastr.error('User ID not found', 'Update Failed');
+            return;
         }
+
+        if (this.profileForm.invalid) {
+            this.markFormAsTouched();
+            this.toastr.error('Please fill all required fields', 'Form Invalid');
+            return;
+        }
+
+        const updateData = {
+            name: this.profileForm.value.userName,
+            address: this.profileForm.value.address,
+            postalCode: this.profileForm.value.postalCode,
+            city: this.profileForm.value.city,
+            country: this.profileForm.value.country,
+            phone: this.profileForm.value.phone
+        };
+
+        this.userService.updateUserProfile(this.userId, updateData).subscribe({
+            next: () => this.toastr.success('Profile updated successfully'),
+            //update store fetch from db
+            complete: () => this.updateStore(),
+
+            error: (err) => this.handleUpdateError(err)
+        });
+    }
+    private updateStore() {
+        if (this.userId) {
+            this.userService.getUserProfile(this.userId).subscribe((user) => {
+                this.store.dispatch(updateUser({ client: user }));
+            });
+        }
+    }
+    private markFormAsTouched() {
+        Object.values(this.profileForm.controls).forEach((control) => {
+            control.markAsTouched();
+        });
+    }
+
+    private handleUpdateError(error: any) {
+        console.error('Update error:', error);
+        const errorMessage = error.error?.message || 'Failed to update profile';
+        this.toastr.error(errorMessage, 'Update Error');
     }
 }

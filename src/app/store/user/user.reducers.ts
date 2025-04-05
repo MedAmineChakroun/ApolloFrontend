@@ -2,27 +2,27 @@
 
 import { createReducer, on } from '@ngrx/store';
 import { setUser, updateUser, clearUser } from './user.actions';
-import { User } from '../../models/user';
+import { Client } from '../../models/Client';
 
 // Define initial state
 export interface UserState {
-    user: User | null;
+    client: Client | null;
 }
 
 export const initialState: UserState = {
-    user: null
+    client: null
 };
 
 // Create reducer function
 export const userReducer = createReducer(
     initialState,
 
-    on(setUser, (state, { user }) => ({ ...state, user })),
+    on(setUser, (state, { client }) => ({ ...state, client })),
 
-    on(updateUser, (state, { user }) => ({
+    on(updateUser, (state, { client }) => ({
         ...state,
-        user: { ...state.user, ...user } as User
+        client: { ...state.client, ...client } as Client
     })),
 
-    on(clearUser, () => ({ user: null }))
+    on(clearUser, () => ({ client: null }))
 );
