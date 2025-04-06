@@ -1,1 +1,88 @@
-<p>shopping-cart works!</p>
+<div class="shopping-cart-container">
+    <!-- Free shipping banner -->
+    <div class="shipping-banner" *ngIf="cartItems.length > 0">
+        <span class="shipping-icon">✌️</span>
+        Livraison Express Gratuite pour les commandes de {{ FREE_SHIPPING_THRESHOLD }} TND !
+    </div>
+
+    <div class="cart-content">
+        <!-- Cart header -->
+        <div class="cart-header">
+            <h1>Votre panier ({{ cartItems.length }})</h1>
+            <button *ngIf="cartItems.length > 0" class="close-button" (click)="clearCart()">
+                <i class="pi pi-trash"></i>
+            </button>
+        </div>
+
+        <!-- Shipping eligibility message -->
+        <div *ngIf="cartItems.length > 0" class="shipping-status" [ngClass]="{ eligible: isEligibleForFreeShipping() }">
+            <p>
+                <span *ngIf="isEligibleForFreeShipping()"> <i class="pi pi-check-circle"></i> Vous êtes éligible à la livraison gratuite. </span>
+                <span *ngIf="!isEligibleForFreeShipping()">
+                    <i class="pi pi-info-circle"></i>
+                    Ajoutez {{ FREE_SHIPPING_THRESHOLD - getTotal() | currency: 'TND' : 'symbol' }} pour bénéficier de la livraison gratuite
+                </span>
+            </p>
+            <div class="progress-bar">
+                <div class="progress" [style.width]="(getTotal() / FREE_SHIPPING_THRESHOLD) * 100 + '%'"></div>
+            </div>
+        </div>
+
+        <!-- Empty cart message -->
+        <div *ngIf="cartItems.length === 0" class="empty-cart">
+            <i class="pi pi-shopping-cart" style="font-size: 3rem; color: var(--text-color-secondary); margin-bottom: 1rem"></i>
+            <h2>Votre panier est vide</h2>
+            <p>Il semble que vous n'ayez pas encore ajouté d'articles à votre panier.</p>
+            <button pButton label="Continuer les achats" icon="pi pi-arrow-right" class="p-button-outlined" (click)="continueShopping()"></button>
+        </div>
+
+        <!-- Cart items -->
+        <div *ngIf="cartItems.length > 0" class="cart-items">
+            <div *ngFor="let item of cartItems; let i = index" class="cart-item">
+                <!-- Product image -->
+                <div class="item-image">
+                    <img [src]="item.product.artImageUrl || 'assets/general/product-default.png'" [alt]="item.product.artIntitule" />
+                </div>
+
+                <!-- Product details -->
+                <div class="item-details">
+                    <div class="item-header">
+                        <h3>{{ item.product.artIntitule }}</h3>
+                        <button class="remove-button" (click)="removeFromCart(i)">
+                            <i class="pi pi-times"></i>
+                        </button>
+                    </div>
+                    <p class="item-category">{{ item.product.artFamille }}</p>
+
+                    <!-- Quantity selector and price -->
+                    <div class="item-actions">
+                        <div class="quantity-selector">
+                            <button (click)="updateQuantity(i, item.quantity - 1)" [disabled]="item.quantity <= 1">
+                                <i class="pi pi-minus"></i>
+                            </button>
+                            <span>{{ item.quantity }}</span>
+                            <button (click)="updateQuantity(i, item.quantity + 1)">
+                                <i class="pi pi-plus"></i>
+                            </button>
+                        </div>
+                        <span class="item-price">{{ item.product.artPrixVente * item.quantity | currency: 'TND' : 'symbol' }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cart summary -->
+        <div *ngIf="cartItems.length > 0" class="cart-summary">
+            <div class="summary-row">
+                <span>Total estimé</span>
+                <span class="total-price">{{ getTotal() | currency: 'TND' : 'symbol' }}</span>
+            </div>
+            <p class="tax-note">Taxes et livraison calculées à la caisse</p>
+
+            <div class="cart-actions">
+                <button pButton label="Voir le panier" icon="pi pi-shopping-cart" class="p-button-outlined"></button>
+                <button pButton label="Commander" icon="pi pi-check" (click)="checkout()" class="p-button"></button>
+            </div>
+        </div>
+    </div>
+</div>

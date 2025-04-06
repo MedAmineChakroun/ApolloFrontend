@@ -1,39 +1,51 @@
 <div class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-[100vw] overflow-hidden p-4">
     <div class="flex flex-col md:flex-row w-full max-w-7xl bg-surface-0 dark:bg-surface-900 shadow-lg rounded-xl overflow-hidden">
         <!-- Left Column: Branding and Welcome Section -->
-        <div class="w-full md:w-2/5 p-8 flex flex-col justify-center items-center" style="background-color: #fefae0">
+        <div class="w-full md:w-2/5 p-8 flex flex-col justify-center items-center" style="background-color: #001219">
             <img class="w-24 mb-8" src="assets/general/ApolloLogo.PNG" alt="Apollo Logo" />
-            <h1 class="text-3xl font-bold mb-4 text-center text-gray-800">Welcome to Apollo Store!</h1>
-            <p class="text-lg mb-6 text-center text-gray-700">Create an account to start shopping with us.</p>
-            <div class="bg-white/70 p-6 rounded-lg w-full max-w-sm shadow-sm">
-                <h3 class="text-xl font-medium mb-3 text-gray-800">Benefits of joining:</h3>
-                <ul class="space-y-3">
-                    <li class="flex items-center">
-                        <i class="pi pi-check-circle mr-2 text-primary"></i>
-                        <span class="text-gray-700">Fast checkout process</span>
-                    </li>
-                    <li class="flex items-center">
-                        <i class="pi pi-check-circle mr-2 text-primary"></i>
-                        <span class="text-gray-700">Order tracking</span>
-                    </li>
-                    <li class="flex items-center">
-                        <i class="pi pi-check-circle mr-2 text-primary"></i>
-                        <span class="text-gray-700">Exclusive deals & offers</span>
-                    </li>
-                    <li class="flex items-center">
-                        <i class="pi pi-check-circle mr-2 text-primary"></i>
-                        <span class="text-gray-700">Save shipping addresses</span>
-                    </li>
-                </ul>
+            <h1 class="text-3xl font-bold mb-4 text-center text-white">Welcome to Apollo Store!</h1>
+            <p class="text-lg mb-6 text-center text-gray-300">Create an account to start shopping with us.</p>
+            <div class="w-full max-w-sm">
+                <div class="space-y-6">
+                    <div class="flex items-start space-x-4 p-4 rounded-lg transition-all duration-300 hover:bg-black/20" style="background-color: rgba(4, 15, 22, 0.6)">
+                        <div class="flex-shrink-0">
+                            <i class="pi pi-bolt text-2xl text-yellow-500"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-white font-medium mb-1">Fast Checkout</h4>
+                            <p class="text-gray-400 text-sm">Save your details for quick and easy purchases</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start space-x-4 p-4 rounded-lg transition-all duration-300 hover:bg-black/20" style="background-color: rgba(4, 15, 22, 0.6)">
+                        <div class="flex-shrink-0">
+                            <i class="pi pi-map-marker text-2xl text-blue-500"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-white font-medium mb-1">Order Tracking</h4>
+                            <p class="text-gray-400 text-sm">Real-time updates on your order status</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start space-x-4 p-4 rounded-lg transition-all duration-300 hover:bg-black/20" style="background-color: rgba(4, 15, 22, 0.6)">
+                        <div class="flex-shrink-0">
+                            <i class="pi pi-tag text-2xl text-green-500"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-white font-medium mb-1">Exclusive Deals</h4>
+                            <p class="text-gray-400 text-sm">Access to special offers and promotions</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- Right Column: Registration Form -->
+        <!-- Right Colmn: Registration Form -->
         <div class="w-full md:w-3/5 p-8 overflow-y-auto" style="max-height: 90vh">
             <h2 class="text-surface-900 dark:text-surface-0 text-2xl font-medium mb-6">Create Your Account</h2>
 
             <div class="p-fluid">
-                <!-- Account Information Section -->
+                <!-- Accuount Information Section -->
                 <div class="mb-5">
                     <div class="text-surface-900 dark:text-surface-0 text-lg font-medium mb-3">Account Information</div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -63,7 +75,24 @@
                     <div class="text-surface-900 dark:text-surface-0 text-lg font-medium mb-3">Contact Information</div>
                     <div class="field mb-3">
                         <label for="phone" class="block text-surface-900 dark:text-surface-0 text-sm font-medium mb-2">Phone Number*</label>
-                        <p-inputMask id="phone" mask="(999) 999-9999" placeholder="(555) 555-5555" [(ngModel)]="registerDto.phone" styleClass="w-full" required></p-inputMask>
+                        <div class="flex gap-2">
+                            <p-dropdown [options]="countryCodes" [(ngModel)]="selectedCountryCode" optionLabel="name" [style]="{ width: '200px' }" placeholder="Select Country" [showClear]="false" (onChange)="onCountryCodeChange()">
+                                <ng-template pTemplate="selectedItem">
+                                    <div class="flex align-items-center gap-2" *ngIf="selectedCountryCode">
+                                        <span>{{ selectedCountryCode.dialCode }}</span>
+                                        <span>{{ selectedCountryCode.name }}</span>
+                                    </div>
+                                </ng-template>
+                                <ng-template let-country pTemplate="item">
+                                    <div class="flex align-items-center gap-2">
+                                        <span>{{ country.dialCode }}</span>
+                                        <span>{{ country.name }}</span>
+                                    </div>
+                                </ng-template>
+                            </p-dropdown>
+                            <p-inputMask id="phone" [mask]="getPhoneMaskPattern()" [(ngModel)]="phoneNumber" placeholder="Enter phone number" styleClass="flex-1" [style]="{ width: '100%' }" [unmask]="true" required> </p-inputMask>
+                        </div>
+                        <small class="text-surface-600 dark:text-surface-400 block mt-1">Select your country code, then enter your phone number</small>
                     </div>
                 </div>
 
@@ -85,7 +114,7 @@
                         </div>
                         <div class="field">
                             <label for="country" class="block text-surface-900 dark:text-surface-0 text-sm font-medium mb-2">Country*</label>
-                            <p-dropdown id="country" [options]="countries" [(ngModel)]="registerDto.country" optionLabel="name" placeholder="Select Country" styleClass="w-full" required></p-dropdown>
+                            <input pInputText id="country" type="text" placeholder="Enter your country" class="w-full" [(ngModel)]="registerDto.country" required />
                         </div>
                     </div>
                 </div>

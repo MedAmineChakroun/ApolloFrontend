@@ -9,13 +9,30 @@ import { PasswordModule } from 'primeng/password';
 import { RippleModule } from 'primeng/ripple';
 import { AuthenticationService } from '../../../core/services/authentication.service';
 import { Register } from '../../../models/Register';
-import { DropdownModule } from 'primeng/dropdown';
 import { InputMaskModule } from 'primeng/inputmask';
+import { DropdownModule } from 'primeng/dropdown';
+
+interface CountryCode {
+    name: string;
+    code: string;
+    dialCode: string;
+}
+
+export interface RegisterDto {
+    name: string;
+    email: string;
+    password: string;
+    city: string;
+    country: string;
+    postalCode: string;
+    address: string;
+    phone: string;
+}
 
 @Component({
     selector: 'app-register',
     standalone: true,
-    imports: [CommonModule, ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, DropdownModule, InputMaskModule],
+    imports: [CommonModule, ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, InputMaskModule, DropdownModule],
     templateUrl: './register.component.html',
     styleUrl: './register.component.scss'
 })
@@ -23,7 +40,21 @@ export class RegisterComponent implements OnInit {
     registerDto = new Register();
     loading = false;
     errorMessage = '';
-    countries: any[] = [];
+    selectedCountryCode: CountryCode | null = null;
+    phoneNumber: string = '';
+
+    countryCodes: CountryCode[] = [
+        { name: 'Tunisia', code: 'TN', dialCode: '+216' },
+        { name: 'United States', code: 'US', dialCode: '+1' },
+        { name: 'United Kingdom', code: 'GB', dialCode: '+44' },
+        { name: 'France', code: 'FR', dialCode: '+33' },
+        { name: 'Germany', code: 'DE', dialCode: '+49' },
+        { name: 'Italy', code: 'IT', dialCode: '+39' },
+        { name: 'Spain', code: 'ES', dialCode: '+34' },
+        { name: 'Morocco', code: 'MA', dialCode: '+212' },
+        { name: 'Algeria', code: 'DZ', dialCode: '+213' },
+        { name: 'Egypt', code: 'EG', dialCode: '+20' }
+    ];
 
     constructor(
         private authService: AuthenticationService,
@@ -31,14 +62,25 @@ export class RegisterComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        // Initialize countries list with proper format
-        this.countries = [
-            { name: 'United States', code: 'US' },
-            { name: 'Canada', code: 'CA' },
-            { name: 'Tunisia', code: 'TN' },
-            { name: 'Germany', code: 'DE' },
-            { name: 'France', code: 'FR' }
-        ];
+        // Set Tunisia as default country code
+        this.selectedCountryCode = this.countryCodes.find((c) => c.code === 'TN') || null;
+    }
+
+    onCountryCodeChange() {
+        // Update the phone mask based on the selected country
+        this.phoneNumber = ''; // Reset phone number when country changes
+    }
+
+    getPhoneMaskPattern(): string {
+        // Different patterns for different countries
+        switch (this.selectedCountryCode?.code) {
+            case 'TN':
+                return '99 999 999';
+            case 'US':
+                return '(999) 999-9999';
+            default:
+                return '99 999 9999';
+        }
     }
 
     register() {
@@ -51,24 +93,28 @@ export class RegisterComponent implements OnInit {
             return;
         }
 
-        // Create a new Register instance with all required fields
-        const registrationData = new Register();
-        registrationData.name = this.registerDto.name;
-        registrationData.email = this.registerDto.email;
-        registrationData.password = this.registerDto.password;
-        registrationData.phone = this.registerDto.phone;
-        registrationData.address = this.registerDto.address;
-        registrationData.city = this.registerDto.city;
-        registrationData.postalCode = this.registerDto.postalCode;
-        registrationData.country = this.registerDto.country;
-        console.log(registrationData);
-        this.authService.register(registrationData).subscribe({
+        // Combine country code and phone number
+        const fullPhoneNumber = this.selectedCountryCode?.dialCode + ' ' + this.phoneNumber;
+
+        // Create registration data object using the interface
+        const registrationData: RegisterDto = {
+            name: this.registerDto.name,
+            email: this.registerDto.email,
+            password: this.registerDto.password,
+            phone: fullPhoneNumber,
+            address: this.registerDto.address,
+            city: this.registerDto.city,
+            postalCode: this.registerDto.postalCode,
+            country: this.registerDto.country
+        };
+
+        console.log('dto', registrationData);
+        this.authService.register(registrationData as Register).subscribe({
             next: () => {
                 console.log('Registration successful');
                 this.router.navigate(['auth/login']);
             },
             error: (err) => {
-                // Process different error formats
                 if (Array.isArray(err)) {
                     this.errorMessage = err.join('\n');
                 } else if (typeof err === 'object') {
@@ -110,7 +156,10 @@ export class RegisterComponent implements OnInit {
         } else if (this.registerDto.password !== this.registerDto.confirmPassword) {
             errors.push('Passwords do not match');
         }
-        if (!this.registerDto.phone) {
+        if (!this.selectedCountryCode) {
+            errors.push('Please select a country code');
+        }
+        if (!this.phoneNumber) {
             errors.push('Phone number is required');
         }
         if (!this.registerDto.address) {
