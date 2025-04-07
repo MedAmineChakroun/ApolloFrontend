@@ -9,10 +9,10 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { CartService } from '../../core/services/cart.service';
 import { Subscription } from 'rxjs';
-import { CartItem } from '../../core/services/cart.service';
 import { ButtonModule } from 'primeng/button';
 import { BadgeModule } from 'primeng/badge';
 import { SidebarModule } from 'primeng/sidebar';
+import { CartItem } from '../../models/cart-item';
 
 @Component({
     selector: 'app-topbar',

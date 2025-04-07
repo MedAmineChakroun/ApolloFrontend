@@ -9,14 +9,14 @@ import { provideStore } from '@ngrx/store';
 import { userReducer } from './app/store/user/user.reducers';
 import { provideToastr } from 'ngx-toastr';
 import { provideAnimations } from '@angular/platform-browser/animations';
-
+import { cartReducer } from './app/store/cart/cart.reducers';
 export const appConfig: ApplicationConfig = {
     providers: [
         provideRouter(appRoutes, withInMemoryScrolling({ anchorScrolling: 'enabled', scrollPositionRestoration: 'enabled' }), withEnabledBlockingInitialNavigation()),
         provideHttpClient(withFetch()),
 
         providePrimeNG({ theme: { preset: Aura, options: { darkModeSelector: '.app-dark' } } }),
-        provideStore({ user: userReducer }),
+        provideStore({ user: userReducer, cart: cartReducer }),
         provideAnimations(),
         provideToastr({
             timeOut: 2500, // Duration before auto-close

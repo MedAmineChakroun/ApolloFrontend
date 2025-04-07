@@ -1,112 +1,123 @@
 <div class="shopping-cart-container">
     <!-- Free shipping banner -->
-    <div class="shipping-banner" *ngIf="cartItems.length > 0">
-        <i class="pi pi-truck"></i>
-        <span>Free Express Shipping on orders over {{ FREE_SHIPPING_THRESHOLD | currency: 'TND' : 'symbol' }}!</span>
-    </div>
 
     <div class="cart-content">
         <!-- Cart header -->
+        <div class="shipping-banner" *ngIf="(cartItemCount$ | async) ?? 0 > 0">
+            <i class="pi pi-truck"></i>
+            <span>Free Express Shipping on orders over {{ FREE_SHIPPING_THRESHOLD | currency: 'TND' : 'symbol' }}!</span>
+        </div>
+
         <div class="cart-header">
             <div class="header-content">
                 <h1>Your Cart</h1>
-                <span class="item-count">{{ cartItems.length }} {{ cartItems.length === 1 ? 'item' : 'items' }}</span>
+                <span class="item-count">{{ (cartItemCount$ | async) ?? 0 }} {{ ((cartItemCount$ | async) ?? 0) === 1 ? 'item' : 'items' }}</span>
             </div>
-            <button *ngIf="cartItems.length > 0" class="clear-button" (click)="clearCart()">
+            <button *ngIf="(cartItemCount$ | async) ?? 0 > 0" class="clear-button" (click)="clearCart()">
                 <i class="pi pi-trash"></i>
                 <span>Clear Cart</span>
             </button>
         </div>
 
         <!-- Shipping eligibility message -->
-        <div *ngIf="cartItems.length > 0" class="shipping-status" [ngClass]="{ eligible: isEligibleForFreeShipping() }">
+        <div *ngIf="((cartItems$ | async) ?? []).length > 0" class="shipping-status" [ngClass]="{ eligible: isEligibleForFreeShipping() }">
             <div class="status-content">
                 <i [class]="isEligibleForFreeShipping() ? 'pi pi-check-circle' : 'pi pi-info-circle'"></i>
                 <span>
-                    {{ isEligibleForFreeShipping() ? 'You are eligible for free shipping!' : 'Add ' + (FREE_SHIPPING_THRESHOLD - getTotal() | currency: 'TND' : 'symbol') + ' more to get free shipping' }}
+                    {{ isEligibleForFreeShipping() ? 'You are eligible for free shipping!' : 'Add ' + (FREE_SHIPPING_THRESHOLD - currentTotal | currency: 'TND' : 'symbol') + ' more to get free shipping' }}
                 </span>
             </div>
             <div class="progress-bar">
-                <div class="progress" [style.width]="(getTotal() / FREE_SHIPPING_THRESHOLD) * 100 + '%'"></div>
+                <div class="progress" [style.width]="getProgressWidth()"></div>
             </div>
         </div>
 
-        <!-- Empty cart message -->
-        <div *ngIf="cartItems.length === 0" class="empty-cart">
-            <div class="empty-cart-content">
-                <i class="pi pi-shopping-cart"></i>
-                <h2>Your cart is empty</h2>
-                <p>Looks like you haven't added any items to your cart yet.</p>
-                <button pButton label="Continue Shopping" icon="pi pi-arrow-right" class="p-button-outlined" (click)="continueShopping()"></button>
-            </div>
-        </div>
-
-        <!-- Cart items -->
-        <div *ngIf="cartItems.length > 0" class="cart-items">
-            <div *ngFor="let item of cartItems; let i = index" class="cart-item">
-                <!-- Product image -->
-                <div class="item-image">
-                    <img [src]="item.product.artImageUrl || 'assets/general/product-default.png'" [alt]="item.product.artIntitule" (error)="handleImageError($event)" />
+        <!-- Use ng-container with ngIf-else pattern for better null handling -->
+        <ng-container *ngIf="cartItems$ | async as cartItems; else loading">
+            <!-- Empty cart message -->
+            <div *ngIf="cartItems.length === 0" class="empty-cart">
+                <div class="empty-cart-content">
+                    <i class="pi pi-shopping-cart"></i>
+                    <h2>Your cart is empty</h2>
+                    <p>Looks like you haven't added any items to your cart yet.</p>
+                    <button pButton label="Continue Shopping" icon="pi pi-arrow-right" class="p-button-outlined" (click)="continueShopping()"></button>
                 </div>
+            </div>
 
-                <!-- Product details -->
-                <div class="item-details">
-                    <div class="item-header">
-                        <h3>{{ item.product.artIntitule }}</h3>
-                        <button class="remove-button" (click)="removeFromCart(i)">
-                            <i class="pi pi-times"></i>
-                        </button>
-                    </div>
-                    <p class="item-category">{{ item.product.artFamille }}</p>
-
-                    <!-- Quantity selector and price -->
-                    <div class="item-actions">
-                        <div class="quantity-selector">
-                            <button (click)="updateQuantity(i, item.quantity - 1)" [disabled]="item.quantity <= 1">
-                                <i class="pi pi-minus"></i>
-                            </button>
-                            <span>{{ item.quantity }}</span>
-                            <button (click)="updateQuantity(i, item.quantity + 1)">
-                                <i class="pi pi-plus"></i>
-                            </button>
+            <!-- Cart with items -->
+            <div *ngIf="cartItems.length > 0" class="cart-main-content">
+                <!-- Cart items -->
+                <div class="cart-items">
+                    <div *ngFor="let item of cartItems" class="cart-item">
+                        <div class="item-image">
+                            <img [src]="item.product.artImageUrl || 'assets/general/product-default.png'" [alt]="item.product.artIntitule" (error)="handleImageError($event)" />
                         </div>
-                        <span class="item-price">{{ item.product.artPrixVente * item.quantity | currency: 'TND' : 'symbol' }}</span>
+                        <div class="item-details">
+                            <div class="item-header">
+                                <h3>{{ item.product.artIntitule }}</h3>
+                                <button class="remove-button" (click)="removeFromCart(item.product.artId)">
+                                    <i class="pi pi-times"></i>
+                                </button>
+                            </div>
+                            <p class="item-category">{{ item.product.artFamille }}</p>
+                            <div class="item-actions">
+                                <div class="quantity-selector">
+                                    <button (click)="updateQuantity(item.product.artId, item.quantity - 1)" [disabled]="item.quantity <= 1">
+                                        <i class="pi pi-minus"></i>
+                                    </button>
+                                    <span>{{ item.quantity }}</span>
+                                    <button (click)="updateQuantity(item.product.artId, item.quantity + 1)">
+                                        <i class="pi pi-plus"></i>
+                                    </button>
+                                </div>
+                                <span class="item-price">{{ item.product.artPrixVente * item.quantity | currency: 'TND' : 'symbol' }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cart summary -->
+                <div class="cart-summary">
+                    <div class="summary-header">
+                        <h3>Order Summary</h3>
+                        <span class="item-count">{{ cartItems.length }} {{ cartItems.length === 1 ? 'item' : 'items' }}</span>
+                    </div>
+
+                    <div class="summary-content">
+                        <div class="summary-row">
+                            <span>Subtotal</span>
+                            <span>{{ (cartTotal$ | async) ?? 0 | currency: 'TND' : 'symbol' }}</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Shipping</span>
+                            <span>{{ isEligibleForFreeShipping() ? 'Free' : '10 TND' }}</span>
+                        </div>
+                        <div class="summary-row total">
+                            <span>Total</span>
+                            <span class="total-price">
+                                {{ ((cartTotal$ | async) ?? 0) + (isEligibleForFreeShipping() ? 0 : 10) | currency: 'TND' : 'symbol' }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="cart-actions">
+                        <button pButton label="Continue Shopping" icon="pi pi-arrow-left" (click)="continueShopping()" class="p-button-outlined"></button>
+                        <button pButton label="Proceed to Checkout" icon="pi pi-check" (click)="checkout()" class="p-button-success"></button>
+                    </div>
+
+                    <div class="shipping-info" *ngIf="!isEligibleForFreeShipping()">
+                        <i class="pi pi-truck"></i>
+                        <span>Add {{ FREE_SHIPPING_THRESHOLD - currentTotal | currency: 'TND' : 'symbol' }} more to get free shipping!</span>
                     </div>
                 </div>
             </div>
-        </div>
+        </ng-container>
 
-        <!-- Cart summary -->
-        <div *ngIf="cartItems.length > 0" class="cart-summary">
-            <div class="summary-header">
-                <h3>Order Summary</h3>
-                <span class="item-count">{{ cartItems.length }} {{ cartItems.length === 1 ? 'item' : 'items' }}</span>
+        <!-- Loading template -->
+        <ng-template #loading>
+            <div class="loading-container">
+                <p>Loading cart items...</p>
             </div>
-
-            <div class="summary-content">
-                <div class="summary-row">
-                    <span>Subtotal</span>
-                    <span>{{ getTotal() | currency: 'TND' : 'symbol' }}</span>
-                </div>
-                <div class="summary-row">
-                    <span>Shipping</span>
-                    <span>{{ isEligibleForFreeShipping() ? 'Free' : '10 TND' }}</span>
-                </div>
-                <div class="summary-row total">
-                    <span>Total</span>
-                    <span class="total-price">{{ getTotal() | currency: 'TND' : 'symbol' }}</span>
-                </div>
-            </div>
-
-            <div class="cart-actions">
-                <button pButton label="Continue Shopping" icon="pi pi-arrow-left" (click)="continueShopping()" class="p-button-outlined"></button>
-                <button pButton label="Proceed to Checkout" icon="pi pi-check" (click)="checkout()" class="p-button"></button>
-            </div>
-
-            <div class="shipping-info" *ngIf="!isEligibleForFreeShipping()">
-                <i class="pi pi-truck"></i>
-                <span>Add {{ FREE_SHIPPING_THRESHOLD - getTotal() | currency: 'TND' : 'symbol' }} more to get free shipping!</span>
-            </div>
-        </div>
+        </ng-template>
     </div>
 </div>

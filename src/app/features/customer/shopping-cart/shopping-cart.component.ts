@@ -1,79 +1,91 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ButtonModule } from 'primeng/button';
-import { InputNumberModule } from 'primeng/inputnumber';
-import { CartService } from '../../../core/services/cart.service';
-import { CartItem } from '../../../core/services/cart.service';
-import { Subscription } from 'rxjs';
-import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ButtonModule } from 'primeng/button';
+import { ToastrService } from 'ngx-toastr';
+import { Store } from '@ngrx/store';
+import { CartState } from '../../../store/cart/cart.reducers';
+import { selectCartItems, selectCartItemCount, selectCartTotal } from '../../../store/cart/cart.selectors';
+import { Observable } from 'rxjs';
+import * as CartActions from '../../../store/cart/cart.actions';
+import { CartItem } from '../../../models/cart-item';
+import { CartService } from '../../../core/services/cart.service';
+
 @Component({
     selector: 'app-shopping-cart',
     standalone: true,
-    imports: [CommonModule, ButtonModule, InputNumberModule, FormsModule],
+    imports: [CommonModule, ButtonModule],
     templateUrl: './shopping-cart.component.html',
     styleUrls: ['./shopping-cart.component.css']
 })
-export class ShoppingCartComponent implements OnInit, OnDestroy {
-    cartItems: CartItem[] = [];
-    private cartSubscription?: Subscription;
-    readonly FREE_SHIPPING_THRESHOLD = 500;
+export class ShoppingCartComponent implements OnInit {
+    cartItems$: Observable<CartItem[]>;
+    cartItemCount$: Observable<number>;
+    cartTotal$: Observable<number>;
+    FREE_SHIPPING_THRESHOLD = 500;
+    currentTotal = 0;
 
     constructor(
-        private cartService: CartService,
-        private router: Router
-    ) {}
+        private router: Router,
+        private toastr: ToastrService,
+        private store: Store<{ cart: CartState }>,
+        private cartService: CartService
+    ) {
+        this.cartItems$ = this.store.select(selectCartItems);
+        this.cartItemCount$ = this.store.select(selectCartItemCount);
+        this.cartTotal$ = this.store.select(selectCartTotal);
 
-    ngOnInit() {
-        this.cartSubscription = this.cartService.getCartItems().subscribe((items) => {
-            this.cartItems = items;
+        // Subscribe to keep track of current total
+        this.cartTotal$.subscribe((total) => {
+            this.currentTotal = total;
         });
     }
 
-    ngOnDestroy() {
-        if (this.cartSubscription) {
-            this.cartSubscription.unsubscribe();
+    ngOnInit(): void {}
+
+    removeFromCart(productId: number): void {
+        this.store.dispatch(CartActions.removeFromCart({ productId }));
+        this.toastr.success('Item removed from cart');
+    }
+
+    updateQuantity(productId: number, quantity: number): void {
+        if (quantity > 0) {
+            this.store.dispatch(CartActions.updateQuantity({ productId, quantity }));
+            this.toastr.success('Quantity updated');
         }
     }
 
-    updateQuantity(index: number, newQuantity: number) {
-        if (newQuantity > 0) {
-            const item = this.cartItems[index];
-            if (item) {
-                this.cartService.updateQuantity(Number(item.product.artId), newQuantity);
-            }
-        }
+    clearCart(): void {
+        this.store.dispatch(CartActions.clearCart());
+        this.toastr.info('Cart cleared');
     }
 
-    removeFromCart(index: number) {
-        const item = this.cartItems[index];
-        if (item) {
-            this.cartService.removeFromCart(item.product.artId);
-        }
-    }
-
-    clearCart() {
-        this.cartService.clearCart();
-    }
-
-    getTotal(): number {
-        return this.cartService.getCartTotal();
-    }
-
-    isEligibleForFreeShipping(): boolean {
-        return this.getTotal() >= this.FREE_SHIPPING_THRESHOLD;
-    }
-
-    checkout() {
-        this.router.navigate(['/store/checkout']);
-    }
-
-    continueShopping() {
+    continueShopping(): void {
         this.router.navigate(['/store/products']);
     }
 
-    handleImageError(event: Event): void {
-        const img = event.target as HTMLImageElement;
-        img.src = 'assets/general/product-default.png';
+    checkout(): void {
+        this.toastr.info('Checkout functionality coming soon!');
+    }
+
+    handleImageError(event: any): void {
+        event.target.src = 'assets/general/product-default.png';
+    }
+
+    isEligibleForFreeShipping(): boolean {
+        return this.currentTotal >= this.FREE_SHIPPING_THRESHOLD;
+    }
+
+    getProgressWidth(): string {
+        const progress = (this.currentTotal / this.FREE_SHIPPING_THRESHOLD) * 100;
+        return `${Math.min(progress, 100)}%`;
+    }
+
+    getTotal(): Observable<number> {
+        return this.cartService.getCartTotal();
+    }
+
+    getItemCount(): Observable<number> {
+        return this.cartService.getCartItemCount();
     }
 }
