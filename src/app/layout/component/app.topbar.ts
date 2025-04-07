@@ -263,7 +263,7 @@ export class AppTopbar implements OnInit, OnDestroy {
     }
 
     navigateToCart() {
-        this.router.navigate(['/store/customer/cart']);
+        this.router.navigate(['/store/products/cart']);
     }
 
     removeFromCart(index: number) {
