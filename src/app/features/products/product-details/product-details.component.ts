@@ -1,23 +1,23 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterModule, Router } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
-import { CardModule } from 'primeng/card';
 import { TagModule } from 'primeng/tag';
-import { ToastrService } from 'ngx-toastr';
-import { CartService } from '../../../core/services/cart.service';
-// import { WishlistService } from '../../../core/services/wishlist.service';
-import { ProductsService } from '../../../core/services/products.service';
-import { Product } from '../../../models/Product';
-import { RippleModule } from 'primeng/ripple';
 import { SkeletonModule } from 'primeng/skeleton';
+import { TooltipModule } from 'primeng/tooltip';
+import { RippleModule } from 'primeng/ripple';
+import { ProductsService } from '../../../core/services/products.service';
+import { CartService } from '../../../core/services/cart.service';
+import { Product } from '../../../models/Product';
+import { ToastrService } from 'ngx-toastr';
+
+type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | undefined;
 
 @Component({
     selector: 'app-product-details',
     standalone: true,
-    imports: [CommonModule, RouterModule, ButtonModule, CardModule, TagModule, RippleModule, SkeletonModule],
-    templateUrl: './product-details.component.html',
-    styleUrls: ['./product-details.component.css']
+    imports: [CommonModule, RouterModule, ButtonModule, TagModule, SkeletonModule, TooltipModule, RippleModule],
+    templateUrl: './product-details.component.html'
 })
 export class ProductDetailsComponent implements OnInit {
     product: Product | null = null;
@@ -26,39 +26,40 @@ export class ProductDetailsComponent implements OnInit {
 
     constructor(
         private route: ActivatedRoute,
-        private router: Router,
-        private productService: ProductsService,
+        private productsService: ProductsService,
         private cartService: CartService,
-        // private wishlistService: WishlistService,
         private toastr: ToastrService
     ) {}
 
     ngOnInit() {
-        const productId = this.route.snapshot.paramMap.get('id');
-        if (productId) {
-            this.loadProductDetails(productId);
-        } else {
-            this.error = 'Product ID not found';
-        }
+        this.route.params.subscribe((params) => {
+            const productId = params['id'];
+            if (productId) {
+                this.loadProduct(productId);
+            }
+        });
     }
 
-    loadProductDetails(productId: string) {
+    private loadProduct(productId: string) {
         const id = parseInt(productId, 10);
         if (isNaN(id)) {
             this.error = 'Invalid product ID';
             return;
         }
-        this.productService.getProductById(id).subscribe({
+
+        this.productsService.getProductById(id).subscribe({
             next: (response: any) => {
-                if (response) {
+                if (response?.data) {
+                    this.product = response.data;
+                } else if (response) {
                     this.product = response;
                 } else {
                     this.error = 'Product not found';
                 }
             },
-            error: (error) => {
-                console.error('Error loading product details:', error);
-                this.error = 'Failed to load product details. Please try again later.';
+            error: (err) => {
+                console.error('Error loading product:', err);
+                this.error = 'Failed to load product details';
             }
         });
     }
@@ -67,49 +68,36 @@ export class ProductDetailsComponent implements OnInit {
         event.target.src = this.DEFAULT_PRODUCT_IMAGE;
     }
 
-    addToCart(product: Product) {
-        this.cartService.addToCart(product);
-        this.toastr.success(`${product.artIntitule} added to cart`, 'Added to Cart', {
-            timeOut: 2000,
-            progressBar: true,
-            progressAnimation: 'increasing',
-            positionClass: 'toast-top-right'
-        });
-    }
-
-    // toggleWishlist(product: Product) {
-    //     if (this.isInWishlist(product)) {
-    //         this.wishlistService.removeFromWishlist(product);
-    //         this.toastr.info(`${product.artIntitule} removed from wishlist`, 'Removed from Wishlist', {
-    //             timeOut: 2000,
-    //             progressBar: true,
-    //             progressAnimation: 'increasing',
-    //             positionClass: 'toast-top-right'
-    //         });
-    //     } else {
-    //         this.wishlistService.addToWishlist(product);
-    //         this.toastr.success(`${product.artIntitule} added to wishlist`, 'Added to Wishlist', {
-    //             timeOut: 2000,
-    //             progressBar: true,
-    //             progressAnimation: 'increasing',
-    //             positionClass: 'toast-top-right'
-    //         });
-    //     }
-    // }
-
-    // isInWishlist(product: Product): boolean {
-    //    return this.wishlistService.isInWishlist(product);
-    // }
-
     getStockStatus(stockValue: number): string {
         return stockValue > 0 ? 'IN STOCK' : 'OUT OF STOCK';
     }
 
-    getStockSeverity(stockValue: number): 'success' | 'danger' {
+    getStockSeverity(stockValue: number): TagSeverity {
         return stockValue > 0 ? 'success' : 'danger';
     }
 
     isOutOfStock(stockValue: number): boolean {
         return stockValue === 0;
+    }
+
+    addToCart(product: Product) {
+        this.cartService.addToCart(product);
+
+        // Show success toast
+        this.toastr.success(`${product.artIntitule} added to cart`, 'Added to Cart', {
+            timeOut: 2000,
+            progressBar: true,
+            progressAnimation: 'increasing',
+            positionClass: 'toast-bottom-right'
+        });
+
+        // Add animation to cart icon (optional)
+        const cartIcon = document.querySelector('.cart-icon');
+        if (cartIcon) {
+            cartIcon.classList.add('animate-bounce');
+            setTimeout(() => {
+                cartIcon.classList.remove('animate-bounce');
+            }, 1000);
+        }
     }
 }
