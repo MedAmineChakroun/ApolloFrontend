@@ -101,8 +101,8 @@
                     </div>
 
                     <div class="cart-actions">
-                        <button pButton label="Continue Shopping" icon="pi pi-arrow-left" (click)="continueShopping()" class="p-button-outlined"></button>
-                        <button pButton label="Proceed to Checkout" icon="pi pi-check" (click)="checkout()" class="p-button-success"></button>
+                        <button pButton label="Continue Shopping" (click)="continueShopping()" class="p-button-outlined"></button>
+                        <button pButton label="Proceed to Checkout" (click)="checkout()" class="p-button-primary" [disabled]="(cartItemCount$ | async) === 0"></button>
                     </div>
 
                     <div class="shipping-info" *ngIf="!isEligibleForFreeShipping()">

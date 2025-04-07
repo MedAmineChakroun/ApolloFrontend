@@ -65,7 +65,7 @@ export class ShoppingCartComponent implements OnInit {
     }
 
     checkout(): void {
-        this.toastr.info('Checkout functionality coming soon!');
+        this.router.navigate(['/store/customer/checkout']);
     }
 
     handleImageError(event: any): void {
