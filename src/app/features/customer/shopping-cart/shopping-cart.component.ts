@@ -2,11 +2,11 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { CartService } from '../../../core/services/cart.service';
+import { CartItem } from '../../../core/services/cart.service';
 import { Subscription } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { CartItem, CartService } from '../../../core/services/cart.service';
-
 @Component({
     selector: 'app-shopping-cart',
     standalone: true,
@@ -40,7 +40,7 @@ export class ShoppingCartComponent implements OnInit, OnDestroy {
         if (newQuantity > 0) {
             const item = this.cartItems[index];
             if (item) {
-                this.cartService.updateQuantity(item.product.artId, newQuantity);
+                this.cartService.updateQuantity(Number(item.product.artId), newQuantity);
             }
         }
     }
@@ -70,5 +70,10 @@ export class ShoppingCartComponent implements OnInit, OnDestroy {
 
     continueShopping() {
         this.router.navigate(['/store/products']);
+    }
+
+    handleImageError(event: Event): void {
+        const img = event.target as HTMLImageElement;
+        img.src = 'assets/general/product-default.png';
     }
 }

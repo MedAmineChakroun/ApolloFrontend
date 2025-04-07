@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
+import { ProductDetailsComponent } from './product-details/product-details.component';
 import { products } from './products-list/products-list.component';
 
 export default [
-    { path: '', component: products }
-    // { path: 'products', component: ProductsComponent },
-    // { path: 'product/:id', component: ProductComponent },
+    { path: '', component: products },
+    { path: ':id', component: ProductDetailsComponent }
 ] as Routes;

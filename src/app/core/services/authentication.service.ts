@@ -139,7 +139,7 @@ export class AuthenticationService {
                 tiersPays: client.tiersPays,
                 tiersTel1: client.tiersTel1
             };
-            console.log('clientData:', clientData);
+            //console.log('clientData:', clientData);
             this.store.dispatch(setUser({ client: clientData }));
         });
     }

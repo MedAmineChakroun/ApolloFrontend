@@ -16,7 +16,9 @@ export class ProductsService {
     getProductsByFamille(famille?: string) {
         return this.http.get<Product[]>(`https://localhost:7257/api/Produits/byFamille?famille=${famille}`);
     }
-
+    getProductById(id: number): Observable<Product> {
+        return this.http.get<Product>(`https://localhost:7257/api/Produits/${id}`);
+    }
     /**
      * Extract products from API response, handling different response formats
      * @param response API response

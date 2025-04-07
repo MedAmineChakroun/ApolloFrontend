@@ -13,6 +13,9 @@ import { Product } from '../../../models/Product';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputGroupModule } from 'primeng/inputgroup';
+import { CartService } from '../../../core/services/cart.service';
+import { ToastrService } from 'ngx-toastr';
+import { RippleModule } from 'primeng/ripple';
 
 // Define the allowed severity types for p-tag
 type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' | undefined;
@@ -26,7 +29,7 @@ interface SortOption {
 @Component({
     selector: 'app-products-list',
     standalone: true,
-    imports: [CommonModule, DataViewModule, FormsModule, SelectButtonModule, PickListModule, OrderListModule, TagModule, ButtonModule, DropdownModule, InputTextModule, InputGroupModule],
+    imports: [CommonModule, DataViewModule, FormsModule, SelectButtonModule, PickListModule, OrderListModule, TagModule, ButtonModule, DropdownModule, InputTextModule, InputGroupModule, RippleModule],
     templateUrl: './products-list.component.html',
     styleUrls: ['./products-list.component.css'],
     providers: [ProductsService]
@@ -64,7 +67,9 @@ export class products implements OnInit {
     constructor(
         private productService: ProductsService,
         private route: ActivatedRoute,
-        private router: Router
+        private router: Router,
+        private toastr: ToastrService,
+        private cartService: CartService
     ) {}
 
     // Method to handle image loading errors
@@ -333,5 +338,32 @@ export class products implements OnInit {
 
     isOutOfStock(stockValue: number): boolean {
         return stockValue === 0;
+    }
+    addToCart(product: Product) {
+        this.cartService.addToCart(product);
+
+        // Show success toast
+        this.toastr.success(`${product.artIntitule} added to cart`, 'Added to Cart', {
+            timeOut: 2000,
+            progressBar: true,
+            progressAnimation: 'increasing',
+            positionClass: 'toast-bottom-right'
+        });
+
+        // Add animation to cart icon (optional)
+        const cartIcon = document.querySelector('.cart-icon');
+        if (cartIcon) {
+            cartIcon.classList.add('animate-bounce');
+            setTimeout(() => {
+                cartIcon.classList.remove('animate-bounce');
+            }, 1000);
+        }
+    }
+
+    /**
+     * Navigate to product details page
+     */
+    navigateToProductDetails(productId: string) {
+        this.router.navigate(['/store/products', productId]);
     }
 }
