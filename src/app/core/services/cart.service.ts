@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, take } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Product } from '../../models/Product';
 import { CartItem } from '../../models/cart-item';
@@ -24,9 +24,27 @@ export class CartService {
     }
 
     addToCart(product: Product, quantity: number = 1): void {
-        const item: CartItem = { product, quantity };
-        this.store.dispatch(CartActions.addToCart({ item }));
-        this.saveCartToStorage();
+        // Use take(1) to get the current state and complete the subscription
+        this.getCartItems()
+            .pipe(take(1))
+            .subscribe((items) => {
+                const existingItem = items.find((item) => item.product.artId === product.artId);
+
+                if (existingItem) {
+                    // If item exists, update its quantity
+                    this.store.dispatch(
+                        CartActions.updateQuantity({
+                            productId: product.artId,
+                            quantity: existingItem.quantity + quantity
+                        })
+                    );
+                } else {
+                    // If item doesn't exist, add new item
+                    const item: CartItem = { product, quantity };
+                    this.store.dispatch(CartActions.addToCart({ item }));
+                }
+                this.saveCartToStorage();
+            });
     }
 
     removeFromCart(productId: number): void {
@@ -53,8 +71,12 @@ export class CartService {
     }
 
     private saveCartToStorage(): void {
-        this.store.select(selectCartItems).subscribe((items) => {
-            localStorage.setItem('cart', JSON.stringify(items));
-        });
+        // Use take(1) to avoid memory leaks and infinite loops
+        this.store
+            .select(selectCartItems)
+            .pipe(take(1))
+            .subscribe((items) => {
+                localStorage.setItem('cart', JSON.stringify(items));
+            });
     }
 }
