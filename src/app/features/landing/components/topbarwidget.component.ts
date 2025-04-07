@@ -37,7 +37,7 @@ import { AuthenticationService } from '../../../core/services/authentication.ser
                 <ng-template #notAuthenticated>
                     <div class="flex gap-2">
                         <button pButton pRipple label="Login" routerLink="/auth/login" [rounded]="true" [text]="true"></button>
-                        <button pButton pRipple label="Register" routerLink="/auth/login" [rounded]="true"></button>
+                        <button pButton pRipple label="Register" routerLink="/auth/register" [rounded]="true"></button>
                     </div>
                 </ng-template>
             </div>
@@ -52,7 +52,7 @@ import { AuthenticationService } from '../../../core/services/authentication.ser
 
                     <div class="flex flex-col mt-4 space-y-2" *ngIf="!authService.isAuthenticated()">
                         <button pButton pRipple label="Login" routerLink="/auth/login" [rounded]="true" class="w-full"></button>
-                        <button pButton pRipple label="Register" routerLink="/auth/login" [rounded]="true" severity="secondary" class="w-full"></button>
+                        <button pButton pRipple label="Register" routerLink="/auth/register" [rounded]="true" severity="secondary" class="w-full"></button>
                     </div>
                     <div class="mt-4" *ngIf="authService.isAuthenticated()">
                         <button pButton pRipple label="My Profile" (click)="navigateMobile(['/store/customer/profile'])" icon="pi pi-user" class="w-full"></button>
