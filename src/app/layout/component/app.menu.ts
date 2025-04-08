@@ -188,12 +188,12 @@ export class AppMenu implements OnInit {
                     {
                         label: 'FAQ',
                         icon: 'pi pi-fw pi-question',
-                        routerLink: ['/help/faq']
+                        routerLink: ['/store/help/faqs']
                     },
                     {
                         label: 'Contact Us',
                         icon: 'pi pi-fw pi-envelope',
-                        routerLink: ['/help/contact']
+                        routerLink: ['/store/help/contact']
                     }
                 ]
             }

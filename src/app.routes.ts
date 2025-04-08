@@ -9,7 +9,6 @@ import { TermsConditions } from './app/features/auth/terms-conditions/terms-cond
 export const appRoutes: Routes = [
     { path: '', component: Landing },
     { path: 'auth', loadChildren: () => import('./app/features/auth/auth.routes') },
-
     // Layout Wrapper for Admin, Business, and Customer
     {
         path: 'store',
@@ -38,6 +37,10 @@ export const appRoutes: Routes = [
                 loadChildren: () => import('./app/features/customer/customer.routes'),
                 canActivate: [AuthGuard, RoleGuard],
                 data: { roles: ['customer'] }
+            },
+            {
+                path: 'help',
+                loadChildren: () => import('./app/features/shared/shared.routes')
             }
         ]
     },

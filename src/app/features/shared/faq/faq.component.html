@@ -1,0 +1,25 @@
+<div class="faq-container">
+    <div class="faq-header">
+        <h1>Frequently Asked Questions</h1>
+        <p>Everything you need to know about Apollo Store</p>
+    </div>
+
+    <div class="faq-list">
+        <div class="faq-item" *ngFor="let faq of faqs">
+            <div class="faq-question">
+                <h3>Q: {{ faq.header }}</h3>
+            </div>
+            <div class="faq-answer">
+                <p>A: {{ faq.content }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="faq-contact">
+        <h2>Need more help?</h2>
+        <div class="faq-buttons">
+            <button pButton label="Email Support" icon="pi pi-envelope" class="p-button-outlined"></button>
+            <button pButton label="Call Us" icon="pi pi-phone" class="p-button-outlined"></button>
+        </div>
+    </div>
+</div>
