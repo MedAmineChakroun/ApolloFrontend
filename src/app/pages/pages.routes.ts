@@ -1,9 +1,4 @@
 import { Routes } from '@angular/router';
-import { Crud } from './crud/crud';
-import { Empty } from './empty/empty';
+import { TermsConditions } from '../features/auth/terms-conditions/terms-conditions';
 
-export default [
-    { path: 'crud', component: Crud },
-    { path: 'empty', component: Empty },
-    { path: '**', redirectTo: '/notfound' }
-] as Routes;
+export default [{ path: '**', redirectTo: '/notfound' }] as Routes;

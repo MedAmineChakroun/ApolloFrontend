@@ -10,11 +10,12 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { RippleModule } from 'primeng/ripple';
-import { AppFloatingConfigurator } from '../../../layout/component/app.floatingconfigurator';
+import { AuthNavbar } from '../auth-navbar/auth-navbar.component';
 
 @Component({
     selector: 'app-login',
-    imports: [CommonModule, ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, AppFloatingConfigurator],
+    standalone: true,
+    imports: [CommonModule, ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, AuthNavbar],
     templateUrl: './login.component.html',
     styleUrl: './login.component.scss'
 })

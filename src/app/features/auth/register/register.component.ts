@@ -11,6 +11,8 @@ import { AuthenticationService } from '../../../core/services/authentication.ser
 import { Register } from '../../../models/Register';
 import { InputMaskModule } from 'primeng/inputmask';
 import { DropdownModule } from 'primeng/dropdown';
+import { FormStateService } from './form-state.service';
+import { AuthNavbar } from '../auth-navbar/auth-navbar.component';
 
 interface CountryCode {
     name: string;
@@ -32,7 +34,7 @@ export interface RegisterDto {
 @Component({
     selector: 'app-register',
     standalone: true,
-    imports: [CommonModule, ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, InputMaskModule, DropdownModule],
+    imports: [CommonModule, ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, InputMaskModule, DropdownModule, AuthNavbar],
     templateUrl: './register.component.html',
     styleUrl: './register.component.scss'
 })
@@ -58,12 +60,21 @@ export class RegisterComponent implements OnInit {
 
     constructor(
         private authService: AuthenticationService,
-        private router: Router
+        private router: Router,
+        private formStateService: FormStateService
     ) {}
 
     ngOnInit() {
-        // Set Tunisia as default country code
-        this.selectedCountryCode = this.countryCodes.find((c) => c.code === 'TN') || null;
+        // Try to restore form state if exists
+        const savedState = this.formStateService.getFormState();
+        if (savedState) {
+            this.registerDto = savedState.registerData;
+            this.phoneNumber = savedState.phoneNumber;
+            this.selectedCountryCode = savedState.selectedCountryCode;
+        } else {
+            // Set Tunisia as default country code (only if no saved state)
+            this.selectedCountryCode = this.countryCodes.find((c) => c.code === 'TN') || null;
+        }
     }
 
     onCountryCodeChange() {
@@ -112,6 +123,8 @@ export class RegisterComponent implements OnInit {
         this.authService.register(registrationData as Register).subscribe({
             next: () => {
                 console.log('Registration successful');
+                // Clear form state on successful registration
+                this.formStateService.clearFormState();
                 this.router.navigate(['auth/login']);
             },
             error: (err) => {
@@ -185,5 +198,11 @@ export class RegisterComponent implements OnInit {
         }
 
         return true;
+    }
+
+    openTermsConditions() {
+        // Save form state before navigating
+        this.formStateService.saveFormState(this.registerDto, this.phoneNumber, this.selectedCountryCode);
+        this.router.navigate(['/auth/terms-conditions']);
     }
 }

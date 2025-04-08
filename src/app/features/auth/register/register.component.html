@@ -1,5 +1,6 @@
-<div class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-[100vw] overflow-hidden p-4">
-    <div class="flex flex-col md:flex-row w-full max-w-7xl bg-surface-0 dark:bg-surface-900 shadow-lg rounded-xl overflow-hidden">
+<auth-navbar></auth-navbar>
+<div class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-[100vw] overflow-hidden p-4 pt-16">
+    <div class="flex flex-col md:flex-row w-full max-w-7xl bg-surface-0 dark:bg-surface-900 shadow-lg rounded-xl overflow-hidden my-8">
         <!-- Left Column: Branding and Welcome Section -->
         <div class="w-full md:w-2/5 p-8 flex flex-col justify-center items-center" style="background-color: #001219">
             <img class="w-24 mb-8" src="assets/general/ApolloLogo.PNG" alt="Apollo Logo" />
@@ -123,7 +124,7 @@
                 <div class="field-checkbox mb-4">
                     <p-checkbox id="agreeTerms" [(ngModel)]="registerDto.agreeTerms" [binary]="true" required></p-checkbox>
                     <label for="agreeTerms" class="ml-2 text-surface-700 dark:text-surface-300"
-                        >I agree to the <a href="#" class="text-primary font-medium">Terms of Service</a> and <a href="#" class="text-primary font-medium">Privacy Policy</a></label
+                        >I agree to the <a (click)="openTermsConditions()" class="text-primary font-medium">Terms of Service</a> and <a (click)="openTermsConditions()" class="text-primary font-medium">Privacy Policy</a></label
                     >
                 </div>
 

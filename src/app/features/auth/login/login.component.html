@@ -1,9 +1,8 @@
-<app-floating-configurator></app-floating-configurator>
-
-<div class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-[100vw] overflow-hidden">
-    <div class="flex flex-col items-center justify-center">
+<auth-navbar></auth-navbar>
+<div class="auth-page flex items-center justify-center min-h-screen overflow-hidden">
+    <div class="flex flex-col items-center justify-center py-8 px-4 w-full">
         <div style="border-radius: 56px; padding: 0.3rem; background: linear-gradient(360deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%)">
-            <div class="w-full bg-surface-0 dark:bg-surface-900 py-20 px-8 sm:px-20" style="border-radius: 53px">
+            <div class="w-full bg-surface-0 dark:bg-surface-900 py-16 px-8 sm:px-20" style="border-radius: 53px">
                 <div class="text-center mb-8">
                     <img class="mb-8 w-16 shrink-0 mx-auto" src="assets/general/ApolloLogo.PNG" style="width: 80px" />
                     <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">Welcome Back!</div>
@@ -18,7 +17,7 @@
                     <p-password id="password1" [(ngModel)]="loginDto.password" placeholder="Password" [toggleMask]="true" styleClass="mb-4" [fluid]="true" [feedback]="false"></p-password>
 
                     <p-button (click)="login()" [disabled]="loading" label="Sign In" styleClass="w-full mb-4" severity="success" raised></p-button>
-                    <p style="text-align: center">Dont have an Account? <a class="font-medium no-underline ml-2 text-right cursor-pointer text-primary" routerLink="/auth/register">Register</a></p>
+                    <p style="text-align: center">Don't have an account? <a class="font-medium no-underline ml-2 text-right cursor-pointer text-primary" routerLink="/auth/register">Register</a></p>
                     <div *ngIf="errorMessage" class="mt-4 p-3 border-round bg-red-50 dark:bg-red-900/20 border-1 border-red-200 dark:border-red-800">
                         <ul class="list-none p-0 m-0 text-left">
                             <li *ngFor="let error of errorMessage.split('\n')" class="text-red-500 dark:text-red-300 mb-1 flex align-items-center">
