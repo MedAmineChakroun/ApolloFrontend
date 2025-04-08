@@ -8,17 +8,20 @@ import { Router, RouterModule } from '@angular/router';
     standalone: true,
     imports: [ButtonModule, RippleModule, RouterModule],
     template: /*html*/ `
-        <div class="relative h-screen overflow-hidden bg-gradient-to-br from-gray-900 to-indigo-900">
-            <div class="absolute inset-0 bg-[url('https://public.readdy.ai/ai/img_res/eeb199e695d4efd5daaa5c17d08fd570.jpg')] opacity-40 bg-cover bg-center "></div>
+        <div class="relative min-h-screen overflow-hidden bg-gradient-to-br from-gray-900 to-indigo-900">
+            <div class="absolute inset-0 bg-[url('https://public.readdy.ai/ai/img_res/eeb199e695d4efd5daaa5c17d08fd570.jpg')] opacity-40 bg-cover bg-center"></div>
             <div class="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent"></div>
-            <div class="max-w-7xl mx-auto px-8 h-full relative">
-                <div class="flex items-center h-full">
-                    <div class="w-1/2 text-white">
-                        <h1 class="text-7xl font-bold leading-tight mb-8 text-white">Smart Shopping, Smarter Choices</h1>
-                        <p class="text-xl opacity-100 leading-relaxed mb-12 text-white">Discover the future of e-commerce with AI-powered recommendations that personalize your shopping experience.</p>
-                        <div class="flex gap-6">
-                            <button (click)="navigate()" class="h-14 px-10 bg-white text-black hover:bg-gray-200 text-lg font-medium rounded-lg cursor-pointer">Start Shopping</button>
-                            <button class="h-14 px-10 border-2 border-white text-white hover:bg-white/10 text-lg font-medium rounded-lg cursor-pointer">Explore Features</button>
+
+            <div class="container mx-auto px-6 sm:px-8 h-full relative">
+                <div class="flex items-center justify-start h-screen">
+                    <div class="max-w-2xl text-white pt-20 md:pt-0">
+                        <div class="mb-4 text-primary-400 font-medium tracking-widest uppercase text-sm">Apollo eCommerce</div>
+                        <h1 class="text-5xl sm:text-6xl md:text-7xl font-extrabold leading-tight mb-6 text-white tracking-tight uppercase" style="line-height: 1.2;">Smart Shopping, Smarter Choices</h1>
+                        <div class="w-20 h-1 bg-primary-500 mb-8"></div>
+                        <p class="text-lg sm:text-xl opacity-90 leading-relaxed mb-10 text-white font-light tracking-wide max-w-xl">Discover the future of e-commerce with AI-powered recommendations that personalize your shopping experience.</p>
+                        <div class="flex flex-col sm:flex-row gap-4 sm:gap-6">
+                            <button (click)="navigate()" class="h-14 px-10 bg-white text-black hover:bg-gray-200 text-lg font-medium rounded-lg cursor-pointer transition-all duration-300 shadow-lg hover:shadow-xl">Start Shopping</button>
+                            <button class="h-14 px-10 border-2 border-white text-white hover:bg-white/20 text-lg font-medium rounded-lg cursor-pointer transition-all duration-300">Explore Features</button>
                         </div>
                     </div>
                 </div>
