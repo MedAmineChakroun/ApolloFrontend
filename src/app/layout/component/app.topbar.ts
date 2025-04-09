@@ -154,6 +154,7 @@ import { CartItem } from '../../models/cart-item';
                 <a class="layout-topbar-logo" routerLink="/">
                     <img style="width: 3rem" src="assets/general/ApolloLogo.PNG" alt="Logo" />
                     <span>Apollo Store</span>
+                    <i class="pi pi-shop" style="font-size: 24px"></i>
                 </a>
             </div>
 

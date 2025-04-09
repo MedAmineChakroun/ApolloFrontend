@@ -1,107 +1,125 @@
-.user-profile {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 2rem;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+.user-profile-container {
+    min-height: 100%;
+    background-color: var(--surface-ground);
+}
 
-    .avatar-option {
-        width: 70px;
-        height: 70px;
-        cursor: pointer;
-        transition:
-            transform 0.3s,
-            box-shadow 0.3s;
-    }
-    .avatar-option:hover {
-        transform: scale(1.1);
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+:host ::ng-deep {
+    .p-card {
+        border-radius: 12px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+        overflow: hidden;
     }
 
-    .blur-overlay {
-        filter: blur(2px);
-        transition: filter 0.3s ease-in-out;
+    .p-inputtext {
+        width: 100%;
     }
 
-    /* Custom toast animation */
-    #profileToast {
-        animation: slideFade 0.8s ease-in-out;
+    .p-inputtext.ng-invalid.ng-touched {
+        border-color: var(--red-500);
     }
 
-    @keyframes slideFade {
-        0% {
-            opacity: 0;
-            transform: translateX(100%);
-        }
-        100% {
-            opacity: 1;
-            transform: translateX(0);
-        }
+    .p-inputgroup-addon {
+        background-color: var(--surface-100);
+        color: var(--primary-color);
+        border-color: var(--surface-300);
     }
 
-    h2 {
-        text-align: center;
-        margin-bottom: 1.5rem;
-        color: #333;
-    }
-
-    .form-group {
-        margin-bottom: 1.5rem;
-
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: bold;
-            color: #555;
+    .p-button {
+        &.p-button-rounded {
+            width: 36px;
+            height: 36px;
         }
 
-        .form-control {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-size: 1rem;
-            color: #333;
+        &.bg-white {
+            background-color: white !important;
+            color: var(--primary-color) !important;
 
-            &::placeholder {
-                color: #aaa;
-            }
-        }
-    }
-
-    .form-actions {
-        text-align: center;
-
-        .btn {
-            padding: 0.75rem 1.5rem;
-            font-size: 1rem;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-
-            &.btn-primary {
-                background-color: #007bff;
-                color: #fff;
-
-                &:hover {
-                    background-color: #0056b3;
-                }
+            &:hover {
+                background-color: white !important;
+                box-shadow: 0 0 0 1px var(--primary-color);
             }
         }
     }
 }
-.toast-container {
-    font-size: 14px;
-    font-weight: bold;
-}
 
-.avatar-wrapper {
+.avatar-container {
     position: relative;
-    width: fit-content;
-    margin: auto;
+    width: 150px;
+    height: 150px;
+    margin: 0 auto;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 4px solid var(--surface-200);
+        transition: all 0.3s ease;
+    }
+
+    .avatar-actions {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        display: flex;
+        gap: 8px;
+    }
+
+    .avatar-action-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+
+        &:hover {
+            transform: translateY(-2px);
+        }
+    }
+}
+
+.bg-primary {
+    background-color: var(--primary-color);
+}
+
+.bg-danger {
+    background-color: var(--red-500);
+}
+
+.text-success {
+    color: var(--green-500);
+}
+
+.border-bottom {
+    border-bottom: 1px solid var(--surface-200);
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.5rem;
+    border-radius: 16px;
+    font-size: 0.75rem;
+    font-weight: 600;
+
+    &.badge-primary {
+        background-color: var(--primary-100);
+        color: var(--primary-700);
+    }
+
+    &.badge-success {
+        background-color: var(--green-100);
+        color: var(--green-700);
+    }
+}
+
+.account-sidebar {
+    background-color: var(--surface-50);
+    border-radius: 8px;
+    padding: 1rem;
 }
 
 .avatar-loading-overlay {
@@ -115,14 +133,7 @@
     justify-content: center;
     background-color: rgba(255, 255, 255, 0.7);
     border-radius: 50%;
-    z-index: 1;
-}
-
-.avatar-image {
-    width: 150px;
-    height: 150px;
-    object-fit: cover;
-    transition: opacity 0.3s ease;
+    z-index: 2;
 }
 
 .opacity-50 {

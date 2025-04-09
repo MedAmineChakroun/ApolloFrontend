@@ -10,6 +10,7 @@ import { clearUser, setUser } from '../../store/user/user.actions';
 import { jwtDecode } from 'jwt-decode';
 import { Client } from '../../models/Client';
 import { UserService } from './client-service.service';
+import { clearCart } from '../../store/cart/cart.actions';
 interface DecodedToken {
     ClientId: string;
     UserName: string;
@@ -65,7 +66,9 @@ export class AuthenticationService {
 
     logout(): void {
         localStorage.removeItem('jwtToken');
+        localStorage.removeItem('cart');
         this.store.dispatch(clearUser());
+        this.store.dispatch(clearCart());
         this.authStatusSubject.next(false);
     }
 

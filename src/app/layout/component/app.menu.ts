@@ -18,10 +18,13 @@ import { ActivatedRoute } from '@angular/router';
     imports: [CommonModule, AppMenuitem, RouterModule, FormsModule, SliderModule, InputTextModule, ButtonModule, ScrollerModule],
     template: /*html*/ `
         <ul class="layout-menu">
+            <li class="layout-menuitem-category">
+                <span>Menu</span>
+            </li>
             <!-- Primary Navigation - All Products link -->
             <li class="mb-3">
                 <a class="flex align-items-center cursor-pointer py-3 px-3 surface-hover border-round transition-colors transition-duration-150 w-full menu-button" (click)="navigateToAllProducts()">
-                    <i class="pi pi-shopping-cart mr-2 text-primary"></i>
+                    <i class="pi pi-shopping-cart mr-2 text-primary-400"></i>
                     <span class="font-medium">All Products</span>
                 </a>
             </li>
@@ -53,7 +56,7 @@ import { ActivatedRoute } from '@angular/router';
             </li>
             <li>
                 <a class="flex align-items-center cursor-pointer py-3 px-3 surface-hover border-round transition-colors transition-duration-150 w-full menu-button" (click)="navigateToOnSale()">
-                    <i class="pi pi-check-circle mr-2 text-green-500"></i>
+                    <i class="pi pi-check-circle mr-2 "></i>
                     <span class="font-medium">In Stock Only</span>
                 </a>
             </li>
@@ -143,7 +146,6 @@ import { ActivatedRoute } from '@angular/router';
 
             .menu-button {
                 border: 1px solid var(--surface-200);
-                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             }
 
             .menu-button:hover {
@@ -178,7 +180,7 @@ export class AppMenu implements OnInit {
         this.model = [
             {
                 label: 'Account',
-                icon: 'pi pi-fw pi-user',
+                icon: 'pi pi-fw pi-angle-right',
                 items: this.getAccountMenuItems()
             },
             {

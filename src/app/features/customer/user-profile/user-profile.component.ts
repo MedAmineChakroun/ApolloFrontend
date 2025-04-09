@@ -11,6 +11,9 @@ import { Client } from '../../../models/Client';
 import { jwtDecode } from 'jwt-decode';
 import { updateUser } from '../../../store/user/user.actions';
 import { InputMaskModule } from 'primeng/inputmask';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { InputTextModule } from 'primeng/inputtext';
+
 interface DecodedToken {
     Id: string;
     ClientId: string;
@@ -25,7 +28,7 @@ interface DecodedToken {
 @Component({
     selector: 'app-user-profile',
     standalone: true,
-    imports: [ReactiveFormsModule, CommonModule, ButtonModule, InputMaskModule],
+    imports: [ReactiveFormsModule, CommonModule, ButtonModule, InputMaskModule, ProgressSpinnerModule, InputTextModule],
     templateUrl: './user-profile.component.html',
     styleUrls: ['./user-profile.component.scss']
 })

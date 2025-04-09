@@ -26,7 +26,7 @@
             </div>
         </div>
 
-        <p-dataview [value]="filteredProducts" [layout]="layout" [paginator]="true" [rows]="9" emptyMessage="No products found matching your criteria">
+        <p-dataview [value]="filteredProducts" [layout]="layout" [paginator]="true" [rows]="16" emptyMessage="No products found matching your criteria">
             <ng-template #header>
                 <div class="flex flex-col md:flex-row justify-between items-center gap-4">
                     <!-- Search Bar -->
@@ -103,18 +103,18 @@
             </ng-template>
 
             <ng-template #grid let-items>
-                <div class="grid grid-cols-12 gap-4">
-                    <div *ngFor="let product of items; let i = index" class="col-span-12 sm:col-span-6 lg:col-span-4 p-2">
+                <div class="grid grid-cols-12 gap-0">
+                    <div *ngFor="let product of items; let i = index" class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 p-2">
                         <div class="p-6 border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 rounded flex flex-col h-full cursor-pointer hover:shadow-lg transition-shadow duration-200">
-                            <div class="bg-surface-50 flex justify-center rounded p-6" (click)="navigateToProductDetails(product.artId)">
+                            <div class="bg-surface-50 flex justify-center rounded p-4" (click)="navigateToProductDetails(product.artId)">
                                 <div class="relative mx-auto">
-                                    <img [src]="product.artImageUrl" [alt]="product.artIntitule" class="card-img-top" (error)="handleProductImageError($event)" style="height: 200px; object-fit: cover" />
-                                    <div *ngIf="isOutOfStock(product.artEtat)" class="absolute bg-black/70 rounded" style="left: 4px; top: 4px">
+                                    <img [src]="product.artImageUrl" [alt]="product.artIntitule" class="card-img-top" (error)="handleProductImageError($event)" style="height: 150px; object-fit: contain" />
+                                    <div *ngIf="isOutOfStock(product.artEtat)" class="absolute rounded" style="left: 4px; top: 4px">
                                         <p-tag [value]="getStockStatus(product.artEtat)" [severity]="getStockSeverity(product.artEtat)"></p-tag>
                                     </div>
                                 </div>
                             </div>
-                            <div class="pt-6 flex flex-col flex-grow">
+                            <div class="pt-4 flex flex-col flex-grow">
                                 <div class="flex flex-row justify-between items-start gap-2">
                                     <div>
                                         <span class="font-medium text-surface-500 dark:text-surface-400 text-sm">{{ product.artFamille }}</span>
@@ -122,21 +122,13 @@
                                         <div class="text-sm text-surface-400">{{ product.artUnite }}</div>
                                     </div>
                                 </div>
-                                <div class="flex flex-col gap-4 mt-6">
+                                <div class="flex flex-col gap-4 mt-auto">
                                     <div class="flex justify-between items-center">
                                         <span class="text-2xl font-semibold">{{ product.artPrixVente | currency: 'TND' : 'symbol' : '1.2-2' }}</span>
                                     </div>
-                                    <div class="flex gap-2 mt-auto">
-                                        <p-button
-                                            (onClick)="addToCart(product)"
-                                            icon="pi pi-shopping-cart"
-                                            label="Ajouter au panier"
-                                            [disabled]="isOutOfStock(product.artEtat)"
-                                            class="flex-auto whitespace-nowrap"
-                                            styleClass="w-full"
-                                            raised
-                                        ></p-button>
-                                        <p-button icon="pi pi-heart" styleClass="h-full" [outlined]="true"></p-button>
+                                    <div class="flex gap-2">
+                                        <p-button (onClick)="addToCart(product)" icon="pi pi-shopping-cart" label="Ajouter au panier" [disabled]="isOutOfStock(product.artEtat)" styleClass="w-full" raised></p-button>
+                                        <p-button icon="pi pi-heart" styleClass="w-3rem h-full" [outlined]="true"></p-button>
                                     </div>
                                 </div>
                             </div>
