@@ -32,15 +32,21 @@
                 <small *ngIf="contactForm.get('message')?.invalid && contactForm.get('message')?.touched" class="p-error text-danger font-bold"> Message is required </small>
             </div>
 
-            <div class="flex justify-content-end">
-                <p-button type="submit" label="Send Message" icon="pi pi-send" [disabled]="contactForm.invalid" styleClass="w-auto"></p-button>
+            <div class="flex justify-between items-center mt-4">
+                <!-- Submit button on the right -->
+                <p-button type="submit" label="Send Message" icon="pi pi-send" [disabled]="contactForm.invalid || loading" styleClass="w-auto"></p-button>
+                <!-- Loading spinner on the left -->
+                <div *ngIf="loading" class="flex items-center text-primary">
+                    <i class="pi pi-spinner pi-spin mr-2 text-xl text-purple-500"></i>
+                    <span class="text-purple-500">Sending message...</span>
+                </div>
             </div>
         </form>
 
         <ng-template pTemplate="footer">
             <div class="text-center text-gray-600 text-sm">
                 <p>
-                    You can also reach us at: <a href="mailto:{{ recipientEmail }}" class="text-primary">{{ recipientEmail }} </a>
+                    You can also reach us at: <a class="text-purple-500" href="mailto:{{ recipientEmail }}">{{ recipientEmail }} </a>
                 </p>
             </div>
         </ng-template>

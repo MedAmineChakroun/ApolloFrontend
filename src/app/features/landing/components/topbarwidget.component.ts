@@ -22,13 +22,13 @@ import { AuthenticationService } from '../../../core/services/authentication.ser
                 </a>
 
                 <nav class="hidden lg:flex space-x-8">
-                    <a (click)="router.navigate(['/landing'], { fragment: 'home' })" [ngClass]="{ 'text-white': !scrolled, 'text-black': scrolled }" class="hover:text-gray-300 transition cursor-pointer ">Home</a>
+                    <a (click)="router.navigate([''], { fragment: 'hero' })" [ngClass]="{ 'text-white': !scrolled, 'text-black': scrolled }" class="hover:text-gray-300 transition cursor-pointer ">Home</a>
 
                     <a (click)="router.navigate(['/store/products'])" [ngClass]="{ 'text-white': !scrolled, 'text-black': scrolled }" class="hover:text-gray-300 transition cursor-pointer">Store</a>
 
-                    <a (click)="router.navigate(['/landing'], { fragment: 'highlights' })" [ngClass]="{ 'text-white': !scrolled, 'text-black': scrolled }" class="hover:text-gray-300 transition cursor-pointer">About Us</a>
+                    <a (click)="router.navigate([''], { fragment: 'features' })" [ngClass]="{ 'text-white': !scrolled, 'text-black': scrolled }" class="hover:text-gray-300 transition cursor-pointer">Features</a>
 
-                    <a (click)="router.navigate(['/landing'], { fragment: 'pricing' })" [ngClass]="{ 'text-white': !scrolled, 'text-black': scrolled }" class="hover:text-gray-300 transition cursor-pointer">Contact</a>
+                    <a (click)="router.navigate([''], { fragment: 'highlights' })" [ngClass]="{ 'text-white': !scrolled, 'text-black': scrolled }" class="hover:text-gray-300 transition cursor-pointer">About us</a>
                 </nav>
 
                 <ng-container *ngIf="authService.isAuthenticated(); else notAuthenticated">
@@ -45,10 +45,10 @@ import { AuthenticationService } from '../../../core/services/authentication.ser
             <!-- Mobile Menu -->
             <div *ngIf="mobileMenuOpen" class="lg:hidden mobile-menu">
                 <div class="flex flex-col p-4 bg-white/95 shadow-lg backdrop-blur-md">
-                    <a (click)="navigateMobile(['/landing'], { fragment: 'home' })" class="mobile-menu-item">Home</a>
+                    <a (click)="navigateMobile([''], { fragment: 'hero' })" class="mobile-menu-item">Home</a>
                     <a (click)="navigateMobile(['/store/products'])" class="mobile-menu-item">Store</a>
-                    <a (click)="navigateMobile(['/landing'], { fragment: 'highlights' })" class="mobile-menu-item">About Us</a>
-                    <a (click)="navigateMobile(['/landing'], { fragment: 'pricing' })" class="mobile-menu-item">Contact</a>
+                    <a (click)="navigateMobile([''], { fragment: 'features' })" class="mobile-menu-item">Features</a>
+                    <a (click)="navigateMobile([''], { fragment: 'highlights' })" class="mobile-menu-item">About us</a>
 
                     <div class="flex flex-col mt-4 space-y-2" *ngIf="!authService.isAuthenticated()">
                         <button pButton pRipple label="Login" routerLink="/auth/login" [rounded]="true" class="w-full"></button>

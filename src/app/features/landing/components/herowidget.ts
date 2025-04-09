@@ -8,7 +8,7 @@ import { Router, RouterModule } from '@angular/router';
     standalone: true,
     imports: [ButtonModule, RippleModule, RouterModule],
     template: /*html*/ `
-        <div class="relative min-h-screen overflow-hidden bg-gradient-to-br from-gray-900 to-indigo-900">
+        <div id="hero" class="relative min-h-screen overflow-hidden bg-gradient-to-br from-gray-900 to-indigo-900">
             <div class="absolute inset-0 bg-[url('https://public.readdy.ai/ai/img_res/eeb199e695d4efd5daaa5c17d08fd570.jpg')] opacity-40 bg-cover bg-center"></div>
             <div class="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent"></div>
 

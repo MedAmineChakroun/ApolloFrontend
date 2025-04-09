@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
-
+import { Router } from '@angular/router';
 @Component({
     selector: 'app-faq',
     standalone: true,
@@ -10,6 +10,7 @@ import { ButtonModule } from 'primeng/button';
     styleUrl: './faq.component.css'
 })
 export class FaqComponent {
+    constructor(private router: Router) {}
     faqs = [
         {
             header: 'What products does Apollo Store offer?',
@@ -46,4 +47,7 @@ export class FaqComponent {
                 'Yes! We offer seasonal promotions, new customer discounts, and an Apollo Rewards program. Join our mailing list to stay updated on special offers, and create an account to automatically enroll in our loyalty program to earn points on every purchase.'
         }
     ];
+    navigateToContact() {
+        this.router.navigate(['/store/help/contact']);
+    }
 }

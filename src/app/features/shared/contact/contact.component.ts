@@ -5,6 +5,8 @@ import { CardModule } from 'primeng/card';
 import { InputTextarea } from 'primeng/inputtextarea';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ContactService } from '../../../core/services/contact.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'app-contact',
@@ -16,8 +18,12 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 export class ContactComponent implements OnInit {
     recipientEmail = 'medaminechakroun520@gmail.com';
     contactForm!: FormGroup;
-
-    constructor(private fb: FormBuilder) {}
+    loading: boolean = false;
+    constructor(
+        private fb: FormBuilder,
+        private contactService: ContactService,
+        private toast: ToastrService
+    ) {}
 
     ngOnInit(): void {
         this.initForm();
@@ -33,10 +39,21 @@ export class ContactComponent implements OnInit {
 
     onSubmit(): void {
         if (this.contactForm.valid) {
+            this.loading = true;
             console.log('Form submitted:', this.contactForm.value);
-            // TODO: Implement actual form submission logic
-            // Reset form after submission
-            this.contactForm.reset();
+            this.contactService.sendEmail(this.contactForm.value).subscribe({
+                next: (response) => {
+                    console.log('Email sent:', response);
+                    this.toast.success('Email sent successfully');
+                    this.contactForm.reset();
+                    this.loading = false;
+                },
+                error: (err) => {
+                    console.error('Email sending failed:', err);
+                    this.toast.error('Email sending failed');
+                    this.loading = false;
+                }
+            });
         } else {
             // Mark all fields as touched to trigger validation messages
             Object.keys(this.contactForm.controls).forEach((key) => {
