@@ -1,0 +1,66 @@
+.contact-container {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+:host ::ng-deep .p-card {
+    border-radius: 12px;
+    background-color: #ffffff;
+}
+
+:host ::ng-deep .p-card .p-card-content {
+    padding: 1.5rem;
+}
+
+:host ::ng-deep .p-inputtext:enabled:focus {
+    box-shadow:
+        0 0 0 2px #ffffff,
+        0 0 0 4px var(--primary-color, #3b82f6);
+    border-color: var(--primary-color, #3b82f6);
+}
+
+:host ::ng-deep .p-button {
+    transition: all 0.2s;
+}
+
+:host ::ng-deep .p-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.text-primary {
+    color: var(--primary-color, #3b82f6);
+}
+
+.text-danger {
+    color: var(--red-500, #ef4444) !important;
+}
+
+:host ::ng-deep .p-error {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+    20%,
+    60% {
+        transform: translateX(-5px);
+    }
+    40%,
+    80% {
+        transform: translateX(5px);
+    }
+}
+
+@media (max-width: 640px) {
+    .contact-container {
+        margin: 1rem auto;
+    }
+}

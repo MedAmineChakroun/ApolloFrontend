@@ -1,0 +1,48 @@
+<div class="contact-container">
+    <p-card styleClass="shadow-3 p-4">
+        <ng-template pTemplate="header">
+            <div class="text-center my-3">
+                <h2 class="text-3xl font-bold text-primary-400">Contact Us</h2>
+                <p class="text-gray-600 mt-2">We'd love to hear from you</p>
+            </div>
+        </ng-template>
+
+        <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+            <div class="field mb-4">
+                <label for="email" class="block text-900 font-medium mb-2">Email</label>
+                <span class="p-input-icon-left w-full">
+                    <i class="pi pi-envelope"></i>
+                    <input id="email" type="email" pInputText formControlName="email" class="w-full" placeholder="Your email address" />
+                </span>
+                <small *ngIf="contactForm.get('email')?.invalid && contactForm.get('email')?.touched" class="p-error text-danger font-bold"> Please enter a valid email address </small>
+            </div>
+
+            <div class="field mb-4">
+                <label for="subject" class="block text-900 font-medium mb-2">Subject</label>
+                <span class="p-input-icon-left w-full">
+                    <i class="pi pi-tag"></i>
+                    <input id="subject" type="text" pInputText formControlName="subject" class="w-full" placeholder="Message subject" />
+                </span>
+                <small *ngIf="contactForm.get('subject')?.invalid && contactForm.get('subject')?.touched" class="p-error text-danger font-bold"> Subject is required </small>
+            </div>
+
+            <div class="field mb-4">
+                <label for="message" class="block text-900 font-medium mb-2">Message</label>
+                <textarea id="message" pInputTextarea formControlName="message" [rows]="5" class="w-full" placeholder="Your message"></textarea>
+                <small *ngIf="contactForm.get('message')?.invalid && contactForm.get('message')?.touched" class="p-error text-danger font-bold"> Message is required </small>
+            </div>
+
+            <div class="flex justify-content-end">
+                <p-button type="submit" label="Send Message" icon="pi pi-send" [disabled]="contactForm.invalid" styleClass="w-auto"></p-button>
+            </div>
+        </form>
+
+        <ng-template pTemplate="footer">
+            <div class="text-center text-gray-600 text-sm">
+                <p>
+                    You can also reach us at: <a href="mailto:{{ recipientEmail }}" class="text-primary">{{ recipientEmail }} </a>
+                </p>
+            </div>
+        </ng-template>
+    </p-card>
+</div>
