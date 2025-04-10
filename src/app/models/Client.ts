@@ -1,5 +1,5 @@
 export interface Client {
-    tiersId: string;
+    tiersId: number;
     tiersCode: string;
     tiersIntitule: string;
     tiersAdresse1: string;

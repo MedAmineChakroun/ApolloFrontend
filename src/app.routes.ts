@@ -27,12 +27,6 @@ export const appRoutes: Routes = [
                 data: { roles: ['admin'] }
             },
             {
-                path: 'fournisseur',
-                loadChildren: () => import('./app/features/fournisseur/fournisseur.routes'),
-                canActivate: [AuthGuard, RoleGuard],
-                data: { roles: ['fournisseur'] }
-            },
-            {
                 path: 'customer',
                 loadChildren: () => import('./app/features/customer/customer.routes'),
                 canActivate: [AuthGuard, RoleGuard],

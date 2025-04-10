@@ -9,4 +9,5 @@ export interface Product {
     artEtat: number;
     artUnite: string;
     artImageUrl: string;
+    artTvaTaux: number;
 }

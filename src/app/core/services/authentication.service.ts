@@ -12,7 +12,7 @@ import { Client } from '../../models/Client';
 import { UserService } from './client-service.service';
 import { clearCart } from '../../store/cart/cart.actions';
 interface DecodedToken {
-    ClientId: string;
+    ClientId: number;
     UserName: string;
     sub: string;
     email: string;
