@@ -28,6 +28,6 @@ export class CommandeService {
         return this.http.get<DocumentVenteLigne[]>(`${this.apiUrlLigneCommande}/piece/${docPiece}`);
     }
     createDocumentventeLigne(docLigneDto: DocLigneDto) {
-        return this.http.post<DocumentVenteLigne>(`${this.apiUrlLigneCommande}`, docLigneDto);
+        return this.http.post<DocumentVenteLigne>(`${this.apiUrlLigneCommande}/create`, docLigneDto);
     }
 }

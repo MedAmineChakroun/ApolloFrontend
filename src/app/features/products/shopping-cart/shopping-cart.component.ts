@@ -6,7 +6,7 @@ import { Store } from '@ngrx/store';
 import { CartState } from '../../../store/cart/cart.reducers';
 import { selectCartItems, selectCartItemCount, selectCartTotal } from '../../../store/cart/cart.selectors';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import * as CartActions from '../../../store/cart/cart.actions';
 import { CartItem } from '../../../models/cart-item';
 import { CartService } from '../../../core/services/cart.service';
@@ -17,6 +17,7 @@ import { DocVenteDto } from '../../../models/Dtos/DocVenteDto';
 import { Router } from '@angular/router';
 import { selectUser } from '../../../store/user/user.selectors';
 import { AuthenticationService } from '../../../core/services/authentication.service';
+import { DocLigneDto } from '../../../models/Dtos/DocLigneDto';
 @Component({
     selector: 'app-shopping-cart',
     standalone: true,
@@ -86,9 +87,6 @@ export class ShoppingCartComponent implements OnInit {
     traiterCommande(): void {
         try {
             this.creerDocument();
-            this.creerDocumentLignes();
-            //  this.clearCart();
-            this.toastr.success('Commande passée avec succès');
         } catch (error) {
             this.toastr.error('Erreur lors de la création de la commande');
         }
@@ -116,16 +114,56 @@ export class ShoppingCartComponent implements OnInit {
         this.commandeService.createDocumentVente(docVenteDto).subscribe({
             next: (response) => {
                 this.docVentePiece = response.docPiece;
-                console.log(this.docVentePiece);
-                console.log(response);
+                console.log('Document created with piece:', this.docVentePiece);
+                // Now that we have the docVentePiece, create the document lines
+                this.creerDocumentLignes();
             },
             error: (error) => {
-                console.log(error);
+                console.error('Error creating document:', error);
+                this.toastr.error('Erreur lors de la création du document');
             }
         });
     }
     creerDocumentLignes(): void {
-        console.log('création des lignes du document');
+        this.cartItems$.pipe(take(1)).subscribe((cartItems) => {
+            let completedLines = 0;
+            const totalLines = cartItems.length;
+
+            if (totalLines === 0) {
+                this.toastr.success('Commande passée avec succès');
+                this.clearCart();
+                return;
+            }
+
+            cartItems.forEach((item) => {
+                const docLigneDto: DocLigneDto = {
+                    ligneDocPiece: this.docVentePiece || '',
+                    ligneArtCode: item.product.artCode,
+                    ligneArtDesi: item.product.artIntitule,
+                    ligneQte: item.quantity,
+                    lignePu: item.product.artPrixVente,
+                    ligneHt: item.product.artPrixVente * item.quantity,
+                    ligneTtc: item.product.artPrixVente * (1 + item.product.artTvaTaux / 100) * item.quantity
+                };
+
+                console.log(docLigneDto);
+                this.commandeService.createDocumentventeLigne(docLigneDto).subscribe({
+                    next: (response) => {
+                        console.log('Document ligne created successfully:', response);
+                        completedLines++;
+                        // Check if all lines are created
+                        if (completedLines === totalLines) {
+                            this.toastr.success('Commande passée avec succès');
+                            this.clearCart();
+                        }
+                    },
+                    error: (error) => {
+                        console.error('Error creating document ligne:', error);
+                        this.toastr.error('Erreur lors de la création des lignes de commande');
+                    }
+                });
+            });
+        });
     }
     removeFromCart(productId: number): void {
         this.store.dispatch(CartActions.removeFromCart({ productId }));
