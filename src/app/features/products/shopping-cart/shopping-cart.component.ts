@@ -15,7 +15,8 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { CommandeService } from '../../../core/services/commande.service';
 import { DocVenteDto } from '../../../models/Dtos/DocVenteDto';
 import { Router } from '@angular/router';
-
+import { selectUser } from '../../../store/user/user.selectors';
+import { AuthenticationService } from '../../../core/services/authentication.service';
 @Component({
     selector: 'app-shopping-cart',
     standalone: true,
@@ -31,6 +32,9 @@ export class ShoppingCartComponent implements OnInit {
     FREE_SHIPPING_THRESHOLD = 500;
     currentTotal = 0;
     totalTht = 0;
+    TiersCode: string | null = null;
+    TiersIntitule: string | null = null;
+    docVentePiece: string | null = null;
 
     constructor(
         private toastr: ToastrService,
@@ -38,7 +42,8 @@ export class ShoppingCartComponent implements OnInit {
         private cartService: CartService,
         private confirmationService: ConfirmationService,
         private commandeService: CommandeService,
-        private router: Router
+        private router: Router,
+        private authService: AuthenticationService
     ) {
         this.cartItems$ = this.store.select(selectCartItems);
         this.cartItemCount$ = this.store.select(selectCartItemCount);
@@ -55,20 +60,73 @@ export class ShoppingCartComponent implements OnInit {
         });
     }
 
-    ngOnInit(): void {}
+    ngOnInit(): void {
+        if (this.authService.isAuthenticated()) {
+            this.getClientFromStore();
+        }
+    }
+
+    isAuthenticated(): boolean {
+        return this.authService.isAuthenticated();
+    }
 
     PasserCommande(): void {
-        this.confirmationService.confirm({
-            message: 'Êtes-vous sûr de vouloir passer cette commande ?',
-            header: 'Confirmation de commande',
-            icon: 'pi pi-exclamation-triangle',
-            accept: () => {
-                //traiter la commande
-                //this.traiterCommande();
+        if (this.authService.isAuthenticated()) {
+            this.confirmationService.confirm({
+                message: 'Êtes-vous sûr de vouloir passer cette commande ?',
+                header: 'Confirmation de commande',
+                icon: 'pi pi-exclamation-triangle',
+                accept: () => {
+                    //traiter la commande
+                    this.traiterCommande();
+                }
+            });
+        }
+    }
+    traiterCommande(): void {
+        try {
+            this.creerDocument();
+            this.creerDocumentLignes();
+            //  this.clearCart();
+            this.toastr.success('Commande passée avec succès');
+        } catch (error) {
+            this.toastr.error('Erreur lors de la création de la commande');
+        }
+    }
+    getClientFromStore(): void {
+        this.store.select(selectUser).subscribe({
+            next: (user) => {
+                if (user) {
+                    this.TiersCode = user.tiersCode;
+                    this.TiersIntitule = user.tiersIntitule;
+                }
+            },
+            error: (error) => {
+                console.log(error);
             }
         });
     }
-
+    creerDocument(): void {
+        const docVenteDto: DocVenteDto = {
+            docTiersCode: this.TiersCode || '',
+            docTiersIntitule: this.TiersIntitule || '',
+            docTht: this.totalTht,
+            docTtc: this.currentTotal
+        };
+        this.commandeService.createDocumentVente(docVenteDto).subscribe({
+            next: (response) => {
+                this.docVentePiece = response.docPiece;
+                console.log(this.docVentePiece);
+                console.log(response);
+            },
+            error: (error) => {
+                console.log(error);
+            }
+        });
+    }
+    creerDocumentLignes(): void {
+        console.log('création des lignes du document');
+    }
     removeFromCart(productId: number): void {
         this.store.dispatch(CartActions.removeFromCart({ productId }));
     }

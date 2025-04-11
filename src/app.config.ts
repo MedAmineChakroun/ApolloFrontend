@@ -10,10 +10,12 @@ import { userReducer } from './app/store/user/user.reducers';
 import { provideToastr } from 'ngx-toastr';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { cartReducer } from './app/store/cart/cart.reducers';
+import { withInterceptors } from '@angular/common/http';
+import { AuthInterceptor } from './app/core/interceptors/interceptor';
 export const appConfig: ApplicationConfig = {
     providers: [
         provideRouter(appRoutes, withInMemoryScrolling({ anchorScrolling: 'enabled', scrollPositionRestoration: 'enabled' }), withEnabledBlockingInitialNavigation()),
-        provideHttpClient(withFetch()),
+        provideHttpClient(withFetch(), withInterceptors([AuthInterceptor])),
 
         providePrimeNG({ theme: { preset: Aura, options: { darkModeSelector: '.app-dark' } } }),
         provideStore({ user: userReducer, cart: cartReducer }),

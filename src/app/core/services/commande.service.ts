@@ -21,7 +21,7 @@ export class CommandeService {
         return this.http.get<DocumentVente[]>(`${this.apiUrl}/client/${tiersCode}`);
     }
     createDocumentVente(docVenteDto: DocVenteDto): Observable<DocumentVente> {
-        return this.http.post<DocumentVente>(`${this.apiUrl}`, docVenteDto);
+        return this.http.post<DocumentVente>(`${this.apiUrl}/create`, docVenteDto);
     }
     //pour Doc Ligne Commande
     getLignesCommandeParDocPiece(docPiece: string): Observable<DocumentVenteLigne[]> {

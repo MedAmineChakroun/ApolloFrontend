@@ -93,7 +93,7 @@
                             <span>{{ totalTht | currency: 'TND' : 'symbol' }}</span>
                         </div>
                         <div class="summary-row">
-                            <span>Subtotal TTC</span>
+                            <span>Total TTC</span>
                             <span>{{ (cartTotal$ | async) ?? 0 | currency: 'TND' : 'symbol' }}</span>
                         </div>
                         <div class="summary-row">
@@ -110,7 +110,7 @@
 
                     <div class="cart-actions">
                         <button pButton label="Continue Shopping" (click)="continueShopping()" class="p-button-outlined"></button>
-                        <button pButton label="Passer Commande" (click)="PasserCommande()" class="p-button-primary" [disabled]="(cartItemCount$ | async) === 0"></button>
+                        <button pButton label="Passer Commande" (click)="PasserCommande()" class="p-button-primary" [disabled]="(cartItemCount$ | async) === 0 || !isAuthenticated()"></button>
                     </div>
 
                     <div class="shipping-info" *ngIf="!isEligibleForFreeShipping()">
