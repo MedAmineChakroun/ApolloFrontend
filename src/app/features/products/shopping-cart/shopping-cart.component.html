@@ -51,7 +51,12 @@
                 <!-- Cart items -->
                 <div class="cart-items">
                     <div *ngFor="let item of cartItems" class="cart-item">
-     <h3>{{ item.product.artIntitule }}</h3>
+                        <div class="item-image">
+                            <img [src]="item.product.artImageUrl || 'assets/general/product-default.png'" [alt]="item.product.artIntitule" (error)="handleImageError($event)" />
+                        </div>
+                        <div class="item-details">
+                            <div class="item-header">
+                                <h3>{{ item.product.artIntitule }}</h3>
                                 <button class="remove-button" (click)="removeFromCart(item.product.artId)">
                                     <i class="pi pi-times"></i>
                                 </button>
@@ -118,10 +123,5 @@
                 <p>Loading cart items...</p>
             </div>
         </ng-template>
-    </div>                        <div class="item-image">
-                            <img [src]="item.product.artImageUrl || 'assets/general/product-default.png'" [alt]="item.product.artIntitule" (error)="handleImageError($event)" />
-                        </div>
-                        <div class="item-details">
-                            <div class="item-header">
-                           
+    </div>
 </div>
