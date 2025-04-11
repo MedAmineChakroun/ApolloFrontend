@@ -10,11 +10,13 @@ import { Observable } from 'rxjs';
 import * as CartActions from '../../../store/cart/cart.actions';
 import { CartItem } from '../../../models/cart-item';
 import { CartService } from '../../../core/services/cart.service';
-
+import { ConfirmationService } from 'primeng/api';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 @Component({
     selector: 'app-shopping-cart',
     standalone: true,
-    imports: [CommonModule, ButtonModule],
+    imports: [CommonModule, ButtonModule, ConfirmDialogModule],
+    providers: [ConfirmationService],
     templateUrl: './shopping-cart.component.html',
     styleUrls: ['./shopping-cart.component.css']
 })
@@ -29,7 +31,8 @@ export class ShoppingCartComponent implements OnInit {
         private router: Router,
         private toastr: ToastrService,
         private store: Store<{ cart: CartState }>,
-        private cartService: CartService
+        private cartService: CartService,
+        private confirmationService: ConfirmationService
     ) {
         this.cartItems$ = this.store.select(selectCartItems);
         this.cartItemCount$ = this.store.select(selectCartItemCount);
@@ -64,8 +67,17 @@ export class ShoppingCartComponent implements OnInit {
         this.router.navigate(['/store/products']);
     }
 
-    checkout(): void {
-        this.router.navigate(['/store/customer/checkout']);
+    PasserCommande(): void {
+        //ask for confirmation
+        this.confirmationService.confirm({
+            message: 'Êtes-vous sûr de vouloir passer commande ?',
+            header: 'Confirmation de commande',
+            icon: 'pi pi-exclamation-triangle',
+            accept: () => {
+                //traiter la commande
+                this.router.navigate(['/store/products']);
+            }
+        });
     }
 
     handleImageError(event: any): void {
