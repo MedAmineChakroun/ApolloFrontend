@@ -1,0 +1,51 @@
+:host {
+    display: block;
+    min-height: 100vh;
+    background-color: #f8f9fa;
+}
+
+.container {
+    max-width: 1200px;
+}
+
+.p-card {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.p-datatable {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.p-datatable .p-datatable-thead > tr > th {
+    background-color: #f8f9fa;
+    color: #495057;
+    font-weight: 600;
+    padding: 1rem;
+}
+
+.p-datatable .p-datatable-tbody > tr > td {
+    padding: 1rem;
+}
+
+.p-datatable .p-datatable-tbody > tr:hover {
+    background-color: #f8f9fa;
+}
+
+.p-tag {
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+}
+
+.p-button.p-button-text {
+    color: #6366f1;
+}
+
+.p-button.p-button-text:hover {
+    background: rgba(99, 102, 241, 0.04);
+}
+
+.p-datatable-sm .p-datatable-tbody > tr > td {
+    padding: 0.5rem;
+}

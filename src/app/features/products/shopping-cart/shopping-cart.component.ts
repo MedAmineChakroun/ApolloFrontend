@@ -10,19 +10,21 @@ import { map, take } from 'rxjs/operators';
 import * as CartActions from '../../../store/cart/cart.actions';
 import { CartItem } from '../../../models/cart-item';
 import { CartService } from '../../../core/services/cart.service';
-import { ConfirmationService } from 'primeng/api';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { CommandeService } from '../../../core/services/commande.service';
 import { DocVenteDto } from '../../../models/Dtos/DocVenteDto';
 import { Router } from '@angular/router';
 import { selectUser } from '../../../store/user/user.selectors';
 import { AuthenticationService } from '../../../core/services/authentication.service';
 import { DocLigneDto } from '../../../models/Dtos/DocLigneDto';
+import { StepperModule } from 'primeng/stepper';
+import { DialogModule } from 'primeng/dialog';
+import { CheckboxModule } from 'primeng/checkbox';
+import { FormsModule } from '@angular/forms';
 @Component({
     selector: 'app-shopping-cart',
     standalone: true,
-    imports: [CommonModule, ButtonModule, ConfirmDialogModule],
-    providers: [ConfirmationService],
+    imports: [CommonModule, ButtonModule, StepperModule, DialogModule, FormsModule, CheckboxModule],
+    providers: [],
     templateUrl: './shopping-cart.component.html',
     styleUrls: ['./shopping-cart.component.css']
 })
@@ -36,12 +38,14 @@ export class ShoppingCartComponent implements OnInit {
     TiersCode: string | null = null;
     TiersIntitule: string | null = null;
     docVentePiece: string | null = null;
+    currentStep = 1;
+    display = false;
+    accepted = false;
 
     constructor(
         private toastr: ToastrService,
         private store: Store<{ cart: CartState }>,
         private cartService: CartService,
-        private confirmationService: ConfirmationService,
         private commandeService: CommandeService,
         private router: Router,
         private authService: AuthenticationService
@@ -60,7 +64,19 @@ export class ShoppingCartComponent implements OnInit {
             this.totalTht = total;
         });
     }
+    set() {
+        if (this.accepted) this.currentStep = 2;
+        else this.currentStep = 3;
+    }
+    open() {
+        this.currentStep = 2;
+        this.display = true;
+    }
 
+    close() {
+        this.currentStep = 1;
+        this.display = false;
+    }
     ngOnInit(): void {
         if (this.authService.isAuthenticated()) {
             this.getClientFromStore();
@@ -73,15 +89,10 @@ export class ShoppingCartComponent implements OnInit {
 
     PasserCommande(): void {
         if (this.authService.isAuthenticated()) {
-            this.confirmationService.confirm({
-                message: 'Êtes-vous sûr de vouloir passer cette commande ?',
-                header: 'Confirmation de commande',
-                icon: 'pi pi-exclamation-triangle',
-                accept: () => {
-                    //traiter la commande
-                    this.traiterCommande();
-                }
-            });
+            //traiter la commande
+            this.currentStep = 3;
+            this.traiterCommande();
+            this.close();
         }
     }
     traiterCommande(): void {

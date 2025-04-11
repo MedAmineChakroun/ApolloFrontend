@@ -1,0 +1,75 @@
+<div class="container mx-auto p-4">
+    <p-card header="My Orders" styleClass="mb-4">
+        <p-table
+            [value]="orders"
+            [rowHover]="true"
+            [rows]="10"
+            [paginator]="true"
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [rowsPerPageOptions]="[10, 25, 50]"
+            styleClass="p-datatable-striped"
+            [expandedRowKeys]="expandedRows"
+            dataKey="docId"
+        >
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 3rem"></th>
+                    <th>Order Number</th>
+                    <th>Date</th>
+                    <th>Total HT</th>
+                    <th>Total TTC</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-order let-expanded="expanded">
+                <tr>
+                    <td>
+                        <button type="button" pButton pRipple (click)="toggleRow(order.docId)" class="p-button-text p-button-rounded p-button-plain" [icon]="isRowExpanded(order.docId) ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
+                    </td>
+                    <td>{{ order.docPiece }}</td>
+                    <td>{{ order.docDate | date: 'mediumDate' }}</td>
+                    <td>{{ order.docTht | currency: 'TND' }}</td>
+                    <td>{{ order.docTtc | currency: 'TND' }}</td>
+                    <td>
+                        <p-tag [value]="getStatusLabel(order.docType)" [severity]="getSeverity(order.docType)"></p-tag>
+                    </td>
+                    <td>
+                        <button pButton pRipple icon="pi pi-download" class="p-button-rounded p-button-text" pTooltip="Download Invoice"></button>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="rowexpansion" let-order>
+                <tr>
+                    <td colspan="7">
+                        <div class="p-4">
+                            <p-table [value]="orderDetails[order.docId]" styleClass="p-datatable-sm">
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th>Product Code</th>
+                                        <th>Description</th>
+                                        <th>Quantity</th>
+                                        <th>Unit Price</th>
+                                        <th>Total HT</th>
+                                        <th>Total TTC</th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-item>
+                                    <tr>
+                                        <td>{{ item.ligneArtCode }}</td>
+                                        <td>{{ item.ligneArtDesi }}</td>
+                                        <td>{{ item.ligneQte }}</td>
+                                        <td>{{ item.lignePu | currency: 'EUR' }}</td>
+                                        <td>{{ item.ligneHt | currency: 'EUR' }}</td>
+                                        <td>{{ item.ligneTtc | currency: 'EUR' }}</td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </p-card>
+</div>

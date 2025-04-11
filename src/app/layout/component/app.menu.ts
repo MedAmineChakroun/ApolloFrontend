@@ -306,7 +306,7 @@ export class AppMenu implements OnInit {
                 {
                     label: 'Orders',
                     icon: 'pi pi-fw pi-shopping-bag',
-                    routerLink: ['/account/orders']
+                    routerLink: ['/store/customer/orders']
                 },
                 {
                     label: 'Wishlist',

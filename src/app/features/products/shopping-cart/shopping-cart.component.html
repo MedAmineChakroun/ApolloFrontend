@@ -1,9 +1,54 @@
-<p-confirmDialog></p-confirmDialog>
-
 <div class="shopping-cart-container">
     <!-- Free shipping banner -->
 
     <div class="cart-content">
+        <div class="cart-stepper" *ngIf="(cartItemCount$ | async) ?? 0 > 0">
+            <div class="card p-1">
+                <p-stepper [value]="currentStep">
+                    <p-step-list>
+                        <p-step [value]="1" [disabled]="true">Creation</p-step>
+                        <p-step [value]="2" [disabled]="true">Terms & Conditions</p-step>
+                        <p-step [value]="3" [disabled]="true">Confirmation</p-step>
+                    </p-step-list>
+                </p-stepper>
+            </div>
+        </div>
+
+        <p-dialog
+            header="Conditions Générales d’Utilisation"
+            [(visible)]="display"
+            [breakpoints]="{ '960px': '75vw' }"
+            [style]="{ width: '50vw', maxWidth: '90vw', maxHeight: '60vh' }"
+            [modal]="true"
+            [draggable]="false"
+            [baseZIndex]="10000"
+            contentStyleClass="pt-0 scrollable-dialog"
+            class="p-0"
+        >
+            <div class="text-sm leading-relaxed px-3 py-4 space-y-4">
+                <p class="text-gray-600">Veuillez lire attentivement les conditions générales suivantes avant de finaliser votre commande :</p>
+                <ul class="list-disc list-inside space-y-2 text-gray-700">
+                    <li><strong>Acceptation :</strong> En poursuivant, vous acceptez les présentes conditions générales d'utilisation.</li>
+                    <li><strong>Exactitude des informations :</strong> Vous confirmez que toutes les informations fournies sont exactes, complètes et à jour.</li>
+                    <li><strong>Utilisation :</strong> Le service est soumis à des règles strictes dans le respect des lois et des bonnes pratiques.</li>
+                    <li><strong>Responsabilités :</strong> L'utilisateur est responsable de l’usage du service. Aucune responsabilité ne saurait être engagée en cas de mauvaise utilisation.</li>
+                    <li><strong>Modifications :</strong> Les conditions peuvent être modifiées à tout moment. Il est de votre responsabilité de les consulter régulièrement.</li>
+                </ul>
+
+                <div class="flex items-center gap-2 mt-4">
+                    <p-checkbox [(ngModel)]="accepted" binary="true" inputId="acceptTerms" (click)="set()"></p-checkbox>
+                    <label for="acceptTerms" class="text-gray-800 cursor-pointer">J’ai lu et j’accepte les conditions générales</label>
+                </div>
+            </div>
+
+            <ng-template pTemplate="footer">
+                <div class="flex justify-end gap-3 px-3 py-2 border-t border-gray-200">
+                    <button pButton label="Annuler" class="p-button-outlined p-button-sm" (click)="close()"></button>
+                    <button pButton label="Accepter" class="p-button-sm" [disabled]="!accepted" (click)="PasserCommande()"></button>
+                </div>
+            </ng-template>
+        </p-dialog>
+
         <!-- Cart header -->
         <div class="shipping-banner" *ngIf="(cartItemCount$ | async) ?? 0 > 0">
             <i class="pi pi-truck"></i>
@@ -110,7 +155,7 @@
 
                     <div class="cart-actions">
                         <button pButton label="Continue Shopping" (click)="continueShopping()" class="p-button-outlined"></button>
-                        <button pButton label="Passer Commande" (click)="PasserCommande()" class="p-button-primary" [disabled]="(cartItemCount$ | async) === 0 || !isAuthenticated()"></button>
+                        <button pButton label="Passer Commande" (click)="open()" class="p-button-primary" [disabled]="(cartItemCount$ | async) === 0 || !isAuthenticated()"></button>
                     </div>
 
                     <div class="shipping-info" *ngIf="!isEligibleForFreeShipping()">
