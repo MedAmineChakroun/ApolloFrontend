@@ -1,17 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { ToastrService } from 'ngx-toastr';
 import { Store } from '@ngrx/store';
 import { CartState } from '../../../store/cart/cart.reducers';
 import { selectCartItems, selectCartItemCount, selectCartTotal } from '../../../store/cart/cart.selectors';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import * as CartActions from '../../../store/cart/cart.actions';
 import { CartItem } from '../../../models/cart-item';
 import { CartService } from '../../../core/services/cart.service';
 import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { CommandeService } from '../../../core/services/commande.service';
+import { DocVenteDto } from '../../../models/Dtos/DocVenteDto';
+import { Router } from '@angular/router';
+
 @Component({
     selector: 'app-shopping-cart',
     standalone: true,
@@ -26,13 +30,15 @@ export class ShoppingCartComponent implements OnInit {
     cartTotal$: Observable<number>;
     FREE_SHIPPING_THRESHOLD = 500;
     currentTotal = 0;
+    totalTht = 0;
 
     constructor(
-        private router: Router,
         private toastr: ToastrService,
         private store: Store<{ cart: CartState }>,
         private cartService: CartService,
-        private confirmationService: ConfirmationService
+        private confirmationService: ConfirmationService,
+        private commandeService: CommandeService,
+        private router: Router
     ) {
         this.cartItems$ = this.store.select(selectCartItems);
         this.cartItemCount$ = this.store.select(selectCartItemCount);
@@ -42,13 +48,29 @@ export class ShoppingCartComponent implements OnInit {
         this.cartTotal$.subscribe((total) => {
             this.currentTotal = total;
         });
+
+        // Subscribe to keep track of total HT
+        this.cartItems$.pipe(map((items) => items.reduce((total, item) => total + item.product.artPrixVente * item.quantity, 0))).subscribe((total) => {
+            this.totalTht = total;
+        });
     }
 
     ngOnInit(): void {}
 
+    PasserCommande(): void {
+        this.confirmationService.confirm({
+            message: 'Êtes-vous sûr de vouloir passer cette commande ?',
+            header: 'Confirmation de commande',
+            icon: 'pi pi-exclamation-triangle',
+            accept: () => {
+                //traiter la commande
+                //this.traiterCommande();
+            }
+        });
+    }
+
     removeFromCart(productId: number): void {
         this.store.dispatch(CartActions.removeFromCart({ productId }));
-        this.toastr.success('Item removed from cart');
     }
 
     updateQuantity(productId: number, quantity: number): void {
@@ -59,25 +81,12 @@ export class ShoppingCartComponent implements OnInit {
     }
 
     clearCart(): void {
-        this.store.dispatch(CartActions.clearCart());
+        this.cartService.clearCart();
         this.toastr.info('Cart cleared');
     }
 
     continueShopping(): void {
         this.router.navigate(['/store/products']);
-    }
-
-    PasserCommande(): void {
-        //ask for confirmation
-        this.confirmationService.confirm({
-            message: 'Êtes-vous sûr de vouloir passer commande ?',
-            header: 'Confirmation de commande',
-            icon: 'pi pi-exclamation-triangle',
-            accept: () => {
-                //traiter la commande
-                this.router.navigate(['/store/products']);
-            }
-        });
     }
 
     handleImageError(event: any): void {
@@ -91,13 +100,5 @@ export class ShoppingCartComponent implements OnInit {
     getProgressWidth(): string {
         const progress = (this.currentTotal / this.FREE_SHIPPING_THRESHOLD) * 100;
         return `${Math.min(progress, 100)}%`;
-    }
-
-    getTotal(): Observable<number> {
-        return this.cartService.getCartTotal();
-    }
-
-    getItemCount(): Observable<number> {
-        return this.cartService.getCartItemCount();
     }
 }

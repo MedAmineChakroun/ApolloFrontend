@@ -89,7 +89,11 @@
 
                     <div class="summary-content">
                         <div class="summary-row">
-                            <span>Subtotal</span>
+                            <span>Total HT</span>
+                            <span>{{ totalTht | currency: 'TND' : 'symbol' }}</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Subtotal TTC</span>
                             <span>{{ (cartTotal$ | async) ?? 0 | currency: 'TND' : 'symbol' }}</span>
                         </div>
                         <div class="summary-row">
