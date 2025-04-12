@@ -1,0 +1,62 @@
+/* Print styles */
+@media print {
+    body * {
+        visibility: hidden;
+    }
+
+    .card,
+    .card * {
+        visibility: visible;
+    }
+
+    .card {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+    }
+
+    button,
+    .p-paginator,
+    .p-button,
+    .no-print {
+        display: none !important;
+    }
+}
+
+/* Additional styling */
+.shadow-2 {
+    box-shadow:
+        0 4px 10px rgba(0, 0, 0, 0.03),
+        0 0 2px rgba(0, 0, 0, 0.06),
+        0 2px 6px rgba(0, 0, 0, 0.12) !important;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+    .p-card .p-card-content {
+        padding: 0.5rem;
+    }
+}
+
+/* Animation for loading state */
+.p-skeleton {
+    animation: pulse 2s infinite ease-in-out;
+}
+
+@keyframes pulse {
+    0% {
+        background-color: rgba(190, 190, 190, 0.2);
+    }
+    50% {
+        background-color: rgba(190, 190, 190, 0.5);
+    }
+    100% {
+        background-color: rgba(190, 190, 190, 0.2);
+    }
+}
+.entete {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}

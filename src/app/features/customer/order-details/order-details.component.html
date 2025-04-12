@@ -1,0 +1,179 @@
+<div class="card">
+    <p-toast></p-toast>
+
+    <!-- Header -->
+    <div class="flex flex-row justify-content-between align-items-center mb-4">
+        <div class="flex align-items-center">
+            <button pButton pRipple icon="pi pi-chevron-left" class="p-button-rounded p-button-text p-button-secondary" pTooltip="Back" tooltipPosition="top" (click)="goBack()"></button>
+            <h2 class="m-0">Invoice #{{ orderDocPiece }}</h2>
+        </div>
+
+        <div class="flex gap-2 mt-3 md:mt-0">
+            <button pButton icon="pi pi-file-pdf" label="Export PDF" (click)="exportPdf()" severity="danger" outlined></button>
+            <button pButton icon="pi pi-print" label="Print" (click)="printInvoice()" class="p-button-secondary"></button>
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="card my-4 surface-section border-round">
+        <p-skeleton height="16rem" styleClass="mb-2"></p-skeleton>
+    </div>
+
+    <!-- Main Content when data is loaded -->
+    <div *ngIf="!loading && CommandeEntete && clientData" class="grid">
+        <!-- Invoice Header Card -->
+        <div class="col-12">
+            <p-card styleClass="shadow-2 mt-3">
+                <div class="grid">
+                    <div class="col-12 md:col-6 lg:col-4 entete">
+                        <!-- Company Info (This would typically be your company's info) -->
+                        <div style="text-align: left">
+                            <div class="text-800 font-bold text-xl mb-2"><i class="pi pi-wallet text-primary-500" style="font-size: 1.5rem"></i> Bill To:</div>
+                            <div class="text-600 font-medium">{{ clientData.tiersIntitule }}</div>
+                            <div class="text-600">{{ clientData.tiersAdresse1 }}</div>
+                            <div class="text-600">{{ clientData.tiersCodePostal }}, {{ clientData.tiersVille }}</div>
+                            <div class="text-600">{{ clientData.tiersPays }}</div>
+                            <div class="text-600">{{ clientData.tiersTel1 }}</div>
+                        </div>
+
+                        <!-- Client Info -->
+                        <div style="text-align: right">
+                            <div class="text-800 font-bold text-xl mb-2">
+                                Apollo Store
+                                <i class="pi pi-shop text-primary-500" style="font-size: 1.5rem"></i>
+                            </div>
+                            <div class="text-600">123 Business Street</div>
+                            <div class="text-600">Business City, 12345</div>
+                            <div class="text-600">contactyourcompany.com</div>
+                            <div class="text-600">+1 234 567 890</div>
+                        </div>
+                    </div>
+                    <p-divider></p-divider>
+                    <!-- Invoice Details -->
+                    <div class="col-12 md:col-6 lg:col-4">
+                        <div class="surface-card p-3 border-round">
+                            <div class="flex justify-content-between mb-2">
+                                <span class="font-medium text-600">Invoice #:</span>
+                                <span class="font-medium">#{{ CommandeEntete.docPiece }}</span>
+                            </div>
+                            <div class="flex justify-content-between mb-2">
+                                <span class="font-medium text-600">Date:</span>
+                                <span class="font-medium">{{ formatDate(CommandeEntete.docDate) }}</span>
+                            </div>
+                            <div class="flex justify-content-between mb-2">
+                                <span class="font-medium text-600">Client Code:</span>
+                                <span class="font-medium">#{{ CommandeEntete.docTiersCode }}</span>
+                            </div>
+                            <div class="flex justify-content-between">
+                                <span class="font-medium text-600">Status:</span>
+                                <p-tag severity="success" value="Passed successfully"></p-tag>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </p-card>
+        </div>
+
+        <!-- Order Lines Table -->
+        <div class="col-12 mt-3">
+            <p-card>
+                <h3>Order Items</h3>
+                <p-table [value]="LignesCommande" [paginator]="LignesCommande.length > 10" [rows]="10" [showCurrentPageReport]="true" responsiveLayout="scroll" styleClass="p-datatable-sm p-datatable-gridlines" [rowHover]="true">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th pSortableColumn="ligneArtCode">Item Code <p-sortIcon field="ligneArtCode"></p-sortIcon></th>
+                            <th pSortableColumn="ligneArtDesi">Description <p-sortIcon field="ligneArtDesi"></p-sortIcon></th>
+                            <th pSortableColumn="ligneQte" class="text-center">Quantity <p-sortIcon field="ligneQte"></p-sortIcon></th>
+                            <th pSortableColumn="lignePu" class="text-right">Unit Price <p-sortIcon field="lignePu"></p-sortIcon></th>
+                            <th pSortableColumn="ligneHt" class="text-right">Total HT <p-sortIcon field="ligneHt"></p-sortIcon></th>
+                            <th pSortableColumn="ligneTtc" class="text-right">Total TTC <p-sortIcon field="ligneTtc"></p-sortIcon></th>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="body" let-item>
+                        <tr>
+                            <td>#{{ item.ligneArtCode }}</td>
+                            <td>{{ item.ligneArtDesi }}</td>
+                            <td class="text-center">{{ item.ligneQte }}</td>
+                            <td class="text-right">{{ item.lignePu | currency: 'TND ' }}</td>
+                            <td class="text-right">{{ item.ligneHt | currency: 'TND ' }}</td>
+                            <td class="text-right">{{ item.ligneTtc | currency: 'TND ' }}</td>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="footer">
+                        <tr>
+                            <td colspan="4" class="text-right font-bold">Subtotal:</td>
+
+                            <td class="text-right">{{ calculateTotal() | currency: 'TND ' }}</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" class="text-right font-bold">Tax:</td>
+
+                            <td class="text-right">{{ calculateTotalTTC() - calculateTotal() | currency: 'TND ' }}</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" class="text-right font-bold text-xl text-primary-500">Total:</td>
+                            <td></td>
+                            <td class="text-right font-bold text-xl text-primary-500">{{ calculateTotalTTC() | currency: 'TND ' }}</td>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="6" class="text-center p-4">No order items found</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </p-card>
+        </div>
+
+        <!-- Additional Information -->
+        <div class="col-12 mt-3">
+            <p-card>
+                <div class="grid">
+                    <div class="col-12 md:col-6">
+                        <h3 class="mb-3">Terms & Conditions</h3>
+                        <ul class="list-none p-0 m-0 mb-3 line-height-3">
+                            <li class="flex align-items-center mb-2">
+                                <i class="pi pi-check-circle text-primary-500 mr-2"></i>
+                                <span>Payment is due within 30 days from the invoice date</span>
+                            </li>
+                            <li class="flex align-items-center mb-2">
+                                <i class="pi pi-check-circle text-primary-500 mr-2"></i>
+                                <span>A late payment fee of 2% per month will be applied to overdue balances</span>
+                            </li>
+                            <li class="flex align-items-center mb-2">
+                                <i class="pi pi-check-circle text-primary-500 mr-2"></i>
+                                <span>All prices are inclusive of applicable taxes unless otherwise stated</span>
+                            </li>
+                            <li class="flex align-items-center mb-2">
+                                <i class="pi pi-check-circle text-primary-500 mr-2"></i>
+                                <span>Goods remain the property of the seller until payment is received in full</span>
+                            </li>
+                            <li class="flex align-items-center">
+                                <i class="pi pi-check-circle text-primary-500 mr-2"></i>
+                                <span>For inquiries regarding this invoice, please contact us!</span>
+                            </li>
+                        </ul>
+
+                        <div class="mt-4 text-center">
+                            <p-divider></p-divider>
+                            <p class="text-600 text-sm">Thank you for your business!</p>
+                        </div>
+                    </div>
+                </div>
+            </p-card>
+        </div>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="!loading && (!CommandeEntete || !clientData)" class="card my-4 surface-section border-round p-4 text-center">
+        <i class="pi pi-exclamation-triangle text-5xl text-yellow-500 mb-3"></i>
+        <h3 class="m-0 mb-3">Unable to load invoice details</h3>
+        <p class="m-0 text-600">There was a problem loading the invoice information. Please try again later.</p>
+        <button pButton label="Go Back" icon="pi pi-arrow-left" class="p-button-outlined mt-4" routerLink="/orders"></button>
+    </div>
+</div>

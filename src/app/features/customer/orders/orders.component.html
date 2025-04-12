@@ -53,7 +53,7 @@
                 <td class="text-right font-bold text-primary-500">{{ order.docTtc | currency: 'TND ' }}</td>
                 <td>
                     <div class="flex gap-2 justify-content-center">
-                        <button pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-text p-button-info" pTooltip="View Details" tooltipPosition="top" (click)="viewOrderDetails()"></button>
+                        <button pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-text p-button-info" pTooltip="View Details" tooltipPosition="top" (click)="viewOrderDetails(order.docPiece)"></button>
                         <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-text p-button-danger" pTooltip="Export PDF" tooltipPosition="top"></button>
                     </div>
                 </td>

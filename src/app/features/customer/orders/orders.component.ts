@@ -82,10 +82,10 @@ export class OrdersComponent implements OnInit {
         });
     }
 
-    viewOrderDetails() {
-        this.toast.success('Order details for ');
-    }
     goToNewOrder() {
         this.router.navigate(['/store/products/cart']);
+    }
+    viewOrderDetails(orderId: string) {
+        this.router.navigate(['/store/customer/orderDetails', orderId]);
     }
 }
