@@ -4,7 +4,7 @@ import { Landing } from './app/features/landing/landing';
 import { Notfound } from './app/pages/notfound/notfound';
 import { AuthGuard } from './app/core/guards/auth.guard';
 import { RoleGuard } from './app/core/guards/role.guard';
-import { TermsConditions } from './app/features/auth/terms-conditions/terms-conditions';
+import { TreeDemo } from './app/pages/uikit/treedemo';
 
 export const appRoutes: Routes = [
     { path: '', component: Landing },

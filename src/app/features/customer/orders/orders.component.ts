@@ -1,128 +1,91 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
-import { ButtonModule } from 'primeng/button';
-import { CardModule } from 'primeng/card';
-import { TagModule } from 'primeng/tag';
-import { TooltipModule } from 'primeng/tooltip';
 import { DocumentVente } from '../../../models/DocumentVente';
-import { DocumentVenteLigne } from '../../../models/DocumentVenteLigne';
-
+import { InputTextModule } from 'primeng/inputtext';
+import { ButtonModule } from 'primeng/button';
+import { RippleModule } from 'primeng/ripple';
+import { TooltipModule } from 'primeng/tooltip';
+import { CardModule } from 'primeng/card';
+import { BadgeModule } from 'primeng/badge';
+import { TagModule } from 'primeng/tag';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
+import { FormsModule } from '@angular/forms';
+import { Table } from 'primeng/table';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { CommandeService } from '../../../core/services/commande.service';
+import { selectUser } from '../../../store/user/user.selectors';
+import { Store } from '@ngrx/store';
 @Component({
     selector: 'app-orders',
     standalone: true,
-    imports: [CommonModule, TableModule, ButtonModule, CardModule, TagModule, TooltipModule],
+    imports: [CommonModule, TableModule, InputTextModule, ButtonModule, RippleModule, TooltipModule, CardModule, BadgeModule, TagModule, ToastModule, FormsModule],
+    providers: [MessageService],
     templateUrl: './orders.component.html',
     styleUrls: ['./orders.component.css']
 })
-export class OrdersComponent {
-    orders: DocumentVente[] = [
-        {
-            docId: 1,
-            docType: 1,
-            docPiece: 'CMD-2024-001',
-            docDate: new Date('2024-03-15'),
-            docTht: 1500,
-            docTtc: 1800,
-            docTiersCode: 'CUST001',
-            docTiersIntitule: 'John Doe'
-        },
-        {
-            docId: 2,
-            docType: 1,
-            docPiece: 'CMD-2024-002',
-            docDate: new Date('2024-03-20'),
-            docTht: 2500,
-            docTtc: 3000,
-            docTiersCode: 'CUST001',
-            docTiersIntitule: 'John Doe'
-        }
-    ];
+export class OrdersComponent implements OnInit {
+    @ViewChild('dt') table!: Table;
+    articleCounts: { [docPiece: string]: number } = {};
+    orders: DocumentVente[] = [];
+    loading: boolean = true;
+    tiersCode: string = '';
+    constructor(
+        private router: Router,
+        private toast: ToastrService,
+        private commandeService: CommandeService,
+        private store: Store
+    ) {}
 
-    orderDetails: { [key: number]: DocumentVenteLigne[] } = {
-        1: [
-            {
-                ligneId: 1,
-                ligneDocPiece: 'CMD-2024-001',
-                ligneArtCode: 'PRD001',
-                ligneArtDesi: 'Product 1',
-                ligneQte: 2,
-                lignePu: 500,
-                ligneHt: 1000,
-                ligneTtc: 1200
+    ngOnInit() {
+        this.loadData();
+    }
+    loadData() {
+        this.store.select(selectUser).subscribe({
+            next: (user) => {
+                if (user && user.tiersCode) {
+                    this.tiersCode = user.tiersCode;
+
+                    // Now fetch data with the correct tiersCode
+                    this.commandeService.getDocumentVenteByTiersCode(this.tiersCode).subscribe({
+                        next: (response) => {
+                            this.orders = response;
+                            this.loadNbLigne();
+                            this.loading = false;
+                        },
+                        error: (err) => {
+                            this.loading = false;
+                            console.error('Error loading orders:', err.message);
+                            this.toast.error('Failed to load orders');
+                        }
+                    });
+                }
             },
-            {
-                ligneId: 2,
-                ligneDocPiece: 'CMD-2024-001',
-                ligneArtCode: 'PRD002',
-                ligneArtDesi: 'Product 2',
-                ligneQte: 1,
-                lignePu: 500,
-                ligneHt: 500,
-                ligneTtc: 600
+            error: (error) => {
+                this.loading = false;
+                console.log(error);
             }
-        ],
-        2: [
-            {
-                ligneId: 3,
-                ligneDocPiece: 'CMD-2024-002',
-                ligneArtCode: 'PRD003',
-                ligneArtDesi: 'Product 3',
-                ligneQte: 3,
-                lignePu: 500,
-                ligneHt: 1500,
-                ligneTtc: 1800
-            },
-            {
-                ligneId: 4,
-                ligneDocPiece: 'CMD-2024-002',
-                ligneArtCode: 'PRD004',
-                ligneArtDesi: 'Product 4',
-                ligneQte: 2,
-                lignePu: 500,
-                ligneHt: 1000,
-                ligneTtc: 1200
-            }
-        ]
-    };
-
-    // Array to hold expanded docIds
-    expandedRows: { [key: string]: boolean } = {};
-
-    toggleRow(docId: number): void {
-        const key = docId.toString();
-        this.expandedRows[key] = !this.expandedRows[key];
-        // Trigger change detection by cloning the object
-        this.expandedRows = { ...this.expandedRows };
+        });
+    }
+    loadNbLigne() {
+        this.orders.forEach((order) => {
+            this.commandeService.getNbLigneCommandeParDocPiece(order.docPiece).subscribe({
+                next: (count) => {
+                    this.articleCounts[order.docPiece] = count;
+                },
+                error: () => {
+                    this.articleCounts[order.docPiece] = 0;
+                }
+            });
+        });
     }
 
-    isRowExpanded(docId: number): boolean {
-        return !!this.expandedRows[docId.toString()];
+    viewOrderDetails() {
+        this.toast.success('Order details for ');
     }
-
-    getSeverity(status: number) {
-        switch (status) {
-            case 1:
-                return 'success';
-            case 2:
-                return 'warn';
-            case 3:
-                return 'danger';
-            default:
-                return 'info';
-        }
-    }
-
-    getStatusLabel(status: number) {
-        switch (status) {
-            case 1:
-                return 'Completed';
-            case 2:
-                return 'Processing';
-            case 3:
-                return 'Cancelled';
-            default:
-                return 'Unknown';
-        }
+    goToNewOrder() {
+        this.router.navigate(['/store/products/cart']);
     }
 }

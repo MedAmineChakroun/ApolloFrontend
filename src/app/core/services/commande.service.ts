@@ -30,4 +30,7 @@ export class CommandeService {
     createDocumentventeLigne(docLigneDto: DocLigneDto) {
         return this.http.post<DocumentVenteLigne>(`${this.apiUrlLigneCommande}/create`, docLigneDto);
     }
+    getNbLigneCommandeParDocPiece(docPiece: string): Observable<number> {
+        return this.http.get<number>(`${this.apiUrlLigneCommande}/piece/nb/${docPiece}`);
+    }
 }

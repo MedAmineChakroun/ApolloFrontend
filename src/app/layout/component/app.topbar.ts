@@ -154,7 +154,6 @@ import { CartItem } from '../../models/cart-item';
                 <a class="layout-topbar-logo" routerLink="/">
                     <img style="width: 3rem" src="assets/general/ApolloLogo.PNG" alt="Logo" />
                     <span>Apollo Store</span>
-                    <i class="pi pi-shop" style="font-size: 24px"></i>
                 </a>
             </div>
 
@@ -192,6 +191,10 @@ import { CartItem } from '../../models/cart-item';
 
                     <!-- Authenticated User Menu Items -->
                     <div *ngIf="isConnected">
+                        <button (click)="navigateToOrders()" class="layout-topbar-action" type="button">
+                            <i class="pi pi-shopping-bag"></i>
+                            <span>Orders</span>
+                        </button>
                         <button (click)="navigateToProfile()" type="button" class="layout-topbar-action">
                             <i class="pi pi-user"></i>
                             <span>Profile</span>
@@ -214,6 +217,10 @@ import { CartItem } from '../../models/cart-item';
                 <!-- Desktop Menu -->
                 <div *ngIf="isConnected" class="layout-topbar-menu hidden lg:block">
                     <div class="layout-topbar-menu-content">
+                        <button (click)="navigateToOrders()" class="layout-topbar-action" type="button">
+                            <i class="pi pi-shopping-bag"></i>
+                            <span>Orders</span>
+                        </button>
                         <button (click)="navigateToProfile()" type="button" class="layout-topbar-action">
                             <i class="pi pi-user"></i>
                             <span>Profile</span>
@@ -302,5 +309,8 @@ export class AppTopbar implements OnInit, OnDestroy {
 
     toggleDarkMode() {
         this.layoutService.layoutConfig.update((state) => ({ ...state, darkTheme: !state.darkTheme }));
+    }
+    navigateToOrders() {
+        this.router.navigate(['/store/customer/orders']);
     }
 }

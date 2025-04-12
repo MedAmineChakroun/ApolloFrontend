@@ -55,7 +55,7 @@
             <span>Free Express Shipping on orders over {{ FREE_SHIPPING_THRESHOLD | currency: 'TND' : 'symbol' }}!</span>
         </div>
 
-        <div class="cart-header">
+        <div class="cart-header" *ngIf="((cartItems$ | async) ?? []).length > 0">
             <div class="header-content">
                 <h1>Your Cart</h1>
                 <span class="item-count">{{ (cartItemCount$ | async) ?? 0 }} {{ ((cartItemCount$ | async) ?? 0) === 1 ? 'item' : 'items' }}</span>
@@ -82,15 +82,16 @@
         <!-- Use ng-container with ngIf-else pattern for better null handling -->
         <ng-container *ngIf="cartItems$ | async as cartItems; else loading">
             <!-- Empty cart message -->
-            <div *ngIf="cartItems.length === 0" class="empty-cart">
-                <div class="empty-cart-content">
-                    <i class="pi pi-shopping-cart"></i>
-                    <h2>Your cart is empty</h2>
-                    <p>Looks like you haven't added any items to your cart yet.</p>
-                    <button pButton label="Continue Shopping" icon="pi pi-arrow-right" class="p-button-outlined" (click)="continueShopping()"></button>
+            <div *ngIf="cartItems.length === 0" class="empty-cart-container">
+                <div class="empty-cart">
+                    <div class="empty-cart-content">
+                        <i class="pi pi-shopping-cart"></i>
+                        <h2>Your cart is empty</h2>
+                        <p>Looks like you haven't added any items to your cart yet.</p>
+                        <button pButton label="Continue Shopping" icon="pi pi-arrow-right" class="p-button-outlined" (click)="continueShopping()"></button>
+                    </div>
                 </div>
             </div>
-
             <!-- Cart with items -->
             <div *ngIf="cartItems.length > 0" class="cart-main-content">
                 <!-- Cart items -->

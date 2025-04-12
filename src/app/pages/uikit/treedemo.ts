@@ -10,12 +10,7 @@ import { NodeService } from '../service/node.service';
     selector: 'app-tree-demo',
     standalone: true,
     imports: [CommonModule, FormsModule, TreeModule, TreeTableModule],
-    template: `
-        <div class="card">
-            <div class="font-semibold text-xl">Tree</div>
-            <p-tree [value]="treeValue" selectionMode="checkbox" [(selection)]="selectedTreeValue"></p-tree>
-        </div>
-
+    template: /*html*/ `
         <div class="card">
             <div class="font-semibold text-xl mb-4">TreeTable</div>
             <p-treetable [value]="treeTableValue" [columns]="cols" selectionMode="checkbox" [(selectionKeys)]="selectedTreeTableValue" dataKey="key" [scrollable]="true" [tableStyle]="{ 'min-width': '50rem' }">
@@ -41,11 +36,7 @@ import { NodeService } from '../service/node.service';
     providers: [NodeService]
 })
 export class TreeDemo implements OnInit {
-    treeValue: TreeNode[] = [];
-
     treeTableValue: TreeNode[] = [];
-
-    selectedTreeValue: TreeNode[] = [];
 
     selectedTreeTableValue = {};
 
@@ -54,7 +45,6 @@ export class TreeDemo implements OnInit {
     nodeService = inject(NodeService);
 
     ngOnInit() {
-        this.nodeService.getFiles().then((files) => (this.treeValue = files));
         this.nodeService.getTreeTableNodes().then((files: any) => (this.treeTableValue = files));
 
         this.cols = [
