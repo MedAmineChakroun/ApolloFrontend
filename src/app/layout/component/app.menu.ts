@@ -309,11 +309,6 @@ export class AppMenu implements OnInit {
                     routerLink: ['/store/customer/orders']
                 },
                 {
-                    label: 'Wishlist',
-                    icon: 'pi pi-fw pi-heart',
-                    routerLink: ['/account/wishlist']
-                },
-                {
                     label: 'Logout',
                     icon: 'pi pi-fw pi-sign-out',
                     command: () => this.logout()

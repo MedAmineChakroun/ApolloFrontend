@@ -88,4 +88,48 @@ export class OrdersComponent implements OnInit {
     viewOrderDetails(orderId: string) {
         this.router.navigate(['/store/customer/orderDetails', orderId]);
     }
+    customSort(event: any) {
+        const field = event.field as keyof DocumentVente | 'articleCount';
+
+        event.data.sort((a: DocumentVente, b: DocumentVente) => {
+            let value1: any;
+            let value2: any;
+
+            if (field === 'articleCount') {
+                value1 = this.articleCounts[a.docPiece] || 0;
+                value2 = this.articleCounts[b.docPiece] || 0;
+            } else {
+                value1 = a[field as keyof DocumentVente];
+                value2 = b[field as keyof DocumentVente];
+            }
+
+            let result = 0;
+
+            if (value1 == null && value2 != null) result = -1;
+            else if (value1 != null && value2 == null) result = 1;
+            else if (value1 == null && value2 == null) result = 0;
+            else if (typeof value1 === 'string' && typeof value2 === 'string') result = value1.localeCompare(value2);
+            else result = value1 < value2 ? -1 : value1 > value2 ? 1 : 0;
+
+            return event.order * result;
+        });
+    }
+    exportCSV() {
+        const headers = ['Order #', 'Customer Code', 'Date', 'Article Count', 'Total HT', 'Total TTC'];
+        const rows = this.orders.map((order) => [order.docPiece, order.docTiersCode, new Date(order.docDate).toLocaleDateString(), this.articleCounts[order.docPiece] || 0, order.docTht, order.docTtc]);
+
+        const csvContent = [headers, ...rows].map((row) => row.map((cell) => `"${cell}"`).join(',')).join('\n');
+
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+
+        link.setAttribute('href', url);
+        link.setAttribute('download', 'My-customer-orders.csv');
+        link.style.visibility = 'hidden';
+
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
 }

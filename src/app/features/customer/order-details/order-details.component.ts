@@ -16,6 +16,10 @@ import { DividerModule } from 'primeng/divider';
 import { SkeletonModule } from 'primeng/skeleton';
 import { CommonModule } from '@angular/common';
 import { Divider } from 'primeng/divider';
+//forpdf exportation
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+import 'jspdf-autotable';
 @Component({
     selector: 'app-order-details',
     templateUrl: './order-details.component.html',
@@ -102,16 +106,123 @@ export class OrderDetailsComponent implements OnInit {
         return this.LignesCommande.reduce((sum, line) => sum + line.ligneTtc, 0);
     }
 
-    exportPdf() {
-        // Implement PDF export functionality here
-        this.messageService.add({ severity: 'success', summary: 'Export', detail: 'Invoice exported as PDF' });
-    }
-
     printInvoice() {
         window.print();
         this.messageService.add({ severity: 'info', summary: 'Print', detail: 'Print dialog opened' });
     }
     goBack() {
         this.router.navigate(['/store/customer/orders']);
+    }
+    exportPdf() {
+        this.messageService.add({ severity: 'info', summary: 'PDF Export', detail: 'Preparing PDF...' });
+
+        const doc = new jsPDF();
+        const fileName = `Invoice-${this.orderDocPiece}-${new Date().toLocaleDateString().replace(/\//g, '-')}.pdf`;
+
+        // Helper function to split text into multiple lines
+        const splitTextToLines = (text: string, maxWidth: number) => {
+            return doc.splitTextToSize(text, maxWidth);
+        };
+
+        // Document title
+        doc.setFontSize(20);
+        doc.text(`Invoice #${this.orderDocPiece}`, 105, 20, { align: 'center' });
+
+        // Customer and company information
+        doc.setFontSize(12);
+        doc.text('Bill To:', 15, 40);
+
+        // Handle long customer name with line breaks
+        const customerName = this.clientData?.tiersIntitule || '';
+        const nameLines = splitTextToLines(customerName, 90);
+        doc.text(nameLines, 15, 45);
+
+        // Calculate new Y position based on number of lines in customer name
+        let yPos = 45 + nameLines.length * 5;
+
+        doc.text(`${this.clientData?.tiersAdresse1}`, 15, yPos);
+        yPos += 5;
+        doc.text(`${this.clientData?.tiersCodePostal}, ${this.clientData?.tiersVille}`, 15, yPos);
+
+        // Company info (right aligned)
+        doc.text('Apollo Store', 150, 40, { align: 'right' });
+        doc.text('123 Business Street', 150, 45, { align: 'right' });
+        doc.text('Business City, 12345', 150, 50, { align: 'right' });
+
+        // Invoice details
+        yPos = Math.max(yPos + 15, 70); // Make sure we have enough space
+        doc.text(`Date: ${this.formatDate(this.CommandeEntete?.docDate || new Date())}`, 15, yPos);
+        yPos += 5;
+        doc.text(`Status: Passed successfully`, 15, yPos);
+
+        // Items table
+        yPos += 10;
+        doc.line(15, yPos, 195, yPos);
+        yPos += 5;
+
+        // Table headers
+        doc.setFont('helvetica', 'bold');
+        doc.text('Item', 15, yPos);
+        doc.text('Description', 45, yPos);
+        doc.text('Qty', 110, yPos);
+        doc.text('Unit Price', 130, yPos);
+        doc.text('Total', 170, yPos);
+
+        doc.setFont('helvetica', 'normal');
+        yPos += 5;
+        doc.line(15, yPos, 195, yPos);
+        yPos += 10;
+
+        // Table content
+        this.LignesCommande.forEach((item) => {
+            doc.text(`#${item.ligneArtCode}`, 15, yPos);
+
+            // Handle long descriptions with line breaks
+            const description = item.ligneArtDesi || '';
+            const descriptionLines = splitTextToLines(description, 60);
+            doc.text(descriptionLines, 45, yPos);
+
+            // Calculate line height based on description length
+            const lineHeight = descriptionLines.length * 5;
+
+            doc.text(item.ligneQte.toString(), 110, yPos);
+            doc.text(item.lignePu.toFixed(2) + ' TND', 130, yPos);
+            doc.text(item.ligneTtc.toFixed(2) + ' TND', 170, yPos);
+
+            // Move to next item position, accounting for multi-line descriptions
+            yPos += Math.max(10, lineHeight);
+
+            // Add new page if necessary
+            if (yPos > 270) {
+                doc.addPage();
+                yPos = 20;
+            }
+        });
+
+        // Add totals
+        yPos += 5;
+        doc.line(15, yPos, 195, yPos);
+        yPos += 10;
+
+        doc.text('Subtotal:', 130, yPos);
+        doc.text(`${this.calculateTotal().toFixed(2)} TND`, 170, yPos);
+        yPos += 8;
+
+        doc.text('Tax:', 130, yPos);
+        doc.text(`${(this.calculateTotalTTC() - this.calculateTotal()).toFixed(2)} TND`, 170, yPos);
+        yPos += 8;
+
+        doc.setFont('helvetica', 'bold');
+        doc.text('Total:', 130, yPos);
+        doc.text(`${this.calculateTotalTTC().toFixed(2)} TND`, 170, yPos);
+
+        // Save the PDF
+        doc.save(fileName);
+
+        this.messageService.add({
+            severity: 'success',
+            summary: 'PDF Exported',
+            detail: `Invoice has been exported as PDF`
+        });
     }
 }

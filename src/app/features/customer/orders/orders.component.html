@@ -3,7 +3,7 @@
         <h2 class="m-0 text-2xl font-medium text-900">Customer Orders</h2>
         <div class="flex gap-2 mt-3 md:mt-0">
             <button pButton pRipple label="New Order" icon="pi pi-plus" class="p-button-success" (click)="goToNewOrder()"></button>
-            <button pButton pRipple label="Export" icon="pi pi-download" class="p-button-outlined"></button>
+            <button pButton pRipple label="Export CSV" icon="pi pi-download" class="p-button-outlined" (click)="exportCSV()"></button>
         </div>
     </div>
 
@@ -24,15 +24,20 @@
         [showCurrentPageReport]="true"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} orders"
         [filterDelay]="0"
+        [customSort]="true"
+        (sortFunction)="customSort($event)"
     >
         <ng-template pTemplate="header">
             <tr>
                 <th pSortableColumn="docPiece" style="min-width: 8rem">Order # <p-sortIcon field="docPiece"></p-sortIcon></th>
                 <th pSortableColumn="docTiersIntitule" style="min-width: 8rem">Customer <p-sortIcon field="docTiersIntitule"></p-sortIcon></th>
-                <th pSortableColumn="docDate" style="min-width: 10rem">Date <p-sortIcon field="docDate"></p-sortIcon></th>
-                <th pSortableCommand="docTht" class="text-right" style="min-width: 8rem">nb pieces <p-sortIcon field="docTht"></p-sortIcon></th>
-                <th pSortableColumn="docTht" class="text-right" style="min-width: 12rem">Total HT <p-sortIcon field="docTht"></p-sortIcon></th>
-                <th pSortableColumn="docTtc" class="text-right" style="min-width: 12rem">Total TTC <p-sortIcon field="docTtc"></p-sortIcon></th>
+                <th pSortableColumn="docDate" style="min-width: 8rem">Date <p-sortIcon field="docDate"></p-sortIcon></th>
+                <th pSortableColumn="articleCount" class="text-right" style="min-width: 6rem">
+                    lignes
+                    <p-sortIcon field="articleCount"></p-sortIcon>
+                </th>
+                <th pSortableColumn="docTht" class="text-right" style="min-width: 10rem">Total HT <p-sortIcon field="docTht"></p-sortIcon></th>
+                <th pSortableColumn="docTtc" class="text-right" style="min-width: 10rem">Total TTC <p-sortIcon field="docTtc"></p-sortIcon></th>
                 <th style="min-width: 10rem" class="text-center">Actions</th>
             </tr>
         </ng-template>
@@ -40,7 +45,7 @@
         <ng-template pTemplate="body" let-order>
             <tr>
                 <td>
-                    <span class="font-medium">{{ order.docPiece }}</span>
+                    <span class="font-medium">#{{ order.docPiece }}</span>
                 </td>
                 <td>
                     <div class="flex flex-column">
@@ -54,7 +59,7 @@
                 <td>
                     <div class="flex gap-2 justify-content-center">
                         <button pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-text p-button-info" pTooltip="View Details" tooltipPosition="top" (click)="viewOrderDetails(order.docPiece)"></button>
-                        <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-text p-button-danger" pTooltip="Export PDF" tooltipPosition="top"></button>
+                        <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-text p-button-danger" pTooltip="Export PDF" tooltipPosition="top" (click)="viewOrderDetails(order.docPiece)"></button>
                     </div>
                 </td>
             </tr>
