@@ -11,6 +11,7 @@ import { ButtonModule } from 'primeng/button';
 import { ProductsService } from '../../core/services/products.service';
 import { ScrollerModule } from 'primeng/scroller';
 import { ActivatedRoute } from '@angular/router';
+import { FamillesService } from '../../core/services/familles.service';
 
 @Component({
     selector: 'app-menu',
@@ -169,7 +170,8 @@ export class AppMenu implements OnInit {
         private authService: AuthenticationService,
         private router: Router,
         private productsService: ProductsService,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+        private famillesService: FamillesService
     ) {}
 
     ngOnInit() {

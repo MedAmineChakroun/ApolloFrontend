@@ -76,7 +76,7 @@
                             (click)="navigateToProductDetails(product.artId)"
                         >
                             <div class="md:w-40 relative">
-                                <img [src]="product.artImageUrls" [alt]="product.artIntitule" class="card-img-top" (error)="handleProductImageError($event)" style="height: 200px; object-fit: cover" />
+                                <img src="http://localhost:91/Images/{{ product.artImageUrl }}" [alt]="product.artIntitule" class="card-img-top" (error)="handleProductImageError($event)" style="height: 200px; object-fit: cover" />
                             </div>
                             <div class="flex flex-col md:flex-row justify-between md:items-center flex-1 gap-6">
                                 <div class="flex flex-row md:flex-col justify-between items-start gap-2">

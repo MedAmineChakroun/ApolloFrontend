@@ -3,7 +3,12 @@
         <!-- Product Image Section -->
         <div class="product-image-section">
             <div class="relative group">
-                <img [src]="product.artImageUrl" [alt]="product.artIntitule" class="w-full h-auto rounded-lg shadow-sm transition-transform duration-300 group-hover:scale-105" (error)="handleProductImageError($event)" />
+                <img
+                    src="http://localhost:91/Images/{{ product.artImageUrl }}"
+                    [alt]="product.artIntitule"
+                    class="w-full h-auto rounded-lg shadow-sm transition-transform duration-300 group-hover:scale-105"
+                    (error)="handleProductImageError($event)"
+                />
                 <div class="absolute top-4 right-4">
                     <p-tag [value]="getStockStatus(product.artEtat)" [severity]="getStockSeverity(product.artEtat)" class="text-lg"> </p-tag>
                 </div>

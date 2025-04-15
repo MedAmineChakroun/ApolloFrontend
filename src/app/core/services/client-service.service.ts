@@ -31,4 +31,7 @@ export class UserService {
     deleteUserProfile(id: number): Observable<any> {
         return this.http.delete(`${this.apiUrl}/${id}`);
     }
+    getClientsNumber(): Observable<number> {
+        return this.http.get<number>('https://localhost:7257/api/Clients/count');
+    }
 }

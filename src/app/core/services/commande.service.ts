@@ -26,7 +26,14 @@ export class CommandeService {
     getDocumentVenteByDocPiece(docPiece: string): Observable<DocumentVente> {
         return this.http.get<DocumentVente>(`${this.apiUrl}/piece/${docPiece}`);
     }
-    //pour Doc Ligne Commande
+    getNbDocumentVente(): Observable<number> {
+        return this.http.get<number>(`${this.apiUrl}/count`);
+    }
+    getNbDocumentVenteThisWeek(): Observable<number> {
+        return this.http.get<number>(`${this.apiUrl}/count/thisWeek`);
+    }
+
+    //pour Doc Ligne Commande-------------------------------------
     getLignesCommandeParDocPiece(docPiece: string): Observable<DocumentVenteLigne[]> {
         return this.http.get<DocumentVenteLigne[]>(`${this.apiUrlLigneCommande}/piece/${docPiece}`);
     }
@@ -35,5 +42,8 @@ export class CommandeService {
     }
     getNbLigneCommandeParDocPiece(docPiece: string): Observable<number> {
         return this.http.get<number>(`${this.apiUrlLigneCommande}/piece/nb/${docPiece}`);
+    }
+    getNbLigneCommande(): Observable<number> {
+        return this.http.get<number>(`${this.apiUrlLigneCommande}/count`);
     }
 }

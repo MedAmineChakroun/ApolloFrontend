@@ -19,7 +19,9 @@ export class ProductsService {
     getProductById(id: number): Observable<Product> {
         return this.http.get<Product>(`https://localhost:7257/api/Produits/${id}`);
     }
-
+    getProductsNumber(): Observable<number> {
+        return this.http.get<number>('https://localhost:7257/api/Produits/count');
+    }
     /**
      * Extract products from API response, handling different response formats
      * @param response API response
