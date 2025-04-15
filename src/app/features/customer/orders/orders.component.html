@@ -26,6 +26,8 @@
         [filterDelay]="0"
         [customSort]="true"
         (sortFunction)="customSort($event)"
+        sortField="docDate"
+        [sortOrder]="sort"
     >
         <ng-template pTemplate="header">
             <tr>

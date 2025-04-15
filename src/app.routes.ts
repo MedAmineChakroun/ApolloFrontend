@@ -29,8 +29,7 @@ export const appRoutes: Routes = [
             {
                 path: 'customer',
                 loadChildren: () => import('./app/features/customer/customer.routes'),
-                canActivate: [AuthGuard, RoleGuard],
-                data: { roles: ['customer'] }
+                canActivate: [AuthGuard, RoleGuard]
             },
             {
                 path: 'help',

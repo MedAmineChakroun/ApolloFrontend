@@ -39,7 +39,12 @@ export class LoginComponent {
             next: (jwtDto) => {
                 localStorage.setItem('jwtToken', jwtDto.token);
                 console.log('Login successful');
-                this.router.navigate(['/store/products']);
+                if (this.authService.getUserRole() === 'admin') {
+                    this.router.navigate(['/store/admin/dashboard']);
+                }
+                if (this.authService.getUserRole() === 'customer') {
+                    this.router.navigate(['/store/products']);
+                }
             },
             error: (err) => {
                 console.error('Login failed', err);

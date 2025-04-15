@@ -27,6 +27,7 @@ import { Store } from '@ngrx/store';
     styleUrls: ['./orders.component.css']
 })
 export class OrdersComponent implements OnInit {
+    readonly sort = -1;
     @ViewChild('dt') table!: Table;
     articleCounts: { [docPiece: string]: number } = {};
     orders: DocumentVente[] = [];
