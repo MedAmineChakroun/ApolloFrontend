@@ -189,7 +189,6 @@ export class ShoppingCartComponent implements OnInit {
 
     clearCart(): void {
         this.cartService.clearCart();
-        this.toastr.info('Cart cleared');
     }
 
     continueShopping(): void {

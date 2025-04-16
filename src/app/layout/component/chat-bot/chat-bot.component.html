@@ -1,0 +1,59 @@
+<!-- Floating Chat Button -->
+<div class="floating-button" (click)="toggleChat()" pRipple [class.hidden]="isOpen">
+    <img src="assets/general/ChatCharacter.png" alt="Chat Icon" class="icon" />
+    <p-badge *ngIf="unreadCount > 0" [value]="unreadCount.toString()" severity="danger" class="unread-badge"></p-badge>
+</div>
+
+<!-- Chat Window -->
+<div *ngIf="isOpen" class="chat-window" [@slideInOut]="isOpen ? 'in' : 'out'">
+    <!-- Header -->
+    <div class="chat-header">
+        <div class="header-content">
+            <div class="header-title">
+                <p-avatar image="assets/general/ChatCharacter.png" shape="circle" styleClass="header-avatar"></p-avatar>
+                <div class="header-info">
+                    <h3>AI Assistant</h3>
+                    <span>Online now</span>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button pButton icon="pi pi-trash" class="p-button-rounded p-button-text" (click)="clearChat()" pTooltip="Clear chat" tooltipPosition="left"></button>
+                <button pButton icon="pi pi-times" class="p-button-rounded p-button-text p-button-danger" (click)="toggleChat()" pTooltip="Close" tooltipPosition="left"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Body -->
+    <div #chatBody class="chat-body" (scroll)="onChatScroll()">
+        <div class="messages-container">
+            <ng-container *ngFor="let message of messages">
+                <div class="message-wrapper" [ngClass]="{ 'user-message': message.sender === 'user', 'ai-message': message.sender === 'ai' }">
+                    <p-avatar *ngIf="message.sender === 'ai'" image="assets/general/ChatCharacter.png" shape="circle" styleClass="message-avatar"></p-avatar>
+                    <div class="message" [ngClass]="{ user: message.sender === 'user', ai: message.sender === 'ai' }">
+                        <div class="message-content">{{ message.content }}</div>
+                        <div class="message-time">{{ formatTime(message.timestamp) }}</div>
+                    </div>
+                </div>
+            </ng-container>
+
+            <!-- Loading Indicator -->
+            <div *ngIf="isLoading" class="message-wrapper ai-message">
+                <p-avatar image="assets/general/ChatCharacter.png" shape="circle" styleClass="message-avatar"></p-avatar>
+                <div class="typing-indicator"><span></span><span></span><span></span></div>
+            </div>
+        </div>
+
+        <!-- Scroll To Bottom Button -->
+        <button *ngIf="showScrollBtn" class="scroll-bottom-btn" (click)="scrollToBottom()" pRipple>
+            <i class="pi pi-chevron-down"></i>
+        </button>
+    </div>
+
+    <!-- Input Area -->
+    <div class="chat-input">
+        <input #messageInput type="text" pInputText [(ngModel)]="userMessage" (keyup.enter)="sendMessage()" placeholder="Type your message..." [disabled]="isLoading" />
+        <button pButton icon="pi pi-send" class="p-button-rounded" (click)="sendMessage()" [disabled]="!userMessage.trim() || isLoading"></button>
+    </div>
+</div>
+
+<p-toast position="top-right"></p-toast>
