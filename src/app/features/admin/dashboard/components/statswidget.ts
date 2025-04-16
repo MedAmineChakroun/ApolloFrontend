@@ -73,7 +73,7 @@ import { CommandeService } from '../../../../core/services/commande.service';
 export class StatsWidget {
     nbCommandes = 0;
     nbArticles = 0;
-    nbClients = 0;
+    nbClients = 1;
     nbFamilles = 0;
     nbCommandesSinceLastWeek = 0;
     constructor(
