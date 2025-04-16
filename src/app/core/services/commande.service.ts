@@ -49,4 +49,7 @@ export class CommandeService {
     getTopLignesCommande(): Observable<DocumentVenteLigne[]> {
         return this.http.get<DocumentVenteLigne[]>(`${this.apiUrlLigneCommande}/top`);
     }
+    getLignesCommande(): Observable<DocumentVenteLigne[]> {
+        return this.http.get<DocumentVenteLigne[]>(`${this.apiUrlLigneCommande}`);
+    }
 }
