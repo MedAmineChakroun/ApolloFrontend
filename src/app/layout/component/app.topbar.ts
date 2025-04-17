@@ -161,7 +161,7 @@ import { CartItem } from '../../models/cart-item';
                 <!-- Desktop View -->
                 <div class="hidden lg:flex">
                     <!-- Cart Icon with Badge for Desktop -->
-                    <div class="cart-icon" (click)="navigateToCart()">
+                    <div class="cart-icon" (click)="navigateToCart()" *ngIf="!IsAdmin()">
                         <i class="pi pi-shopping-cart"></i>
                         <span *ngIf="cartItems.length > 0" class="cart-badge">{{ cartItems.length }}</span>
                     </div>
@@ -183,7 +183,7 @@ import { CartItem } from '../../models/cart-item';
                 <!-- Mobile Menu -->
                 <div class="layout-topbar-menu hidden lg:hidden">
                     <!-- Cart Icon for Mobile -->
-                    <div class="cart-icon" (click)="navigateToCart()" type="button" class="layout-topbar-action">
+                    <div class="cart-icon" (click)="navigateToCart()" type="button" class="layout-topbar-action" *ngIf="!IsAdmin()">
                         <i class="pi pi-shopping-cart"></i>
                         <span *ngIf="cartItems.length > 0" class="cart-badge">{{ cartItems.length }}</span>
                         <span>Cart</span>
@@ -191,7 +191,7 @@ import { CartItem } from '../../models/cart-item';
 
                     <!-- Authenticated User Menu Items -->
                     <div *ngIf="isConnected">
-                        <button (click)="navigateToOrders()" class="layout-topbar-action" type="button">
+                        <button (click)="navigateToOrders()" class="layout-topbar-action" type="button" *ngIf="!IsAdmin()">
                             <i class="pi pi-shopping-bag"></i>
                             <span>Orders</span>
                         </button>
@@ -217,7 +217,7 @@ import { CartItem } from '../../models/cart-item';
                 <!-- Desktop Menu -->
                 <div *ngIf="isConnected" class="layout-topbar-menu hidden lg:block">
                     <div class="layout-topbar-menu-content">
-                        <button (click)="navigateToOrders()" class="layout-topbar-action" type="button">
+                        <button (click)="navigateToOrders()" class="layout-topbar-action" type="button" *ngIf="!IsAdmin()">
                             <i class="pi pi-shopping-bag"></i>
                             <span>Orders</span>
                         </button>
@@ -312,5 +312,8 @@ export class AppTopbar implements OnInit, OnDestroy {
     }
     navigateToOrders() {
         this.router.navigate(['/store/customer/orders']);
+    }
+    IsAdmin() {
+        return false;
     }
 }

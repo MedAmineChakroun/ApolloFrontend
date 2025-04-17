@@ -79,7 +79,6 @@ export class AuthenticationService {
     getUserRole(): string {
         const token = this.getToken();
         const decodedToken = jwtDecode<DecodedToken>(token!);
-        console.log(decodedToken.role);
         return decodedToken.role;
     }
     private storeToken(token: string): void {

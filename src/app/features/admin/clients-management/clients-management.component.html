@@ -1,0 +1,167 @@
+<!-- clients-management.component.html -->
+<div class="clients-management-container">
+    <p-toast position="top-right"></p-toast>
+    <p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog>
+
+    <div class="card shadow-4">
+        <!-- Header Section with Title and Actions -->
+        <p-toolbar styleClass="mb-4 p-toolbar-elevated">
+            <ng-template pTemplate="left">
+                <div class="flex flex-column">
+                    <h2 class="text-xl font-bold m-0">Client Management</h2>
+                    <span class="text-sm text-500">Manage your business clients</span>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="right">
+                <div class="flex align-items-center gap-2">
+                    <span class="p-badge p-badge-info">{{ totalClients }} clients</span>
+                    <button pButton pRipple type="button" label="New Client" icon="pi pi-plus" class="p-button-primary" (click)="openNew()"></button>
+                    <button pButton pRipple type="button" label="Delete Selected" icon="pi pi-trash" class="p-button-danger" [disabled]="!selectedClients || !selectedClients.length" (click)="deleteSelectedClients()"></button>
+                </div>
+            </ng-template>
+        </p-toolbar>
+
+        <!-- Search and Export Bar -->
+        <div class="flex justify-content-between align-items-center">
+            <div class="p-inputgroup flex-1 mr-3" style="max-width: 400px">
+                <input type="text" pInputText placeholder="Search clients..." (input)="searchClients($event)" class="p-inputtext p-component w-full" />
+            </div>
+            <button pButton pRipple type="button" label="Export CSV" icon="pi pi-download" class="p-button-outlined" (click)="exportCSV()"></button>
+        </div>
+
+        <!-- Clients Data Table -->
+        <p-table
+            #dt
+            [value]="getFilteredClients()"
+            [rows]="10"
+            [paginator]="true"
+            [globalFilterFields]="['tiersCode', 'tiersIntitule', 'tiersVille', 'tiersPays']"
+            [loading]="loading"
+            [(selection)]="selectedClients"
+            [rowHover]="true"
+            dataKey="tiersId"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} clients"
+            [showCurrentPageReport]="true"
+            styleClass="p-datatable-sm p-datatable-gridlines p-datatable-striped p-datatable-responsive"
+            responsiveLayout="stack"
+            [rowsPerPageOptions]="[10, 25, 50]"
+            exportFilename="clients"
+        >
+            <ng-template pTemplate="caption">
+                <div class="flex justify-content-between align-items-center">
+                    <span *ngIf="selectedClients.length > 0" class="text-sm"> {{ selectedClients.length }} client(s) selected </span>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 3rem" class="text-center">
+                        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                    </th>
+                    <th pSortableColumn="tiersCode" style="min-width: 8rem">Code <p-sortIcon field="tiersCode"></p-sortIcon></th>
+                    <th pSortableColumn="tiersIntitule" style="min-width: 14rem">Name <p-sortIcon field="tiersIntitule"></p-sortIcon></th>
+                    <th pSortableColumn="tiersVille" style="min-width: 10rem">City <p-sortIcon field="tiersVille"></p-sortIcon></th>
+                    <th pSortableColumn="tiersPays" style="min-width: 10rem">Country <p-sortIcon field="tiersPays"></p-sortIcon></th>
+                    <th pSortableColumn="tiersTel1" style="min-width: 10rem">Phone <p-sortIcon field="tiersTel1"></p-sortIcon></th>
+                    <th style="width: 8rem" class="text-center">Actions</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-client>
+                <tr class="p-selectable-row">
+                    <td class="text-center">
+                        <p-tableCheckbox [value]="client"></p-tableCheckbox>
+                    </td>
+                    <td>
+                        <span class="font-semibold">{{ client.tiersCode }}</span>
+                    </td>
+                    <td>
+                        {{ client.tiersIntitule }}
+                    </td>
+                    <td>
+                        {{ client.tiersVille }}
+                    </td>
+                    <td>
+                        <span class="p-tag p-tag-rounded">{{ client.tiersPays }}</span>
+                    </td>
+                    <td><i class="pi pi-phone mr-2"></i>{{ client.tiersTel1 }}</td>
+                    <td>
+                        <span class="p-column-title">Actions</span>
+                        <div class="flex justify-content-center gap-2">
+                            <button pButton pRipple type="button" icon="pi pi-eye" class="p-button-rounded p-button-text p-button-info" (click)="editClient(client)" pTooltip="Edit" tooltipPosition="top"></button>
+                            <button pButton pRipple type="button" icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger" (click)="deleteClient(client)" pTooltip="Delete" tooltipPosition="top"></button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="7" class="text-center py-5">
+                        <div class="flex flex-column align-items-center">
+                            <i class="pi pi-search-minus text-500" style="font-size: 2rem"></i>
+                            <p class="font-semibold mt-3">No clients found</p>
+                            <p class="text-500">Try adjusting your search or creating a new client</p>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="paginatorleft">
+                <div *ngIf="selectedClients.length > 0" class="text-sm ml-2">{{ selectedClients.length }} client(s) selected</div>
+            </ng-template>
+        </p-table>
+    </div>
+
+    <!-- Client Dialog for Add/Edit -->
+    <p-dialog [(visible)]="clientDialog" [style]="{ width: '550px' }" header="Client Details" [modal]="true" styleClass="p-fluid">
+        <ng-template pTemplate="content">
+            <div class="field">
+                <label for="tiersCode">Code*</label>
+                <input type="text" pInputText id="tiersCode" [(ngModel)]="client.tiersCode" required autofocus [ngClass]="{ 'ng-invalid ng-dirty': submitted && !client.tiersCode }" />
+                <small class="p-error" *ngIf="submitted && !client.tiersCode">Code is required.</small>
+            </div>
+            <div class="field">
+                <label for="tiersIntitule">Name*</label>
+                <input type="text" pInputText id="tiersIntitule" [(ngModel)]="client.tiersIntitule" required [ngClass]="{ 'ng-invalid ng-dirty': submitted && !client.tiersIntitule }" />
+                <small class="p-error" *ngIf="submitted && !client.tiersIntitule">Name is required.</small>
+            </div>
+            <div class="grid">
+                <div class="col-12 md:col-6">
+                    <div class="field">
+                        <label for="tiersAdresse1">Address</label>
+                        <input type="text" pInputText id="tiersAdresse1" [(ngModel)]="client.tiersAdresse1" />
+                    </div>
+                </div>
+                <div class="col-12 md:col-6">
+                    <div class="field">
+                        <label for="tiersCodePostal">Postal Code</label>
+                        <input type="text" pInputText id="tiersCodePostal" [(ngModel)]="client.tiersCodePostal" />
+                    </div>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col-12 md:col-6">
+                    <div class="field">
+                        <label for="tiersVille">City</label>
+                        <input type="text" pInputText id="tiersVille" [(ngModel)]="client.tiersVille" />
+                    </div>
+                </div>
+                <div class="col-12 md:col-6">
+                    <div class="field">
+                        <label for="tiersPays">Country</label>
+                        <input type="text" pInputText id="tiersPays" [(ngModel)]="client.tiersPays" />
+                    </div>
+                </div>
+            </div>
+            <div class="field">
+                <label for="tiersTel1">Phone</label>
+                <div class="p-inputgroup">
+                    <span class="p-inputgroup-addon">
+                        <i class="pi pi-phone"></i>
+                    </span>
+                    <input type="text" pInputText id="tiersTel1" [(ngModel)]="client.tiersTel1" />
+                </div>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="footer">
+            <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+        </ng-template>
+    </p-dialog>
+</div>

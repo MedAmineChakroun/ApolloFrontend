@@ -36,12 +36,6 @@ import { filter } from 'rxjs/operators';
                     <span class="font-medium" [ngClass]="{ 'text-primary-500': activeMenu === '/store/admin/products' }">Manage Products</span>
                 </a>
             </li>
-            <li class="mb-3">
-                <a class="flex align-items-center cursor-pointer py-3 px-3 surface-hover border-round transition-colors transition-duration-150 w-full menu-button" routerLink="/store/admin/categories">
-                    <i class="pi pi-tags mr-2" [ngClass]="{ 'text-primary-500': activeMenu === '/store/admin/categories' }"></i>
-                    <span class="font-medium" [ngClass]="{ 'text-primary-500': activeMenu === '/store/admin/categories' }">Categories</span>
-                </a>
-            </li>
 
             <!-- Order Management -->
             <li class="layout-menuitem-category">
@@ -53,21 +47,15 @@ import { filter } from 'rxjs/operators';
                     <span class="font-medium" [ngClass]="{ 'text-primary-500': activeMenu === '/store/admin/orders' }">All Orders</span>
                 </a>
             </li>
-            <li class="mb-3">
-                <a class="flex align-items-center cursor-pointer py-3 px-3 surface-hover border-round transition-colors transition-duration-150 w-full menu-button" routerLink="/store/admin/orders/pending">
-                    <i class="pi pi-clock mr-2" [ngClass]="{ 'text-primary-500': activeMenu === '/store/admin/orders/pending' }"></i>
-                    <span class="font-medium" [ngClass]="{ 'text-primary-500': activeMenu === '/store/admin/orders/pending' }">Pending Orders</span>
-                </a>
-            </li>
 
             <!-- Customer Management -->
             <li class="layout-menuitem-category">
                 <span>Customers</span>
             </li>
             <li class="mb-3">
-                <a class="flex align-items-center cursor-pointer py-3 px-3 surface-hover border-round transition-colors transition-duration-150 w-full menu-button" routerLink="/store/admin/customers">
-                    <i class="pi pi-users mr-2" [ngClass]="{ 'text-primary-500': activeMenu === '/store/admin/customers' }"></i>
-                    <span class="font-medium" [ngClass]="{ 'text-primary-500': activeMenu === '/store/admin/customers' }">Customer List</span>
+                <a class="flex align-items-center cursor-pointer py-3 px-3 surface-hover border-round transition-colors transition-duration-150 w-full menu-button" routerLink="/store/admin/clients">
+                    <i class="pi pi-users mr-2" [ngClass]="{ 'text-primary-500': activeMenu === '/store/admin/clients' }"></i>
+                    <span class="font-medium" [ngClass]="{ 'text-primary-500': activeMenu === '/store/admin/clients' }">Customer List</span>
                 </a>
             </li>
 

@@ -12,11 +12,12 @@ import { HeroWidget } from './components/herowidget';
 import { FeaturesWidget } from './components/featureswidget';
 import { HighlightsWidget } from './components/highlightswidget';
 import { FooterWidget } from './components/footerwidget';
+import { ChatbotComponent } from '../../layout/component/chat-bot/chat-bot.component';
 
 @Component({
     selector: 'app-landing',
     standalone: true,
-    imports: [RouterModule, TopbarWidget, HeroWidget, FeaturesWidget, HighlightsWidget, FooterWidget, RippleModule, StyleClassModule, ButtonModule, DividerModule],
+    imports: [ChatbotComponent, RouterModule, TopbarWidget, HeroWidget, FeaturesWidget, HighlightsWidget, FooterWidget, RippleModule, StyleClassModule, ButtonModule, DividerModule],
     template: /*html*/ `
         <div class="bg-surface-0 dark:bg-surface-900">
             <div id="home" class="landing-wrapper overflow-hidden">
@@ -27,7 +28,7 @@ import { FooterWidget } from './components/footerwidget';
                 <features-widget />
 
                 <highlights-widget />
-
+                <app-chatbot></app-chatbot>
                 <footer-widget class="animate-shine" data-aos="fade-up" data-aos-duration="800" data-aos-easing="ease-out-cubic" data-aos-delay="400" />
             </div>
 
@@ -38,7 +39,7 @@ import { FooterWidget } from './components/footerwidget';
                 [class.opacity-0]="!showScrollButton"
                 [class.pointer-events-auto]="showScrollButton"
                 [class.pointer-events-none]="!showScrollButton"
-                class="fixed bottom-8 right-8 bg-primary-500 text-white p-3 rounded-full shadow-lg hover:bg-primary-600 transition-all duration-300 z-[9999]"
+                class="fixed bottom-8 left-8 bg-primary-500 text-white p-3 rounded-full shadow-lg hover:bg-primary-600 transition-all duration-300 z-[9999]"
                 aria-label="Scroll to top"
             >
                 <i class="pi pi-arrow-up text-xl"></i>
