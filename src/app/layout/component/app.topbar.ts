@@ -296,6 +296,9 @@ export class AppTopbar implements OnInit, OnDestroy {
             message: 'Êtes-vous sûr de vouloir vous déconnecter ?',
             header: 'Confirmation de déconnexion',
             icon: 'pi pi-exclamation-triangle',
+            acceptLabel: 'Oui',
+            rejectLabel: 'Non',
+            rejectButtonStyleClass: 'p-button-danger',
             accept: () => {
                 this.logout();
             }

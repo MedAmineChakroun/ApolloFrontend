@@ -139,7 +139,10 @@ export class AuthenticationService {
                 tiersCodePostal: client.tiersCodePostal,
                 tiersVille: client.tiersVille,
                 tiersPays: client.tiersPays,
-                tiersTel1: client.tiersTel1
+                tiersTel1: client.tiersTel1,
+                tiersEmail: client.tiersEmail,
+                tiersDateCreate: client.tiersDateCreate,
+                tiersFlag: client.tiersFlag
             };
             //console.log('clientData:', clientData);
             this.store.dispatch(setUser({ client: clientData }));

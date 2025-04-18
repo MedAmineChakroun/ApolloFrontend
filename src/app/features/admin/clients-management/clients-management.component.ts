@@ -1,246 +1,242 @@
-// clients-management.component.ts
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, inject, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { Table, TableModule } from 'primeng/table';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+
+// PrimeNG imports
+import { TableModule, Table } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
-import { InputTextModule } from 'primeng/inputtext';
-import { DialogModule } from 'primeng/dialog';
-import { ToastModule } from 'primeng/toast';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToolbarModule } from 'primeng/toolbar';
-import { CardModule } from 'primeng/card';
-import { DividerModule } from 'primeng/divider';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
+import { DialogModule } from 'primeng/dialog';
 import { TooltipModule } from 'primeng/tooltip';
-import { BadgeModule } from 'primeng/badge';
+import { InputTextModule } from 'primeng/inputtext';
+import { CardModule } from 'primeng/card';
 import { TagModule } from 'primeng/tag';
-import { RippleModule } from 'primeng/ripple';
 import { UserService } from '../../../core/services/client-service.service';
-import { finalize, catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
 import { Client } from '../../../models/Client';
 
 @Component({
     selector: 'app-clients-management',
     standalone: true,
-    imports: [CommonModule, FormsModule, TableModule, ButtonModule, InputTextModule, DialogModule, ToastModule, ConfirmDialogModule, ToolbarModule, CardModule, DividerModule, TooltipModule, BadgeModule, TagModule, RippleModule],
-    providers: [MessageService, ConfirmationService],
+    imports: [CommonModule, TableModule, ButtonModule, ToolbarModule, ConfirmDialogModule, DialogModule, TooltipModule, InputTextModule, CardModule, TagModule, ReactiveFormsModule],
+    providers: [ConfirmationService],
     templateUrl: './clients-management.component.html',
     styleUrl: './clients-management.component.css'
 })
 export class ClientsManagementComponent implements OnInit {
-    @ViewChild('dt') table: Table | undefined;
-
     clients: Client[] = [];
-    selectedClients: Client[] = [];
-    client: Client = this.initializeNewClient();
-    clientDialog: boolean = false;
-    submitted: boolean = false;
-    loading: boolean = true;
-    searchQuery: string = '';
-    totalClients: number = 0;
+    loading = false;
+    totalClients = 1;
+    selectedClient: Client | null = null;
+    dialogVisible = false;
+    editMode = false;
+    clientForm!: FormGroup;
+    clientImage: string | null = null;
+    isSyncRoute = false; // Flag to track if we're on the sync route
 
-    constructor(
-        private userService: UserService,
-        private messageService: MessageService,
-        private confirmationService: ConfirmationService
-    ) {}
+    @ViewChild('dt') table!: Table;
+
+    // Services injection
+    private userService = inject(UserService);
+    private confirmationService = inject(ConfirmationService);
+    private toastr = inject(ToastrService);
+    private router = inject(Router);
+    private fb = inject(FormBuilder);
 
     ngOnInit() {
+        // Check if current route is the sync route
+        this.isSyncRoute = this.router.url === '/store/admin/clients/sync';
+
         this.loadClients();
-        this.loadClientsCount();
+        this.getClientsCount();
+        this.initForm();
     }
 
-    initializeNewClient(): Client {
-        return {
-            tiersId: 0,
-            tiersCode: '',
-            tiersIntitule: '',
-            tiersAdresse1: '',
-            tiersCodePostal: '',
-            tiersVille: '',
-            tiersPays: '',
-            tiersTel1: ''
-        };
+    initForm() {
+        this.clientForm = this.fb.group({
+            tiersId: [null],
+            tiersCode: ['', Validators.required],
+            tiersIntitule: ['', Validators.required],
+            tiersAdresse1: [''],
+            tiersCodePostal: [''],
+            tiersVille: [''],
+            tiersPays: [''],
+            tiersTel1: [''],
+            tiersEmail: ['', [Validators.email]],
+            tiersFlag: [0]
+        });
     }
 
     loadClients() {
         this.loading = true;
+        this.userService.getUsers().subscribe({
+            next: (data) => {
+                // Create a temporary storage for all clients
+                const allClients = data;
 
-        this.userService
-            .getUsers()
-            .pipe(
-                finalize(() => (this.loading = false)),
-                catchError((error) => {
-                    this.showErrorMessage('Failed to load clients. Please try again later.');
-                    console.error('Error loading clients:', error);
-                    return of([]);
-                })
-            )
-            .subscribe((data) => {
-                this.clients = data;
-            });
+                // Track how many clients we've processed
+                let processedClients = 0;
+                this.clients = [];
+
+                // Process each client
+                allClients.forEach((client) => {
+                    this.userService.getUserRole(client.tiersId).subscribe({
+                        next: (roleData) => {
+                            // Only add if not admin
+                            if (!roleData.roles.includes('admin')) {
+                                // Check if we're on sync route and filter by tiersFlag
+                                if (this.isSyncRoute) {
+                                    if (client.tiersFlag === 0) {
+                                        this.clients.push(client);
+                                    }
+                                } else {
+                                    // Normal route - add all non-admin clients
+                                    this.clients.push(client);
+                                }
+                            }
+                        },
+                        error: () => {
+                            // If error fetching role, assume not admin
+                            if (this.isSyncRoute) {
+                                if (client.tiersFlag === 0) {
+                                    this.clients.push(client);
+                                }
+                            } else {
+                                this.clients.push(client);
+                            }
+                        },
+                        complete: () => {
+                            // Count processed clients and finish when all are done
+                            processedClients++;
+                            if (processedClients === allClients.length) {
+                                this.loading = false;
+                            }
+                        }
+                    });
+                });
+            },
+            error: (error) => {
+                this.toastr.error('Error loading clients', 'Error');
+                console.error('Error loading clients:', error);
+                this.loading = false;
+            }
+        });
     }
 
-    loadClientsCount() {
-        this.userService
-            .getClientsNumber()
-            .pipe(
-                catchError((error) => {
-                    console.error('Error loading client count:', error);
-                    return of(0);
-                })
-            )
-            .subscribe((count) => {
+    getClientsCount() {
+        this.userService.getClientsNumber().subscribe({
+            next: (count) => {
                 this.totalClients = count;
-            });
+            },
+            error: (error) => {
+                console.error('Error getting client count:', error);
+            }
+        });
     }
 
-    openNew() {
-        this.client = this.initializeNewClient();
-        this.submitted = false;
-        this.clientDialog = true;
+    confirmDelete(client: Client) {
+        this.confirmationService.confirm({
+            message: `Are you sure you want to delete ${client.tiersIntitule}?`,
+            header: 'Delete Confirmation',
+            icon: 'pi pi-exclamation-triangle',
+            acceptLabel: 'Oui',
+            rejectLabel: 'Non',
+            //red reject button
+            rejectButtonStyleClass: 'p-button-danger',
+            accept: () => {
+                this.deleteClient(client.tiersId);
+            }
+        });
     }
 
-    deleteSelectedClients() {
-        if (!this.selectedClients || this.selectedClients.length === 0) {
-            return;
+    deleteClient(id: number) {
+        this.userService.deleteUserProfile(id).subscribe({
+            next: () => {
+                this.toastr.success('Client deleted successfully', 'Success');
+                this.loadClients();
+                this.getClientsCount();
+            },
+            error: (error) => {
+                this.toastr.error('Error deleting client', 'Error');
+                console.error('Error deleting client:', error);
+            }
+        });
+    }
+
+    exportToCSV() {
+        // This is just a placeholder for the CSV export functionality
+        this.toastr.info('Export to CSV functionality will be implemented soon', 'Information');
+    }
+
+    viewClientDetails(client: Client) {
+        this.selectedClient = client;
+        this.dialogVisible = true;
+        this.editMode = false;
+
+        // Reset form if needed
+        if (this.clientForm) {
+            this.resetForm();
         }
+    }
+
+    closeDialog() {
+        this.dialogVisible = false;
+        this.selectedClient = null;
+        this.editMode = false;
+    }
+
+    resetForm() {
+        if (this.clientForm) {
+            this.clientForm.reset();
+        }
+    }
+
+    onChangePhoto() {
+        // Placeholder for photo upload functionality
+        // This would typically open a file picker and handle the upload
+        this.toastr.info('Photo upload functionality will be implemented soon', 'Information');
+    }
+
+    changeUserFlag(client: Client): void {
+        const newFlag = client.tiersFlag === 1 ? 0 : 1;
+        const oldStatus = client.tiersFlag === 1 ? 'synchroniser' : 'non synchroniser';
+        const newStatus = newFlag === 1 ? 'synchroniser' : 'synchroniser';
 
         this.confirmationService.confirm({
-            message: `Are you sure you want to delete the selected ${this.selectedClients.length} client(s)?`,
-            header: 'Confirm Deletion',
+            message: `Voulez-vous vraiment changer l'état du client "${client.tiersIntitule}" de ${oldStatus} à ${newStatus} ?`,
+            header: 'Confirmation',
             icon: 'pi pi-exclamation-triangle',
-            acceptButtonStyleClass: 'p-button-danger',
+            acceptLabel: 'Oui',
+            rejectLabel: 'Non',
+            rejectButtonStyleClass: 'p-button-danger', // ← le bouton "Non" devient rouge
             accept: () => {
-                // Create an array of delete operations
-                const deleteOperations = this.selectedClients.map((client) => this.userService.deleteUserProfile(client.tiersId));
-
-                // Execute all delete operations in parallel
-                Promise.all(
-                    deleteOperations.map((operation) =>
-                        operation.toPromise().catch((error) => {
-                            console.error(`Failed to delete client:`, error);
-                            return null;
-                        })
-                    )
-                ).then((results) => {
-                    const successCount = results.filter((result) => result !== null).length;
-
-                    // Refresh the client list
-                    this.loadClients();
-                    this.loadClientsCount();
-                    this.selectedClients = [];
-
-                    if (successCount > 0) {
-                        this.showSuccessMessage(`${successCount} client(s) successfully deleted`);
+                this.userService.updateUserFlag(client.tiersId, newFlag).subscribe({
+                    next: () => {
+                        this.loadClients();
+                        this.toastr.success('État du client mis à jour avec succès', 'Succès');
+                    },
+                    error: (err) => {
+                        console.error('Erreur lors de la mise à jour du flag :', err);
+                        this.toastr.error("Échec de la mise à jour de l'état du client", 'Erreur');
                     }
                 });
             }
         });
     }
 
-    editClient(client: Client) {
-        this.loading = true;
-
-        // Fetch the complete client data
-        this.userService
-            .getUserById(client.tiersId)
-            .pipe(
-                finalize(() => (this.loading = false)),
-                catchError((error) => {
-                    this.showErrorMessage('Failed to load client details');
-                    console.error('Error fetching client details:', error);
-                    return of(null);
-                })
-            )
-            .subscribe((data) => {
-                if (data) {
-                    this.client = { ...data };
-                    this.clientDialog = true;
-                }
-            });
+    // Helper methods for flag status
+    getSyncStatusLabel(flag: number): string {
+        return flag === 1 ? 'Synchronized' : 'Not Synchronized';
     }
 
-    deleteClient(client: Client) {
-        this.confirmationService.confirm({
-            message: `Are you sure you want to delete ${client.tiersIntitule}?`,
-            header: 'Confirm Deletion',
-            icon: 'pi pi-exclamation-triangle',
-            acceptButtonStyleClass: 'p-button-danger',
-            accept: () => {
-                this.loading = true;
-                this.userService
-                    .deleteUserProfile(client.tiersId)
-                    .pipe(
-                        finalize(() => (this.loading = false)),
-                        catchError((error) => {
-                            this.showErrorMessage('Failed to delete client');
-                            console.error('Error deleting client:', error);
-                            return of(null);
-                        })
-                    )
-                    .subscribe((response) => {
-                        if (response !== null) {
-                            // Remove client from the array
-                            this.clients = this.clients.filter((c) => c.tiersId !== client.tiersId);
-                            this.loadClientsCount();
-                            this.showSuccessMessage('Client successfully deleted');
-                        }
-                    });
-            }
-        });
+    getSyncStatusSeverity(flag: number): 'success' | 'danger' | 'info' | 'warn' | 'secondary' | 'contrast' {
+        return flag === 1 ? 'success' : 'danger';
     }
 
-    hideDialog() {
-        this.clientDialog = false;
-        this.submitted = false;
-    }
-
-    searchClients(event: Event) {
-        const query = (event.target as HTMLInputElement).value.toLowerCase();
-        this.searchQuery = query;
-    }
-
-    getFilteredClients() {
-        if (!this.searchQuery) {
-            return this.clients;
-        }
-
-        return this.clients.filter(
-            (client) =>
-                client.tiersIntitule?.toLowerCase().includes(this.searchQuery) ||
-                '' ||
-                client.tiersCode?.toLowerCase().includes(this.searchQuery) ||
-                '' ||
-                client.tiersVille?.toLowerCase().includes(this.searchQuery) ||
-                '' ||
-                client.tiersPays?.toLowerCase().includes(this.searchQuery) ||
-                ''
-        );
-    }
-
-    exportCSV() {
-        this.showSuccessMessage('CSV file has been downloaded');
-    }
-
-    // Helper methods for notifications
-    private showSuccessMessage(detail: string) {
-        this.messageService.add({
-            severity: 'success',
-            summary: 'Success',
-            detail: detail,
-            life: 3000
-        });
-    }
-
-    private showErrorMessage(detail: string) {
-        this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: detail,
-            life: 5000
-        });
+    getSyncStatusIcon(flag: number): string {
+        return flag === 1 ? 'pi pi-check-circle' : 'pi pi-exclamation-triangle';
     }
 }

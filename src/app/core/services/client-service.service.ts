@@ -34,4 +34,10 @@ export class UserService {
     getClientsNumber(): Observable<number> {
         return this.http.get<number>('https://localhost:7257/api/Clients/count');
     }
+    getUserRole(id: number): Observable<any> {
+        return this.http.get<string>(`${this.apiUrl}/role/${id}`);
+    }
+    updateUserFlag(id: number, flag: number): Observable<any> {
+        return this.http.patch(`${this.apiUrl}/updateFlag/${id}?newFlag=${flag}`, null);
+    }
 }

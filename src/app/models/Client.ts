@@ -7,4 +7,7 @@ export interface Client {
     tiersVille: string;
     tiersPays: string;
     tiersTel1: string;
+    tiersEmail: string;
+    tiersDateCreate: Date;
+    tiersFlag: number;
 }

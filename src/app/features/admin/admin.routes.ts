@@ -5,7 +5,8 @@ import { ClientsManagementComponent } from './clients-management/clients-managem
 export default [
     //exemple
     { path: 'dashboard', component: Dashboard },
-    { path: 'clients', component: ClientsManagementComponent }
+    { path: 'clients', component: ClientsManagementComponent },
+    { path: 'clients/sync', component: ClientsManagementComponent }
     // { path: 'users', component: UsersComponent },
     // { path: 'sellers', component: SellersComponent },
 ] as Routes;

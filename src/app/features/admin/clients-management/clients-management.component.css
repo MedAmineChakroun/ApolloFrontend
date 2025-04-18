@@ -1,18 +1,22 @@
 /* clients-management.component.css */
-.clients-management-container {
+:host {
+    display: block;
     padding: 1.5rem;
 }
 
-:host ::ng-deep .p-toolbar {
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* PrimeNG style overrides */
+:host ::ng-deep .p-card {
     border-radius: 8px;
-    background: linear-gradient(to right, #f7f9fc, #f1f5f9);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
-:host ::ng-deep .card {
-    background: #ffffff;
-    border-radius: 12px;
-    padding: 1.5rem;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+:host ::ng-deep .p-card .p-card-header {
+    padding: 0;
 }
 
 :host ::ng-deep .p-datatable .p-datatable-header {
@@ -21,131 +25,215 @@
     padding: 1rem 0;
 }
 
-:host ::ng-deep .p-datatable .p-datatable-thead > tr > th {
-    background: #f8fafc;
-    color: #334155;
+:host ::ng-deep .p-datatable .p-paginator {
+    border-radius: 0 0 6px 6px;
+}
+
+:host ::ng-deep .p-datatable th {
+    background-color: #f8f9fa;
     font-weight: 600;
-    padding: 1rem;
-    border-width: 0 0 1px 0;
 }
 
-:host ::ng-deep .p-datatable .p-datatable-tbody > tr {
-    transition: box-shadow 0.2s;
+:host ::ng-deep .p-datatable tr:nth-child(even) {
+    background-color: #fcfcfc;
 }
 
-:host ::ng-deep .p-datatable .p-datatable-tbody > tr:hover {
-    background: #f8fafc;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+:host ::ng-deep .p-datatable tr:hover {
+    background-color: #f5f9ff;
 }
 
-:host ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
-    padding: 0.75rem 1rem;
-    border-width: 0 0 1px 0;
-    border-color: #f1f5f9;
+:host ::ng-deep .p-toolbar {
+    background: transparent;
+    border: none;
+    padding: 0.5rem 0;
 }
 
+:host ::ng-deep .delete-confirmation-dialog .p-dialog-content {
+    padding: 2rem;
+}
+
+:host ::ng-deep .p-button.p-button-rounded {
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
+/* Tag styles for sync status */
 :host ::ng-deep .p-tag {
     padding: 0.25rem 0.75rem;
-    border-radius: 12px;
-    font-size: 0.75rem;
     font-weight: 600;
-    background-color: #e2e8f0;
-    color: #475569;
+    border-radius: 6px;
 }
 
-:host ::ng-deep .p-paginator {
-    padding: 1rem;
-    border-radius: 0 0 12px 12px;
-    border-width: 0;
-    background-color: #f8fafc;
-}
-
-:host ::ng-deep .p-paginator .p-paginator-current {
-    margin-left: auto;
-}
-
-:host ::ng-deep .p-button.p-button-text {
-    color: #64748b;
-}
-
-:host ::ng-deep .p-button.p-button-text:hover {
-    background: rgba(100, 116, 139, 0.04);
-    color: #475569;
-}
-
-:host ::ng-deep .p-inputgroup {
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-:host ::ng-deep .p-inputtext {
-    padding: 0.75rem 1rem;
-}
-
-:host ::ng-deep .p-inputgroup-addon {
-    background-color: #f8fafc;
-    border-color: #e2e8f0;
-    color: #64748b;
-}
-
-:host ::ng-deep .p-badge {
-    font-size: 0.75rem;
-    font-weight: 700;
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
-}
-
-:host ::ng-deep .p-badge.p-badge-info {
-    background-color: #eef2ff;
-    color: #4f46e5;
-}
-
-:host ::ng-deep .p-dialog .p-dialog-header {
-    border-bottom: 1px solid #f1f5f9;
-    padding: 1.5rem;
-}
-
-:host ::ng-deep .p-dialog .p-dialog-content {
-    padding: 1.5rem;
-}
-
-:host ::ng-deep .p-dialog .p-dialog-footer {
-    border-top: 1px solid #f1f5f9;
-    padding: 1.5rem;
+:host ::ng-deep .p-tag .p-tag-icon {
+    margin-right: 0.375rem;
 }
 
 :host ::ng-deep .field {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
 }
 
 :host ::ng-deep .field label {
     display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-    color: #334155;
+    margin-bottom: 0.25rem;
+    color: #495057;
+}
+/* clients-management.component.css */
+
+/* Modal styling for client details */
+.client-details-modal .p-dialog-content {
+    padding: 0 1.5rem 1.5rem 1.5rem;
 }
 
-/* Responsive styles */
-@media screen and (max-width: 960px) {
-    .clients-management-container {
-        padding: 1rem;
+/* Client Header Section */
+.client-header {
+    display: flex;
+    align-items: center;
+    padding: 1rem 0 1.5rem 0;
+    border-bottom: 1px solid #f0f0f0;
+    margin-bottom: 1rem;
+}
+
+.profile-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 1.5rem;
+    border: 1px solid #e0e0e0;
+}
+
+.profile-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-info {
+    flex: 1;
+}
+
+.profile-info h2 {
+    margin: 0 0 0.25rem 0;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.profile-info .email {
+    color: #666;
+    margin: 0 0 0.75rem 0;
+}
+
+.sync-status {
+    margin-top: 0.5rem;
+}
+
+/* Details styling */
+.details-container {
+    padding: 0.5rem 0;
+}
+
+.detail-row {
+    display: flex;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.detail-label {
+    width: 120px;
+    color: #666;
+    font-weight: 500;
+}
+
+.detail-value {
+    flex: 1;
+    color: #333;
+}
+
+/* Edit Mode Styling */
+.client-edit-profile {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+}
+
+.edit-profile-image {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid #e0e0e0;
+}
+
+.edit-profile-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.edit-photo-btn {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+}
+
+.form-fields {
+    padding: 0 0.5rem;
+}
+
+.p-grid {
+    display: flex;
+    margin: 0 -0.5rem;
+}
+
+.p-col-6 {
+    flex: 0 0 50%;
+    padding: 0 0.5rem;
+}
+
+.dialog-footer {
+    padding-top: 0.5rem;
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 576px) {
+    .client-header {
+        flex-direction: column;
+        text-align: center;
     }
 
-    :host ::ng-deep .p-datatable.p-datatable-responsive .p-datatable-tbody > tr > td .p-column-title {
-        padding: 0.5rem;
-        min-width: 30%;
-        display: inline-block;
-        margin: -0.5rem 1rem -0.5rem -0.5rem;
-        font-weight: 600;
-        background-color: #f8fafc;
-    }
-
-    :host ::ng-deep .p-toolbar {
-        flex-wrap: wrap;
-    }
-
-    :host ::ng-deep .p-toolbar [class*='p-toolbar-group'] {
+    .profile-image {
+        margin-right: 0;
         margin-bottom: 1rem;
     }
+
+    .detail-row {
+        flex-direction: column;
+    }
+
+    .detail-label {
+        width: 100%;
+        margin-bottom: 0.25rem;
+    }
+
+    .p-grid {
+        flex-direction: column;
+    }
+
+    .p-col-6 {
+        flex: 0 0 100%;
+    }
+}
+img {
+    width: 50px;
 }
