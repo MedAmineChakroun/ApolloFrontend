@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterModule, ActivatedRoute, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { MenuItem } from 'primeng/api';
-import { AppMenuitem } from './app.menuitem';
 import { AuthenticationService } from '../../core/services/authentication.service';
 import { FormsModule } from '@angular/forms';
 import { SliderModule } from 'primeng/slider';
@@ -10,156 +10,299 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { ProductsService } from '../../core/services/products.service';
 import { ScrollerModule } from 'primeng/scroller';
-import { ActivatedRoute } from '@angular/router';
 import { FamillesService } from '../../core/services/familles.service';
+import { CheckboxModule } from 'primeng/checkbox';
 
 @Component({
     selector: 'app-menu',
     standalone: true,
-    imports: [CommonModule, AppMenuitem, RouterModule, FormsModule, SliderModule, InputTextModule, ButtonModule, ScrollerModule],
+    imports: [CommonModule, RouterModule, FormsModule, SliderModule, InputTextModule, ButtonModule, ScrollerModule, CheckboxModule],
     template: /*html*/ `
-        <ul class="layout-menu">
-            <li class="layout-menuitem-category">
-                <span>Menu</span>
-            </li>
-            <!-- Primary Navigation - All Products link -->
-            <li class="mb-3">
-                <a class="flex align-items-center cursor-pointer py-3 px-3 surface-hover border-round transition-colors transition-duration-150 w-full menu-button" (click)="navigateToAllProducts()">
-                    <i class="pi pi-shopping-cart mr-2 text-primary-400"></i>
-                    <span class="font-medium">All Products</span>
-                </a>
-            </li>
+        <div class="sidebar-container">
+            <!-- Shop Section -->
+            <div class="menu-category category-header">
+                <span class="category-title">Shop</span>
+            </div>
 
-            <!-- Categories Section with Scrollbar -->
-            <li class="layout-menuitem-category">
-                <span>Categories</span>
-            </li>
-            <li class="px-3 py-2">
-                <div class="categories-container" style="max-height: 200px; overflow-y: auto; margin-bottom: 10px;">
-                    <ul class="categories-list p-0 m-0">
-                        <li *ngFor="let famille of productFamilies" class="category-item py-1">
-                            <a class="category-link flex align-items-center cursor-pointer" (click)="navigateToCategory(famille)" [class.active-category]="filters.category === famille">
-                                <i class="pi pi-tag mr-2" [class.text-primary]="filters.category === famille"></i>
+            <div class="menu-category menu-item-container">
+                <a class="menu-item" (click)="navigateToAllProducts()" [ngClass]="{ 'active-item': isRouteActive('/store/products') && !hasQueryParams() }">
+                    <i class="pi pi-list"></i>
+                    <span>Liste Articles</span>
+                </a>
+            </div>
+
+            <div class="menu-category menu-item-container">
+                <div class="menu-item expandable" (click)="toggleCategoriesDropdown()">
+                    <div class="item-content">
+                        <i class="pi pi-tags"></i>
+                        <span>Categories</span>
+                    </div>
+                    <i class="pi pi-chevron-right arrow" [ngClass]="{ 'arrow-expanded': showCategories }"></i>
+                </div>
+                <div class="submenu" *ngIf="showCategories">
+                    <ul class="categories-list">
+                        <li *ngFor="let famille of productFamilies" class="category-item">
+                            <a class="submenu-item" (click)="navigateToCategory(famille)" [ngClass]="{ 'active-item': isRouteActive('/store/products') && isCategoryActive(famille) }">
+                                <i class="pi pi-tag"></i>
                                 <span>{{ famille }}</span>
                             </a>
                         </li>
-                        <li *ngIf="productFamilies.length === 0" class="py-2 text-surface-500">
-                            <i class="pi pi-spin pi-spinner mr-2"></i>
-                            <span>Loading categories...</span>
+                        <li *ngIf="productFamilies.length === 0" class="submenu-item loading">
+                            <i class="pi pi-spin pi-spinner"></i>
+                            <span>Loading...</span>
                         </li>
                     </ul>
                 </div>
-            </li>
+            </div>
 
-            <!-- Special Filters -->
-            <li class="layout-menuitem-category mt-3">
-                <span>Special Filters</span>
-            </li>
-            <li>
-                <a class="flex align-items-center cursor-pointer py-3 px-3 surface-hover border-round transition-colors transition-duration-150 w-full menu-button" (click)="navigateToOnSale()">
-                    <i class="pi pi-check-circle mr-2 "></i>
-                    <span class="font-medium">In Stock Only</span>
-                </a>
-            </li>
+            <div class="menu-category menu-item-container" [ngClass]="{ 'active-item': isRouteActive('/store/products') && isInStockActive() }">
+                <div class="menu-item in-stock">
+                    <div class="item-content">
+                        <i class="pi pi-check-circle"></i>
+                        <span>In Stock</span>
+                    </div>
+                    <p-checkbox [binary]="true" [(ngModel)]="inStockOnly" (onChange)="navigateToOnSale()"></p-checkbox>
+                </div>
+            </div>
 
-            <!-- Price Filter Section -->
-            <li class="layout-menuitem-category mt-3">
-                <span>Price Range</span>
-            </li>
-            <li class="px-3 py-2">
-                <div class="flex flex-column gap-2">
-                    <div class="flex align-items-center justify-content-between">
-                        <span class="text-sm">Min: {{ priceRange[0] | currency: 'TND' : 'symbol' : '1.0-0' }}</span>
-                        <span class="text-sm">Max: {{ priceRange[1] | currency: 'TND' : 'symbol' : '1.0-0' }}</span>
+            <div class="menu-category menu-item-container">
+                <div class="price-filter-container">
+                    <div class="price-label mb-4 ml-2">
+                        <i class="pi pi-money-bill"></i>
+                        <span>Price range</span>
+                    </div>
+                    <div class="price-range-labels">
+                        <span>Min: TND{{ priceRange[0] }}</span>
+                        <span>Max: TND{{ priceRange[1] }}</span>
                     </div>
                     <p-slider [(ngModel)]="priceRange" [range]="true" [min]="0" [max]="5000" class="w-full"></p-slider>
-                    <div class="flex justify-content-end mt-2">
-                        <button pButton label="Apply Filter" icon="pi pi-filter" (click)="applyPriceFilter()" size="small" class="p-button-sm"></button>
+                    <div class="apply-filter">
+                        <button pButton label="Apply Filter" icon="pi pi-filter" (click)="applyPriceFilter()" class="p-button-sm"></button>
                     </div>
                 </div>
-            </li>
+            </div>
 
-            <!-- Traditional Menu Items -->
-            <ng-container *ngFor="let item of model; let i = index">
-                <li app-menuitem *ngIf="!item.separator" [item]="item" [index]="i" [root]="true"></li>
-                <li *ngIf="item.separator" class="menu-separator"></li>
+            <!-- Account Section -->
+            <div class="menu-category category-header">
+                <span class="category-title">My Account</span>
+            </div>
+
+            <ng-container *ngIf="authService.isAuthenticated(); else notAuthenticated">
+                <div class="menu-category menu-item-container">
+                    <a class="menu-item" [routerLink]="['/store/customer/profile']" [ngClass]="{ 'active-item': isRouteActive('/store/customer/profile') }">
+                        <i class="pi pi-user"></i>
+                        <span>Profile</span>
+                    </a>
+                </div>
+                <div class="menu-category menu-item-container">
+                    <a class="menu-item" [routerLink]="['/store/customer/orders']" [ngClass]="{ 'active-item': isRouteActive('/store/customer/orders') }">
+                        <i class="pi pi-shopping-bag"></i>
+                        <span>Commandes</span>
+                    </a>
+                </div>
+                <div class="menu-category menu-item-container">
+                    <a class="menu-item" (click)="logout()">
+                        <i class="pi pi-sign-out"></i>
+                        <span>Logout</span>
+                    </a>
+                </div>
             </ng-container>
-        </ul>
+
+            <ng-template #notAuthenticated>
+                <div class="menu-category menu-item-container" [ngClass]="{ 'active-item': isRouteActive('/auth/login') }">
+                    <a class="menu-item" [routerLink]="['/auth/login']">
+                        <i class="pi pi-sign-in"></i>
+                        <span>Login</span>
+                    </a>
+                </div>
+                <div class="menu-category menu-item-container" [ngClass]="{ 'active-item': isRouteActive('/auth/register') }">
+                    <a class="menu-item" [routerLink]="['/auth/register']">
+                        <i class="pi pi-user-plus"></i>
+                        <span>Register</span>
+                    </a>
+                </div>
+            </ng-template>
+
+            <!-- Help Section -->
+            <div class="menu-category category-header">
+                <span class="category-title">Help</span>
+            </div>
+
+            <div class="menu-category menu-item-container" [ngClass]="{ 'active-item': isRouteActive('/store/help/faqs') }">
+                <a class="menu-item" [routerLink]="['/store/help/faqs']">
+                    <i class="pi pi-question-circle"></i>
+                    <span>FAQs</span>
+                </a>
+            </div>
+            <div class="menu-category menu-item-container" [ngClass]="{ 'active-item': isRouteActive('/store/help/contact') }">
+                <a class="menu-item" [routerLink]="['/store/help/contact']">
+                    <i class="pi pi-envelope"></i>
+                    <span>Contact</span>
+                </a>
+            </div>
+        </div>
     `,
     styles: [
         `
-            .layout-menuitem-category {
-                font-weight: 600;
-                padding: 0.75rem 1rem;
-                color: var(--surface-900);
-                background-color: var(--surface-50);
-                border-radius: 4px;
-                margin: 0.5rem 0;
-            }
-
-            .categories-container {
-                scrollbar-width: thin;
-                scrollbar-color: var(--surface-400) var(--surface-100);
-                border: 1px solid var(--surface-200);
-                border-radius: 4px;
+            .sidebar-container {
+                width: 100%;
+                background-color: white;
+                border-right: 1px solid var(--surface-200);
                 padding: 0.5rem 0;
             }
 
-            .categories-container::-webkit-scrollbar {
-                width: 6px;
+            .category-header {
+                padding: 1rem 1rem 0.5rem;
+                margin-top: 0.75rem;
+                margin-bottom: 0.5rem;
             }
 
-            .categories-container::-webkit-scrollbar-track {
-                background: var(--surface-100);
-                border-radius: 4px;
+            .category-title {
+                font-weight: 600;
+                color: #6200ea;
+                font-size: 1.1rem;
             }
 
-            .categories-container::-webkit-scrollbar-thumb {
-                background-color: var(--surface-400);
+            .menu-category {
+                width: 100%;
+            }
+
+            .menu-item-container {
+                margin-bottom: 0.5rem;
+            }
+
+            .menu-item {
+                display: flex;
+                align-items: center;
+                padding: 0.75rem 1rem;
+                cursor: pointer;
+                transition: all 0.2s;
+                color: #333;
+                text-decoration: none;
                 border-radius: 4px;
+                margin: 0 0.5rem;
+            }
+
+            .menu-item:hover {
+                background-color: var(--surface-100);
+            }
+
+            .menu-item i {
+                margin-right: 0.75rem;
+                font-size: 1.1rem;
+            }
+
+            .expandable {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .item-content {
+                display: flex;
+                align-items: center;
+            }
+
+            .arrow {
+                transition: transform 0.3s;
+            }
+
+            .arrow-expanded {
+                transform: rotate(90deg);
+            }
+
+            .submenu {
+                padding: 0.25rem 0 0.25rem 1rem;
+                background-color: var(--surface-50);
+                margin-top: 0.25rem;
+                border-radius: 4px;
+                margin-left: 1rem;
+                margin-right: 0.5rem;
+            }
+
+            .categories-list {
+                list-style: none;
+                padding: 0;
+                margin: 0;
             }
 
             .category-item {
-                list-style-type: none;
-                transition: background-color 0.2s;
-                border-radius: 4px;
-                margin: 2px 0;
+                padding: 0;
+                margin: 0;
             }
 
-            .category-item:hover {
-                background-color: var(--surface-100);
-            }
-
-            .category-link {
-                color: var(--text-color);
-                font-size: 0.875rem;
+            .submenu-item {
+                display: flex;
+                align-items: center;
+                padding: 0.6rem 1rem;
+                color: #444;
                 text-decoration: none;
-                width: 100%;
-                padding: 0.5rem;
+                cursor: pointer;
                 border-radius: 4px;
+                margin-bottom: 0.25rem;
             }
 
-            .active-category {
-                font-weight: 600;
-                background-color: var(--surface-200);
-                color: var(--primary-color);
-            }
-
-            .menu-button {
-                border: 1px solid var(--surface-200);
-            }
-
-            .menu-button:hover {
+            .submenu-item:hover {
                 background-color: var(--surface-100);
-                border-color: var(--surface-300);
+            }
+
+            .submenu-item i {
+                margin-right: 0.75rem;
+                font-size: 1rem;
+            }
+
+            .active-item {
+                background-color: var(--surface-100);
+                border-left: 3px solid var(--primary-color);
+                color: var(--primary-color) !important;
+            }
+
+            .in-stock {
+                justify-content: space-between;
+            }
+
+            .price-filter-container {
+                padding: 0.5rem 1rem;
+            }
+
+            .price-label {
+                display: flex;
+                align-items: center;
+                margin-bottom: 0.5rem;
+                font-weight: 500;
+            }
+
+            .price-label i {
+                margin-right: 0.5rem;
+            }
+
+            .price-range-labels {
+                display: flex;
+                justify-content: space-between;
+                font-size: 0.8rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .apply-filter {
+                display: flex;
+                justify-content: flex-end;
+                margin-top: 0.75rem;
+            }
+
+            .loading {
+                color: #888;
+                font-style: italic;
             }
         `
     ]
 })
 export class AppMenu implements OnInit {
-    model: MenuItem[] = [];
+    activeMenu: string = '';
     priceRange: number[] = [0, 2500]; // Default price range values
     productFamilies: string[] = [];
+    showCategories: boolean = false;
+    inStockOnly: boolean = false;
+
     filters = {
         priceMin: 0,
         priceMax: 5000,
@@ -167,53 +310,80 @@ export class AppMenu implements OnInit {
     };
 
     constructor(
-        private authService: AuthenticationService,
+        public authService: AuthenticationService,
         private router: Router,
         private productsService: ProductsService,
-        private route: ActivatedRoute,
-        private famillesService: FamillesService
+        private route: ActivatedRoute
     ) {}
 
     ngOnInit() {
+        // Set initial active menu based on current route
+        this.activeMenu = this.router.url;
+
+        // Subscribe to router events to update active menu when navigation occurs
+        this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
+            this.activeMenu = this.router.url;
+        });
+
         // Fetch the product families from the service
         this.loadProductFamilies();
 
-        // Initialize other menu items
-        this.model = [
-            {
-                label: 'Account',
-                icon: 'pi pi-fw pi-angle-right',
-                items: this.getAccountMenuItems()
-            },
-            {
-                label: 'Help',
-                icon: 'pi pi-fw pi-question-circle',
-                items: [
-                    {
-                        label: 'FAQ',
-                        icon: 'pi pi-fw pi-question',
-                        routerLink: ['/store/help/faqs']
-                    },
-                    {
-                        label: 'Contact Us',
-                        icon: 'pi pi-fw pi-envelope',
-                        routerLink: ['/store/help/contact']
-                    }
-                ]
-            }
-        ];
-
         // Get current category from URL if present
-        const url = this.router.url;
-        const categoryParam = url.includes('category=') ? url.split('category=')[1].split('&')[0] : '';
+        const categoryParam = this.route.snapshot.queryParams['category'];
         if (categoryParam) {
             this.filters.category = decodeURIComponent(categoryParam);
+            this.showCategories = true; // Auto-expand categories if one is selected
+        }
+
+        // Check if inStock filter is applied
+        const inStockParam = this.route.snapshot.queryParams['inStock'];
+        this.inStockOnly = inStockParam === 'true';
+
+        // Get price range from URL if present
+        const priceMinParam = this.route.snapshot.queryParams['priceMin'];
+        const priceMaxParam = this.route.snapshot.queryParams['priceMax'];
+
+        if (priceMinParam) {
+            this.priceRange[0] = parseInt(priceMinParam);
+        }
+
+        if (priceMaxParam) {
+            this.priceRange[1] = parseInt(priceMaxParam);
         }
     }
 
     /**
-     * Navigate to all products (clear category filter but preserve others)
+     * Check if a specific route is active
      */
+    isRouteActive(route: string): boolean {
+        return this.activeMenu.startsWith(route);
+    }
+
+    /**
+     * Check if the category parameter matches the provided category
+     */
+    isCategoryActive(category: string): boolean {
+        return this.filters.category === category;
+    }
+
+    /**
+     * Check if the inStock filter is active
+     */
+    isInStockActive(): boolean {
+        return this.inStockOnly;
+    }
+
+    /**
+     * Check if there are any query parameters in the current URL
+     */
+    hasQueryParams(): boolean {
+        return Object.keys(this.route.snapshot.queryParams).length > 0;
+    }
+
+    toggleCategoriesDropdown() {
+        this.showCategories = !this.showCategories;
+    }
+
     navigateToAllProducts() {
         // Get current query parameters
         const currentParams = { ...this.route.snapshot.queryParams };
@@ -227,24 +397,22 @@ export class AppMenu implements OnInit {
         });
     }
 
-    /**
-     * Navigate to In Stock products (preserve existing filters)
-     */
     navigateToOnSale() {
         // Get current query parameters to preserve other filters (like category)
         const currentParams = { ...this.route.snapshot.queryParams };
 
         // Add or update the inStock parameter
-        currentParams['inStock'] = 'true';
+        if (this.inStockOnly) {
+            currentParams['inStock'] = 'true';
+        } else {
+            delete currentParams['inStock'];
+        }
 
         this.router.navigate(['/store/products'], {
             queryParams: currentParams
         });
     }
 
-    /**
-     * Navigate to products filtered by category (preserve other filters)
-     */
     navigateToCategory(category: string) {
         // Get current query parameters to preserve other filters (like inStock)
         const currentParams = { ...this.route.snapshot.queryParams };
@@ -258,9 +426,6 @@ export class AppMenu implements OnInit {
         });
     }
 
-    /**
-     * Load product families/categories from the API
-     */
     loadProductFamilies() {
         this.productsService.getUniqueFamilies().subscribe({
             next: (families) => {
@@ -273,10 +438,6 @@ export class AppMenu implements OnInit {
         });
     }
 
-    /**
-     * Apply the price filter and navigate to products page with query params
-     * (preserves other active filters)
-     */
     applyPriceFilter() {
         // Get current query parameters to preserve other filters
         const currentParams = { ...this.route.snapshot.queryParams };
@@ -294,47 +455,6 @@ export class AppMenu implements OnInit {
         });
     }
 
-    /**
-     * Dynamically generates account menu items based on authentication status.
-     */
-    getAccountMenuItems(): MenuItem[] {
-        if (this.authService.isAuthenticated()) {
-            return [
-                {
-                    label: 'Profile',
-                    icon: 'pi pi-fw pi-user-edit',
-                    routerLink: ['/store/customer/profile']
-                },
-                {
-                    label: 'Orders',
-                    icon: 'pi pi-fw pi-shopping-bag',
-                    routerLink: ['/store/customer/orders']
-                },
-                {
-                    label: 'Logout',
-                    icon: 'pi pi-fw pi-sign-out',
-                    command: () => this.logout()
-                }
-            ];
-        } else {
-            return [
-                {
-                    label: 'Login',
-                    icon: 'pi pi-fw pi-sign-in',
-                    routerLink: ['/auth/login']
-                },
-                {
-                    label: 'Register',
-                    icon: 'pi pi-fw pi-user-plus',
-                    routerLink: ['/auth/register']
-                }
-            ];
-        }
-    }
-
-    /**
-     * Logs out the user and redirects to the login page.
-     */
     logout() {
         this.authService.logout();
         this.router.navigate(['/auth/login']);

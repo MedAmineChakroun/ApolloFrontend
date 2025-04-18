@@ -7,4 +7,7 @@ export interface DocumentVente {
     docTiersCode: string;
     docTiersIntitule: string;
     docId: number;
+    docEtat: number;
+    docFlag: number;
+    docNote: string;
 }

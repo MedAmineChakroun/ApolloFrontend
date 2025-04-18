@@ -5,7 +5,7 @@
     <div class="flex flex-row justify-content-between align-items-center mb-4">
         <div class="flex align-items-center">
             <button pButton pRipple icon="pi pi-chevron-left" class="p-button-rounded p-button-text p-button-secondary" pTooltip="Back" tooltipPosition="top" (click)="goBack()"></button>
-            <h2 class="m-0">Invoice #{{ orderDocPiece }}</h2>
+            <h2 class="m-0">Document #{{ orderDocPiece }}</h2>
         </div>
 
         <div class="flex gap-2 mt-3 md:mt-0">
@@ -34,6 +34,7 @@
                             <div class="text-600">{{ clientData.tiersCodePostal }}, {{ clientData.tiersVille }}</div>
                             <div class="text-600">{{ clientData.tiersPays }}</div>
                             <div class="text-600">{{ clientData.tiersTel1 }}</div>
+                            <div class="text-600">{{ clientData.tiersEmail }}</div>
                         </div>
 
                         <!-- Client Info -->
@@ -66,7 +67,7 @@
                             </div>
                             <div class="flex justify-content-between">
                                 <span class="font-medium text-600">Status:</span>
-                                <p-tag severity="success" value="Passed successfully"></p-tag>
+                                <p-tag [value]="getStatus(CommandeEntete.docEtat).label" [severity]="getStatus(CommandeEntete.docEtat).severity" [rounded]="true"></p-tag>
                             </div>
                         </div>
                     </div>

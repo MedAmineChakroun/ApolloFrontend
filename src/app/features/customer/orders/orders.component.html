@@ -34,13 +34,14 @@
                 <th pSortableColumn="docPiece" style="min-width: 8rem">Order # <p-sortIcon field="docPiece"></p-sortIcon></th>
                 <th pSortableColumn="docTiersIntitule" style="min-width: 8rem">Customer <p-sortIcon field="docTiersIntitule"></p-sortIcon></th>
                 <th pSortableColumn="docDate" style="min-width: 8rem">Date <p-sortIcon field="docDate"></p-sortIcon></th>
-                <th pSortableColumn="articleCount" class="text-right" style="min-width: 6rem">
+                <th pSortableColumn="articleCount" class="text-center" style="min-width: 6rem">
                     lignes
                     <p-sortIcon field="articleCount"></p-sortIcon>
                 </th>
                 <th pSortableColumn="docTht" class="text-right" style="min-width: 10rem">Total HT <p-sortIcon field="docTht"></p-sortIcon></th>
                 <th pSortableColumn="docTtc" class="text-right" style="min-width: 10rem">Total TTC <p-sortIcon field="docTtc"></p-sortIcon></th>
-                <th style="min-width: 10rem" class="text-center">Actions</th>
+                <th pSortableColumn="docEtat" style="min-width: 5rem" class="text-center">Status <p-sortIcon field="docEtat"></p-sortIcon></th>
+                <th style="min-width: 5rem" class="text-center">Actions</th>
             </tr>
         </ng-template>
 
@@ -55,9 +56,10 @@
                     </div>
                 </td>
                 <td>{{ order.docDate | date: 'MMM d, yyyy' }}</td>
-                <td>{{ articleCounts[order.docPiece] || '0' }}</td>
+                <td class="text-center">{{ articleCounts[order.docPiece] || '0' }}</td>
                 <td class="text-right font-medium">{{ order.docTht | currency: 'TND ' }}</td>
                 <td class="text-right font-bold text-primary-500">{{ order.docTtc | currency: 'TND ' }}</td>
+                <td class="text-center"><p-tag [value]="getStatus(order.docEtat).label" [severity]="getStatus(order.docEtat).severity" [rounded]="true"></p-tag></td>
                 <td>
                     <div class="flex gap-2 justify-content-center">
                         <button pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-text p-button-info" pTooltip="View Details" tooltipPosition="top" (click)="viewOrderDetails(order.docPiece)"></button>

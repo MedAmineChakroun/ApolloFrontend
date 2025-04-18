@@ -166,11 +166,6 @@ export class ClientsManagementComponent implements OnInit {
         });
     }
 
-    exportToCSV() {
-        // This is just a placeholder for the CSV export functionality
-        this.toastr.info('Export to CSV functionality will be implemented soon', 'Information');
-    }
-
     viewClientDetails(client: Client) {
         this.selectedClient = client;
         this.dialogVisible = true;
@@ -238,5 +233,72 @@ export class ClientsManagementComponent implements OnInit {
 
     getSyncStatusIcon(flag: number): string {
         return flag === 1 ? 'pi pi-check-circle' : 'pi pi-exclamation-triangle';
+    }
+    //exprot csv
+    exportToCSV() {
+        if (this.clients.length === 0) {
+            this.toastr.warning('No data to export', 'Warning');
+            return;
+        }
+
+        try {
+            // Define CSV headers based on client properties
+            const headers = ['Client ID', 'Code', 'Name', 'Address', 'Postal Code', 'City', 'Country', 'Phone', 'Email', 'Sync Status'];
+
+            // Map clients data to CSV rows
+            const csvData = this.clients.map((client) => [
+                client.tiersId,
+                client.tiersCode,
+                client.tiersIntitule,
+                client.tiersAdresse1 || '',
+                client.tiersCodePostal || '',
+                client.tiersVille || '',
+                client.tiersPays || '',
+                client.tiersTel1 || '',
+                client.tiersEmail || '',
+                client.tiersFlag === 1 ? 'Synchronized' : 'Not Synchronized'
+            ]);
+
+            // Add headers as the first row
+            csvData.unshift(headers);
+
+            // Convert to CSV format
+            const csvContent = csvData
+                .map((row) =>
+                    row
+                        .map((cell) =>
+                            // Handle cells that might contain commas or quotes
+                            typeof cell === 'string' && (cell.includes(',') || cell.includes('"')) ? `"${cell.replace(/"/g, '""')}"` : cell
+                        )
+                        .join(',')
+                )
+                .join('\n');
+
+            // Create CSV file and trigger download
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+
+            // Create file name with current date
+            const date = new Date();
+            const fileName = `clients_export_${date.getFullYear()}${(date.getMonth() + 1).toString().padStart(2, '0')}${date.getDate().toString().padStart(2, '0')}.csv`;
+
+            // Handle browser compatibility without TypeScript errors
+            if (window.navigator && 'msSaveBlob' in window.navigator) {
+                // For IE and Edge
+                (window.navigator as any).msSaveBlob(blob, fileName);
+            } else {
+                // For other browsers
+                const url = URL.createObjectURL(blob);
+                link.href = url;
+                link.setAttribute('download', fileName);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+            }
+        } catch (error) {
+            console.error('Error exporting CSV:', error);
+            this.toastr.error('Failed to export CSV file', 'Error');
+        }
     }
 }

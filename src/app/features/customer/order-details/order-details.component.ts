@@ -225,4 +225,16 @@ export class OrderDetailsComponent implements OnInit {
             detail: `Invoice has been exported as PDF`
         });
     }
+    getStatus(etat: number): { label: string; severity: 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' | undefined } {
+        switch (etat) {
+            case 0:
+                return { label: 'En attente', severity: 'secondary' };
+            case 1:
+                return { label: 'Accepté', severity: 'success' };
+            case 2:
+                return { label: 'Refusé', severity: 'danger' };
+            default:
+                return { label: 'Inconnu', severity: 'info' };
+        }
+    }
 }

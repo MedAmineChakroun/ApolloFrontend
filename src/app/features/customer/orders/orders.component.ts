@@ -133,4 +133,16 @@ export class OrdersComponent implements OnInit {
         link.click();
         document.body.removeChild(link);
     }
+    getStatus(etat: number): { label: string; severity: 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' | undefined } {
+        switch (etat) {
+            case 0:
+                return { label: 'En attente', severity: 'secondary' };
+            case 1:
+                return { label: 'Accepté', severity: 'success' };
+            case 2:
+                return { label: 'Refusé', severity: 'danger' };
+            default:
+                return { label: 'Inconnu', severity: 'info' };
+        }
+    }
 }
