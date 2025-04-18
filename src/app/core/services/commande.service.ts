@@ -32,7 +32,9 @@ export class CommandeService {
     getNbDocumentVenteThisWeek(): Observable<number> {
         return this.http.get<number>(`${this.apiUrl}/count/thisWeek`);
     }
-
+    deleteDocumentVente(int: number) {
+        return this.http.delete(`${this.apiUrl}/${int}`);
+    }
     //pour Doc Ligne Commande-------------------------------------
     getLignesCommandeParDocPiece(docPiece: string): Observable<DocumentVenteLigne[]> {
         return this.http.get<DocumentVenteLigne[]>(`${this.apiUrlLigneCommande}/piece/${docPiece}`);

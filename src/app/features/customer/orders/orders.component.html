@@ -63,7 +63,7 @@
                 <td>
                     <div class="flex gap-2 justify-content-center">
                         <button pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-text p-button-info" pTooltip="View Details" tooltipPosition="top" (click)="viewOrderDetails(order.docPiece)"></button>
-                        <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-text p-button-danger" pTooltip="Export PDF" tooltipPosition="top" (click)="viewOrderDetails(order.docPiece)"></button>
+                        <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger" pTooltip="Supprimer" tooltipPosition="top" (click)="supprimerCommande(order.docId)"></button>
                     </div>
                 </td>
             </tr>
@@ -81,3 +81,4 @@
         </ng-template>
     </p-table>
 </div>
+<p-confirmDialog></p-confirmDialog>

@@ -16,13 +16,16 @@ import { Table } from 'primeng/table';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CommandeService } from '../../../core/services/commande.service';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { selectUser } from '../../../store/user/user.selectors';
 import { Store } from '@ngrx/store';
+import { ConfirmationService } from 'primeng/api';
+
 @Component({
     selector: 'app-orders',
     standalone: true,
-    imports: [CommonModule, TableModule, InputTextModule, ButtonModule, RippleModule, TooltipModule, CardModule, BadgeModule, TagModule, ToastModule, FormsModule],
-    providers: [MessageService],
+    imports: [CommonModule, ConfirmDialogModule, TableModule, InputTextModule, ButtonModule, RippleModule, TooltipModule, CardModule, BadgeModule, TagModule, ToastModule, FormsModule],
+    providers: [MessageService, ConfirmationService],
     templateUrl: './orders.component.html',
     styleUrls: ['./orders.component.css']
 })
@@ -37,7 +40,8 @@ export class OrdersComponent implements OnInit {
         private router: Router,
         private toast: ToastrService,
         private commandeService: CommandeService,
-        private store: Store
+        private store: Store,
+        private confirmationService: ConfirmationService
     ) {}
 
     ngOnInit() {
@@ -144,5 +148,23 @@ export class OrdersComponent implements OnInit {
             default:
                 return { label: 'Inconnu', severity: 'info' };
         }
+    }
+    supprimerCommande(docId: number) {
+        console.log(docId);
+        this.confirmationService.confirm({
+            message: 'Voulez-vous vraiment supprimer cette commande ?',
+            header: 'Confirmation',
+            icon: 'pi pi-exclamation-triangle',
+            acceptLabel: 'Oui',
+            rejectLabel: 'Non',
+            rejectButtonStyleClass: 'p-button-danger',
+            accept: () => {
+                this.commandeService.deleteDocumentVente(docId).subscribe(() => {
+                    this.toast.success('Commande supprimée');
+                    this.loadData();
+                });
+            },
+            reject: () => {}
+        });
     }
 }
