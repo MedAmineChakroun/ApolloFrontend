@@ -94,12 +94,40 @@ import { CheckboxModule } from 'primeng/checkbox';
                         <span>Profile</span>
                     </a>
                 </div>
+
+                <!-- Commandes dropdown menu -->
                 <div class="menu-category menu-item-container">
-                    <a class="menu-item" [routerLink]="['/store/customer/orders']" [ngClass]="{ 'active-item': isRouteActive('/store/customer/orders') }">
-                        <i class="pi pi-shopping-bag"></i>
-                        <span>Commandes</span>
-                    </a>
+                    <div class="menu-item expandable" (click)="toggleCommandesDropdown()">
+                        <div class="item-content">
+                            <i class="pi pi-shopping-bag"></i>
+                            <span>Commandes</span>
+                        </div>
+                        <i class="pi pi-chevron-right arrow" [ngClass]="{ 'arrow-expanded': showCommandes }"></i>
+                    </div>
+                    <div class="submenu" *ngIf="showCommandes">
+                        <ul class="categories-list">
+                            <li class="category-item">
+                                <a class="submenu-item" (click)="navigateToCommandes('all')" [ngClass]="{ 'active-item': isRouteActive('/store/customer/orders') && isCommandesTypeActive('all') }">
+                                    <i class="pi pi-list"></i>
+                                    <span>Liste Commandes</span>
+                                </a>
+                            </li>
+                            <li class="category-item">
+                                <a class="submenu-item" (click)="navigateToCommandes('accepte')" [ngClass]="{ 'active-item': isRouteActive('/store/customer/orders') && isCommandesTypeActive('accepte') }">
+                                    <i class="pi pi-check-circle"></i>
+                                    <span>Liste Acceptées</span>
+                                </a>
+                            </li>
+                            <li class="category-item">
+                                <a class="submenu-item" (click)="navigateToCommandes('refuse')" [ngClass]="{ 'active-item': isRouteActive('/store/customer/orders') && isCommandesTypeActive('refuse') }">
+                                    <i class="pi pi-times-circle"></i>
+                                    <span>Liste Refusées</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
+
                 <div class="menu-category menu-item-container">
                     <a class="menu-item" (click)="logout()">
                         <i class="pi pi-sign-out"></i>
@@ -301,7 +329,9 @@ export class AppMenu implements OnInit {
     priceRange: number[] = [0, 2500]; // Default price range values
     productFamilies: string[] = [];
     showCategories: boolean = false;
+    showCommandes: boolean = false; // Control visibility of commandes submenu
     inStockOnly: boolean = false;
+    commandesType: string = 'all'; // Default commandes type
 
     filters = {
         priceMin: 0,
@@ -350,6 +380,13 @@ export class AppMenu implements OnInit {
         if (priceMaxParam) {
             this.priceRange[1] = parseInt(priceMaxParam);
         }
+
+        // Check if commandes type filter is applied
+        const typeParam = this.route.snapshot.queryParams['type'];
+        if (typeParam && this.isRouteActive('/store/customer/orders')) {
+            this.commandesType = typeParam;
+            this.showCommandes = true; // Auto-expand commandes if one is selected
+        }
     }
 
     /**
@@ -374,6 +411,17 @@ export class AppMenu implements OnInit {
     }
 
     /**
+     * Check if the commandes type parameter matches the provided type
+     */
+    isCommandesTypeActive(type: string): boolean {
+        // If no type parameter in URL, default is 'all'
+        if (!this.route.snapshot.queryParams['type'] && type === 'all') {
+            return true;
+        }
+        return this.route.snapshot.queryParams['type'] === type;
+    }
+
+    /**
      * Check if there are any query parameters in the current URL
      */
     hasQueryParams(): boolean {
@@ -382,6 +430,10 @@ export class AppMenu implements OnInit {
 
     toggleCategoriesDropdown() {
         this.showCategories = !this.showCategories;
+    }
+
+    toggleCommandesDropdown() {
+        this.showCommandes = !this.showCommandes;
     }
 
     navigateToAllProducts() {
@@ -423,6 +475,23 @@ export class AppMenu implements OnInit {
 
         this.router.navigate(['/store/products'], {
             queryParams: currentParams
+        });
+    }
+
+    navigateToCommandes(type: string) {
+        // Update the active commandes type
+        this.commandesType = type;
+
+        // Prepare query parameters
+        const queryParams: any = {};
+
+        // Only add type parameter if it's not the default 'all'
+        if (type !== 'all') {
+            queryParams.type = type;
+        }
+
+        this.router.navigate(['/store/customer/orders'], {
+            queryParams: queryParams
         });
     }
 

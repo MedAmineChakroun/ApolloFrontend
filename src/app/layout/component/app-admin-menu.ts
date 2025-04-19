@@ -32,18 +32,26 @@ import { filter } from 'rxjs/operators';
                 <div class="menu-item expandable" [ngClass]="{ 'active-item': activeMenu.includes('/store/admin/orders') }" (click)="toggleSubmenu('orders')">
                     <div class="item-content">
                         <i class="pi pi-shopping-bag"></i>
-                        <span>Liste de commandes</span>
+                        <span>Gestion commandes</span>
                     </div>
                     <i class="pi pi-chevron-right arrow"></i>
                 </div>
                 <div class="submenu" *ngIf="expandedMenus['orders']">
                     <a routerLink="/store/admin/orders/pending" class="submenu-item" [ngClass]="{ 'active-item': activeMenu === '/store/admin/orders/pending' }">
+                        <i class="pi pi-list"></i>
+                        <span>Liste de commandes</span>
+                    </a>
+                    <a routerLink="/store/admin/orders/pending" class="submenu-item" [ngClass]="{ 'active-item': activeMenu === '/store/admin/orders/pending' }">
                         <i class="pi pi-clock"></i>
                         <span>En attente</span>
                     </a>
-                    <a routerLink="/store/admin/orders/completed" class="submenu-item" [ngClass]="{ 'active-item': activeMenu === '/store/admin/orders/completed' }">
-                        <i class="pi pi-check"></i>
-                        <span>Terminées</span>
+                    <a routerLink="/store/admin/orders/accepted" class="submenu-item" [ngClass]="{ 'active-item': activeMenu === '/store/admin/orders/completed' }">
+                        <i class="pi pi-check-circle"></i>
+                        <span>Acceptées</span>
+                    </a>
+                    <a routerLink="/store/admin/orders/refused" class="submenu-item" [ngClass]="{ 'active-item': activeMenu === '/store/admin/orders/completed' }">
+                        <i class="pi pi-times-circle"></i>
+                        <span>Refusées</span>
                     </a>
                 </div>
             </div>

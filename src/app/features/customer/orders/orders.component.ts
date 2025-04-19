@@ -13,7 +13,7 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { FormsModule } from '@angular/forms';
 import { Table } from 'primeng/table';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CommandeService } from '../../../core/services/commande.service';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
@@ -34,10 +34,15 @@ export class OrdersComponent implements OnInit {
     @ViewChild('dt') table!: Table;
     articleCounts: { [docPiece: string]: number } = {};
     orders: DocumentVente[] = [];
+    filteredOrders: DocumentVente[] = [];
     loading: boolean = true;
     tiersCode: string = '';
+    Filtre: string = '';
+    statusFilter: string | null = null;
+
     constructor(
         private router: Router,
+        private route: ActivatedRoute,
         private toast: ToastrService,
         private commandeService: CommandeService,
         private store: Store,
@@ -45,8 +50,19 @@ export class OrdersComponent implements OnInit {
     ) {}
 
     ngOnInit() {
+        this.Filtre = this.router.url.split('/').pop() || '';
+
+        // Get query parameters from URL
+        this.route.queryParams.subscribe((params) => {
+            this.statusFilter = params['type'] || null;
+            if (this.orders.length > 0) {
+                this.applyStatusFilter();
+            }
+        });
+
         this.loadData();
     }
+
     loadData() {
         this.store.select(selectUser).subscribe({
             next: (user) => {
@@ -57,6 +73,7 @@ export class OrdersComponent implements OnInit {
                     this.commandeService.getDocumentVenteByTiersCode(this.tiersCode).subscribe({
                         next: (response) => {
                             this.orders = response;
+                            this.applyStatusFilter();
                             this.loadNbLigne();
                             this.loading = false;
                         },
@@ -74,6 +91,37 @@ export class OrdersComponent implements OnInit {
             }
         });
     }
+
+    applyStatusFilter() {
+        if (!this.statusFilter) {
+            this.filteredOrders = [...this.orders];
+            return;
+        }
+
+        // Map URL parameter to Etat value
+        let etatValue: number | null = null;
+
+        // Make sure the case matches exactly what's in the URL
+        if (this.statusFilter.toLowerCase() === 'accepte') {
+            etatValue = 1;
+        } else if (this.statusFilter.toLowerCase() === 'refuse') {
+            etatValue = 2;
+        } else if (this.statusFilter.toLowerCase() === 'attente') {
+            etatValue = 0;
+        }
+
+        // Filter orders by Etat value if specified
+        if (etatValue !== null) {
+            // Try different property names that might hold the status
+            this.filteredOrders = this.orders.filter((order) => {
+                const statusMatch = order.docEtat === etatValue || (order as any).etat === etatValue || (order as any).status === etatValue || (order as any).docStatus === etatValue;
+
+                return statusMatch;
+            });
+        } else {
+            this.filteredOrders = [...this.orders];
+        }
+    }
     loadNbLigne() {
         this.orders.forEach((order) => {
             this.commandeService.getNbLigneCommandeParDocPiece(order.docPiece).subscribe({
@@ -90,9 +138,11 @@ export class OrdersComponent implements OnInit {
     goToNewOrder() {
         this.router.navigate(['/store/products/cart']);
     }
+
     viewOrderDetails(orderId: string) {
         this.router.navigate(['/store/customer/orderDetails', orderId]);
     }
+
     customSort(event: any) {
         const field = event.field as keyof DocumentVente | 'articleCount';
 
@@ -119,9 +169,11 @@ export class OrdersComponent implements OnInit {
             return event.order * result;
         });
     }
+
     exportCSV() {
         const headers = ['Order #', 'Customer Code', 'Date', 'Article Count', 'Total HT', 'Total TTC'];
-        const rows = this.orders.map((order) => [order.docPiece, order.docTiersCode, new Date(order.docDate).toLocaleDateString(), this.articleCounts[order.docPiece] || 0, order.docTht, order.docTtc]);
+        // Use filteredOrders instead of orders for export
+        const rows = this.filteredOrders.map((order) => [order.docPiece, order.docTiersCode, new Date(order.docDate).toLocaleDateString(), this.articleCounts[order.docPiece] || 0, order.docTht, order.docTtc]);
 
         const csvContent = [headers, ...rows].map((row) => row.map((cell) => `"${cell}"`).join(',')).join('\n');
 
@@ -137,6 +189,7 @@ export class OrdersComponent implements OnInit {
         link.click();
         document.body.removeChild(link);
     }
+
     getStatus(etat: number): { label: string; severity: 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' | undefined } {
         switch (etat) {
             case 0:
@@ -149,6 +202,7 @@ export class OrdersComponent implements OnInit {
                 return { label: 'Inconnu', severity: 'info' };
         }
     }
+
     supprimerCommande(docId: number) {
         console.log(docId);
         this.confirmationService.confirm({
