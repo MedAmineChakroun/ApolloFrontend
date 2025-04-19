@@ -13,7 +13,10 @@ import { filter } from 'rxjs/operators';
     standalone: true,
     imports: [CommonModule, RouterModule, ButtonModule, PanelMenuModule],
     template: /*html*/ `
-        <div class="admin-sidebar mt-5">
+        <div class="admin-sidebar ">
+            <div class="menu-category category-header mt-4">
+                <span class="category-title">Acceuil</span>
+            </div>
             <!-- Accueil -->
             <div class="menu-category">
                 <a routerLink="/store/admin/dashboard" class="menu-item" [ngClass]="{ 'active-item': activeMenu === '/store/admin/dashboard' }">
@@ -29,7 +32,7 @@ import { filter } from 'rxjs/operators';
 
             <!-- Liste de commandes (expandable) -->
             <div class="menu-category menu-item-container">
-                <div class="menu-item expandable" [ngClass]="{ 'active-item': activeMenu.includes('/store/admin/orders') }" (click)="toggleSubmenu('orders')">
+                <div class="menu-item expandable" (click)="toggleSubmenu('orders')">
                     <div class="item-content">
                         <i class="pi pi-shopping-bag"></i>
                         <span>Gestion commandes</span>
@@ -37,21 +40,14 @@ import { filter } from 'rxjs/operators';
                     <i class="pi pi-chevron-right arrow"></i>
                 </div>
                 <div class="submenu" *ngIf="expandedMenus['orders']">
-                    <a routerLink="/store/admin/orders/pending" class="submenu-item" [ngClass]="{ 'active-item': activeMenu === '/store/admin/orders/pending' }">
+                    <a routerLink="/store/admin/orders" class="submenu-item" [ngClass]="{ 'active-item': activeMenu === '/store/admin/orders' }">
                         <i class="pi pi-list"></i>
                         <span>Liste de commandes</span>
                     </a>
-                    <a routerLink="/store/admin/orders/pending" class="submenu-item" [ngClass]="{ 'active-item': activeMenu === '/store/admin/orders/pending' }">
-                        <i class="pi pi-clock"></i>
-                        <span>En attente</span>
-                    </a>
-                    <a routerLink="/store/admin/orders/accepted" class="submenu-item" [ngClass]="{ 'active-item': activeMenu === '/store/admin/orders/completed' }">
-                        <i class="pi pi-check-circle"></i>
-                        <span>Acceptées</span>
-                    </a>
-                    <a routerLink="/store/admin/orders/refused" class="submenu-item" [ngClass]="{ 'active-item': activeMenu === '/store/admin/orders/completed' }">
+
+                    <a routerLink="/store/admin/orders/refused" class="submenu-item" [ngClass]="{ 'active-item': activeMenu === '/store/admin/orders/refused' }">
                         <i class="pi pi-times-circle"></i>
-                        <span>Refusées</span>
+                        <span>non-sync</span>
                     </a>
                 </div>
             </div>
@@ -73,7 +69,7 @@ import { filter } from 'rxjs/operators';
                 <div class="submenu" *ngIf="expandedMenus['clients']">
                     <a routerLink="/store/admin/clients" class="submenu-item" [ngClass]="{ 'active-item': activeMenu === '/store/admin/clients' }">
                         <i class="pi pi-list"></i>
-                        <span>Liste</span>
+                        <span>Liste clients</span>
                     </a>
                     <a routerLink="/store/admin/clients/sync" class="submenu-item" [ngClass]="{ 'active-item': activeMenu === '/store/admin/clients/sync' }">
                         <i class="pi pi-times-circle mr-2"></i>
@@ -157,7 +153,7 @@ import { filter } from 'rxjs/operators';
 
             .category-header {
                 padding: 1rem 1rem 0.5rem;
-                margin-top: 0.75rem;
+                margin-bottom: 0.25rem;
             }
 
             .category-title {

@@ -1,0 +1,55 @@
+/* orders-management.component.css */
+:host ::ng-deep .p-datatable .p-datatable-header {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-width: 1px 0 0 0;
+    padding: 1rem;
+    font-weight: 500;
+}
+
+:host ::ng-deep .p-datatable .p-datatable-footer {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-width: 0 0 1px 0;
+    padding: 1rem;
+    font-weight: 500;
+}
+
+:host ::ng-deep .p-datatable .p-datatable-thead > tr > th {
+    text-align: left;
+    padding: 0.75rem 0.75rem;
+    border: 1px solid #dee2e6;
+    border-width: 0 0 1px 0;
+    font-weight: 600;
+    color: #495057;
+    background: #f8f9fa;
+    transition: box-shadow 0.2s;
+}
+
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+    text-align: left;
+    border: 1px solid #dee2e6;
+    border-width: 0 0 1px 0;
+    padding: 0.75rem 0.75rem;
+}
+
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr:nth-child(even) {
+    background: #fcfcfc;
+}
+
+:host ::ng-deep .p-paginator {
+    padding: 1rem;
+}
+
+.text-primary-500 {
+    color: #3b82f6;
+}
+
+/* Mobile responsive adjustments */
+@media screen and (max-width: 768px) {
+    :host ::ng-deep .p-datatable-responsive .p-datatable-tbody > tr > td .p-column-title {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+}

@@ -9,7 +9,7 @@ export default [
     { path: '', component: Landing },
     { path: 'profile', component: UserProfileComponent, canActivate: [AuthGuard, RoleGuard], data: { roles: ['customer', 'admin'] } },
     { path: 'orders', component: OrdersComponent, canActivate: [AuthGuard, RoleGuard], data: { roles: ['customer'] } },
-    { path: 'orderDetails/:id', component: OrderDetailsComponent, canActivate: [AuthGuard, RoleGuard], data: { roles: ['customer'] } }
+    { path: 'orderDetails/:id', component: OrderDetailsComponent, canActivate: [AuthGuard, RoleGuard], data: { roles: ['customer', 'admin'] } }
     // { path: 'product/:id', component: ProductComponent },
     // { path: 'cart', component: CartComponent },
 ] as Routes;

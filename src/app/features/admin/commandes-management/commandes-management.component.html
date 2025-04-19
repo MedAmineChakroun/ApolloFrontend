@@ -1,0 +1,120 @@
+<!-- orders-management.component.html -->
+<div class="card">
+    <div class="flex flex-column md:flex-row justify-content-between align-items-center mb-4">
+        <h2 class="m-0 text-2xl font-medium text-900">Customer Orders</h2>
+        <div class="flex gap-2 mt-3 md:mt-0">
+            <button pButton pRipple label="Export CSV" icon="pi pi-download" class="p-button-outlined" (click)="exportCSV()"></button>
+        </div>
+    </div>
+
+    <!-- Table Section -->
+    <p-table
+        #dt
+        [value]="filteredOrders"
+        [paginator]="true"
+        [rows]="10"
+        [rowsPerPageOptions]="[5, 10, 25]"
+        [globalFilterFields]="['docPiece', 'docTiersIntitule', 'docTiersCode']"
+        styleClass="p-datatable-sm p-datatable-gridlines"
+        [tableStyle]="{ 'min-width': '50rem' }"
+        [rowHover]="true"
+        dataKey="docId"
+        [loading]="loading"
+        responsiveLayout="scroll"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} orders"
+        [filterDelay]="0"
+        [customSort]="true"
+        (sortFunction)="customSort($event)"
+        sortField="docDate"
+        [sortOrder]="-1"
+    >
+        <ng-template pTemplate="caption">
+            <div class="flex justify-content-between align-items-center">
+                <div>
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-search"></i>
+                        <input pInputText type="text" placeholder="Search..." (input)="onSearchChange($event)" />
+                    </span>
+                </div>
+                <div class="flex gap-2">
+                    <p-dropdown [options]="statusOptions" placeholder="Filter by Status" (onChange)="applyStatusFilter($event.value)" [showClear]="true" appendTo="body">
+                        <ng-template let-option pTemplate="item">
+                            <p-tag [value]="option.label" [severity]="option.severity" [rounded]="true"></p-tag>
+                        </ng-template>
+                    </p-dropdown>
+                    <button pButton pRipple icon="pi pi-filter-slash" class="p-button-text" (click)="clearFilters()" pTooltip="clear" tooltipPosition="top"></button>
+                </div>
+            </div>
+        </ng-template>
+
+        <ng-template pTemplate="header">
+            <tr>
+                <th pSortableColumn="docPiece" style="min-width: 8rem">Order # <p-sortIcon field="docPiece"></p-sortIcon></th>
+                <th style="min-width: 4rem">Icon</th>
+                <th pSortableColumn="docTiersIntitule" style="min-width: 8rem">Customer <p-sortIcon field="docTiersIntitule"></p-sortIcon></th>
+                <th pSortableColumn="docDate" style="min-width: 8rem">Date <p-sortIcon field="docDate"></p-sortIcon></th>
+                <th pSortableColumn="articleCount" class="text-center" style="min-width: 6rem">
+                    lignes
+                    <p-sortIcon field="articleCount"></p-sortIcon>
+                </th>
+                <th pSortableColumn="docTht" class="text-right" style="min-width: 10rem">Total HT <p-sortIcon field="docTht"></p-sortIcon></th>
+                <th pSortableColumn="docTtc" class="text-right" style="min-width: 10rem">Total TTC <p-sortIcon field="docTtc"></p-sortIcon></th>
+                <th pSortableColumn="docEtat" style="min-width: 5rem" class="text-center">Status <p-sortIcon field="docEtat"></p-sortIcon></th>
+                <th style="min-width: 5rem" class="text-center">Actions</th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-order>
+            <tr>
+                <td>
+                    <span class="font-medium">#{{ order.docPiece }}</span>
+                </td>
+                <td>
+                    <div class="flex align-items-center justify-content-center">
+                        <span class="badge bg-primary-500 text-white p-2 text-center" style="border-radius: 50%; width: 2.5rem; height: 2.5rem; display: flex; align-items: center; justify-content: center">
+                            {{ getInitials(order.docTiersIntitule) }}
+                        </span>
+                    </div>
+                </td>
+                <td>
+                    <div class="flex flex-column">
+                        <p-tag [value]="order.docTiersIntitule" severity="info" [rounded]="true"></p-tag>
+                    </div>
+                </td>
+                <td>{{ order.docDate | date: 'MMM d, yyyy' }}</td>
+                <td class="text-center">{{ articleCounts[order.docPiece] || '0' }}</td>
+                <td class="text-right font-medium">{{ order.docTht | currency: 'TND ' }}</td>
+                <td class="text-right font-bold text-primary-500">{{ order.docTtc | currency: 'TND ' }}</td>
+                <td class="text-center">
+                    <p-dropdown [options]="statusOptions" [(ngModel)]="order.docEtat" optionLabel="label" optionValue="value" (onChange)="changeOrderStatus(order, order.docEtat)" appendTo="body" [style]="{ width: '100%' }">
+                        <ng-template pTemplate="selectedItem">
+                            <p-tag [value]="getStatus(order.docEtat).label" [severity]="getStatus(order.docEtat).severity" [rounded]="true"></p-tag>
+                        </ng-template>
+                        <ng-template let-option pTemplate="item">
+                            <p-tag [value]="option.label" [severity]="option.severity" [rounded]="true"></p-tag>
+                        </ng-template>
+                    </p-dropdown>
+                </td>
+                <td>
+                    <div class="flex gap-2 justify-content-center">
+                        <button pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-text p-button-info" pTooltip="View Details" tooltipPosition="top" (click)="viewOrderDetails(order.docPiece)"></button>
+                        <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger" pTooltip="Supprimer" tooltipPosition="top" (click)="supprimerCommande(order.docId)"></button>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="9" class="text-center p-5">
+                    <div class="flex flex-column align-items-center">
+                        <i class="pi pi-inbox text-6xl text-color-secondary mb-3"></i>
+                        <span class="font-medium text-xl">No orders found</span>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+<p-confirmDialog></p-confirmDialog>
