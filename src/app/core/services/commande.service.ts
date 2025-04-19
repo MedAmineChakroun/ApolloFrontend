@@ -38,6 +38,9 @@ export class CommandeService {
     updateEtatDocument(id: number, etat: number, note: string) {
         return this.http.patch(`${this.apiUrl}/updateEtat/${id}?etat=${etat}&note=${note}`, null);
     }
+    updateFlagDocument(id: number, flag: number) {
+        return this.http.patch(`${this.apiUrl}/updateFlag/${id}?flag=${flag}`, null);
+    }
     //pour Doc Ligne Commande-------------------------------------
     getLignesCommandeParDocPiece(docPiece: string): Observable<DocumentVenteLigne[]> {
         return this.http.get<DocumentVenteLigne[]>(`${this.apiUrlLigneCommande}/piece/${docPiece}`);

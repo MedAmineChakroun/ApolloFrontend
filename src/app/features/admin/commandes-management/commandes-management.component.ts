@@ -38,6 +38,7 @@ export class CommandesManagementComponent implements OnInit {
     articleCounts: { [key: string]: number } = {};
     globalFilter: string = '';
     statusFilter: string | null = null;
+    isSyncRoute = false; // Flag to track if we're on the sync route
 
     // New properties for rejection dialog
     rejectionDialogVisible: boolean = false;
@@ -58,15 +59,22 @@ export class CommandesManagementComponent implements OnInit {
     ) {}
 
     ngOnInit() {
+        this.isSyncRoute = this.router.url === '/store/admin/orders/sync';
         this.loadOrders();
     }
 
     loadOrders() {
         this.loading = true;
+        // Check if the current route is the sync route
         this.commandeService.getDocumentVente().subscribe({
             next: (data) => {
-                this.orders = data;
-                this.filteredOrders = [...data];
+                // If on sync route, filter to only show orders with docFlag === 0
+                if (this.isSyncRoute) {
+                    this.orders = data.filter((order) => order.docFlag === 0);
+                } else {
+                    this.orders = data;
+                }
+                this.filteredOrders = [...this.orders];
                 this.loadArticleCounts();
                 this.loading = false;
             },
@@ -312,5 +320,45 @@ export class CommandesManagementComponent implements OnInit {
         this.statusFilter = null;
         this.table.clear();
         this.filteredOrders = [...this.orders];
+    }
+    getSyncStatusLabel(flag: number): string {
+        return flag === 1 ? 'Synchronisé' : 'Non Synchronisé';
+    }
+
+    getSyncStatusSeverity(flag: number): 'success' | 'danger' | 'info' | 'warn' | 'secondary' | 'contrast' {
+        return flag === 1 ? 'success' : 'danger';
+    }
+
+    getSyncStatusIcon(flag: number): string {
+        return flag === 1 ? 'pi pi-check-circle' : 'pi pi-exclamation-triangle';
+    }
+    changerCommandeFlag(order: DocumentVente) {
+        const newFlag = order.docFlag === 1 ? 0 : 1;
+        const newStatus = newFlag === 1 ? 'synchroniser' : 'non synchroniser';
+
+        this.confirmationService.confirm({
+            message: 'Voulez-vous vraiment ' + newStatus + ' cette commande ?',
+            header: 'Confirmation',
+            icon: 'pi pi-exclamation-triangle',
+            acceptLabel: 'Oui',
+            rejectLabel: 'Non',
+            rejectButtonStyleClass: 'p-button-danger',
+            accept: () => {
+                this.commandeService.updateFlagDocument(order.docId, newFlag).subscribe({
+                    next: () => {
+                        this.messageService.add({
+                            severity: 'success',
+                            summary: 'Success',
+                            detail: 'Order flag updated successfully'
+                        });
+                        this.loadOrders(); // Reload orders after update
+                    },
+                    error: (err) => {
+                        console.error('Erreur lors de la mise à jour du flag :', err);
+                        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Order flag updated successfully' });
+                    }
+                });
+            }
+        });
     }
 }

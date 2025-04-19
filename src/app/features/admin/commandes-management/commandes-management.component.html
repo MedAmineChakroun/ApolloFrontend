@@ -58,9 +58,9 @@
                     lignes
                     <p-sortIcon field="articleCount"></p-sortIcon>
                 </th>
-                <th pSortableColumn="docTht" class="text-right" style="min-width: 10rem">Total HT <p-sortIcon field="docTht"></p-sortIcon></th>
                 <th pSortableColumn="docTtc" class="text-right" style="min-width: 10rem">Total TTC <p-sortIcon field="docTtc"></p-sortIcon></th>
                 <th pSortableColumn="docEtat" style="min-width: 5rem" class="text-center">Status <p-sortIcon field="docEtat"></p-sortIcon></th>
+                <th pSortableColumn="docFlag" style="min-width: 10rem" class="text-center">Erp Sync <p-sortIcon field="docFlag"></p-sortIcon></th>
                 <th style="min-width: 5rem" class="text-center">Actions</th>
             </tr>
         </ng-template>
@@ -84,7 +84,7 @@
                 </td>
                 <td>{{ order.docDate | date: 'MMM d, yyyy' }}</td>
                 <td class="text-center">{{ articleCounts[order.docPiece] || '0' }}</td>
-                <td class="text-right font-medium">{{ order.docTht | currency: 'TND ' }}</td>
+
                 <td class="text-right font-bold text-primary-500">{{ order.docTtc | currency: 'TND ' }}</td>
                 <td class="text-center">
                     <p-dropdown [options]="statusOptions" [(ngModel)]="order.docEtat" optionLabel="label" optionValue="value" (onChange)="changeOrderStatus(order, order.docEtat)" appendTo="body" [style]="{ width: '100%' }">
@@ -96,9 +96,11 @@
                         </ng-template>
                     </p-dropdown>
                 </td>
+                <td><p-tag [value]="getSyncStatusLabel(order.docFlag)" [severity]="getSyncStatusSeverity(order.docFlag)" [icon]="getSyncStatusIcon(order.docFlag)"> </p-tag></td>
                 <td>
                     <div class="flex gap-2 justify-content-center">
                         <button pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-info" pTooltip="View Details" tooltipPosition="top" (click)="viewOrderDetails(order.docPiece)"></button>
+                        <button pButton pRipple icon="pi pi-sync" class="p-button-rounded p-button-help" pTooltip="Changer sync Etat" tooltipPosition="top" (click)="changerCommandeFlag(order)"></button>
                         <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" pTooltip="Supprimer" tooltipPosition="top" (click)="supprimerCommande(order.docId)"></button>
                     </div>
                 </td>

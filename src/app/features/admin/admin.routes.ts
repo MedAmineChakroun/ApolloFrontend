@@ -8,7 +8,8 @@ export default [
     { path: 'dashboard', component: Dashboard },
     { path: 'clients', component: ClientsManagementComponent },
     { path: 'clients/sync', component: ClientsManagementComponent },
-    { path: 'orders', component: CommandesManagementComponent }
+    { path: 'orders', component: CommandesManagementComponent },
+    { path: 'orders/sync', component: CommandesManagementComponent }
     // { path: 'users', component: UsersComponent },
     // { path: 'sellers', component: SellersComponent },
 ] as Routes;

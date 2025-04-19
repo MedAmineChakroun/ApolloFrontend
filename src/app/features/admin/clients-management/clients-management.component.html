@@ -1,4 +1,3 @@
-<!-- clients-management.component.html -->
 <div class="container">
     <p-card>
         <ng-template pTemplate="header">
@@ -47,11 +46,11 @@
                     <th pSortableColumn="tiersCode" style="width: 6rem">Code <p-sortIcon field="tiersCode"></p-sortIcon></th>
                     <th pSortableColumn="tiersIntitule" style="width: 8rem">Name <p-sortIcon field="tiersIntitule"></p-sortIcon></th>
                     <th pSortableColumn="tiersVille" style="width: 8rem">City <p-sortIcon field="tiersVille"></p-sortIcon></th>
-                    <th pSortableColumn="tiersPays" style="width: 10rem">Country <p-sortIcon field="tiersPays"></p-sortIcon></th>
+                    <th pSortableColumn="tiersPays" style="width: 12rem">Country<p-sortIcon field="tiersPays"></p-sortIcon></th>
                     <th pSortableColumn="tiersTel1" style="width: 12rem">Phone <p-sortIcon field="tiersTel1"></p-sortIcon></th>
                     <th pSortableColumn="tiersEmail" style="width: 8rem">Email <p-sortIcon field="tiersEmail"></p-sortIcon></th>
-                    <th pSortableColumn="tiersFlag" style="width: 10rem">ERP Sync Status <p-sortIcon field="tiersFlag"></p-sortIcon></th>
-                    <th style="width: 10rem">Actions</th>
+                    <th pSortableColumn="tiersFlag" style="min-width: 12rem" class="text-center">ERP Sync <p-sortIcon field="tiersFlag"></p-sortIcon></th>
+                    <th style="min-width: 10rem">Actions</th>
                 </tr>
             </ng-template>
 
@@ -71,9 +70,9 @@
                     <td>
                         <p-tag [value]="getSyncStatusLabel(client.tiersFlag)" [severity]="getSyncStatusSeverity(client.tiersFlag)" [icon]="getSyncStatusIcon(client.tiersFlag)"> </p-tag>
                     </td>
-                    <td>
-                        <button pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-info mr-2 mb-1" (click)="viewClientDetails(client)" pTooltip="Voir Detail" tooltipPosition="top"></button>
-                        <button pButton pRipple icon="pi pi-sync" class="p-button-rounded p-button-help mr-2 mb-1" (click)="changeUserFlag(client)" pTooltip="Changer Etat" tooltipPosition="top"></button>
+                    <td class="flex gap-2 justify-content-center">
+                        <button pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-info" (click)="viewClientDetails(client)" pTooltip="Voir Detail" tooltipPosition="top"></button>
+                        <button pButton pRipple icon="pi pi-sync" class="p-button-rounded p-button-help" (click)="changeUserFlag(client)" pTooltip="Changer Etat" tooltipPosition="top"></button>
                         <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="confirmDelete(client)" pTooltip="supprimer" tooltipPosition="top"></button>
                     </td>
                 </tr>

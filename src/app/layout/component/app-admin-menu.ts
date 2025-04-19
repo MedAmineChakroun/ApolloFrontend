@@ -45,7 +45,7 @@ import { filter } from 'rxjs/operators';
                         <span>Liste de commandes</span>
                     </a>
 
-                    <a routerLink="/store/admin/orders/refused" class="submenu-item" [ngClass]="{ 'active-item': activeMenu === '/store/admin/orders/refused' }">
+                    <a routerLink="/store/admin/orders/sync" class="submenu-item" [ngClass]="{ 'active-item': activeMenu === '/store/admin/orders/sync' }">
                         <i class="pi pi-times-circle"></i>
                         <span>non-sync</span>
                     </a>

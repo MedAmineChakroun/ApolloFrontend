@@ -198,7 +198,7 @@ export class ClientsManagementComponent implements OnInit {
     changeUserFlag(client: Client): void {
         const newFlag = client.tiersFlag === 1 ? 0 : 1;
         const oldStatus = client.tiersFlag === 1 ? 'synchroniser' : 'non synchroniser';
-        const newStatus = newFlag === 1 ? 'synchroniser' : 'synchroniser';
+        const newStatus = newFlag === 1 ? 'synchroniser' : 'non synchroniser';
 
         this.confirmationService.confirm({
             message: `Voulez-vous vraiment changer l'état du client "${client.tiersIntitule}" de ${oldStatus} à ${newStatus} ?`,
@@ -224,7 +224,7 @@ export class ClientsManagementComponent implements OnInit {
 
     // Helper methods for flag status
     getSyncStatusLabel(flag: number): string {
-        return flag === 1 ? 'Synchronized' : 'Not Synchronized';
+        return flag === 1 ? 'Synchronisé' : 'Non Synchronisé';
     }
 
     getSyncStatusSeverity(flag: number): 'success' | 'danger' | 'info' | 'warn' | 'secondary' | 'contrast' {
