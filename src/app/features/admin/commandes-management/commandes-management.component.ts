@@ -1,3 +1,4 @@
+// TypeScript Component (commandes-management.component.ts)
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -18,11 +19,12 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { CardModule } from 'primeng/card';
 import { BadgeModule } from 'primeng/badge';
+import { DialogModule } from 'primeng/dialog';
 
 @Component({
     selector: 'app-orders-management',
     standalone: true,
-    imports: [CommonModule, FormsModule, TableModule, ButtonModule, RippleModule, InputTextModule, DropdownModule, TooltipModule, TagModule, ConfirmDialogModule, ToastModule, CardModule, BadgeModule],
+    imports: [CommonModule, FormsModule, TableModule, ButtonModule, RippleModule, InputTextModule, DropdownModule, TooltipModule, TagModule, ConfirmDialogModule, ToastModule, CardModule, BadgeModule, DialogModule],
     providers: [ConfirmationService, MessageService],
     templateUrl: './commandes-management.component.html',
     styleUrls: ['./commandes-management.component.css']
@@ -37,6 +39,11 @@ export class CommandesManagementComponent implements OnInit {
     globalFilter: string = '';
     statusFilter: string | null = null;
 
+    // New properties for rejection dialog
+    rejectionDialogVisible: boolean = false;
+    currentOrder: DocumentVente | null = null;
+    rejectionNote: string = '';
+
     statusOptions: { label: string; value: number; severity: 'info' | 'success' | 'warn' | 'danger' | 'secondary' | 'contrast' }[] = [
         { label: 'En attente', value: 0, severity: 'secondary' },
         { label: 'Accepté', value: 1, severity: 'success' },
@@ -46,6 +53,7 @@ export class CommandesManagementComponent implements OnInit {
     constructor(
         private commandeService: CommandeService,
         private confirmationService: ConfirmationService,
+        private messageService: MessageService,
         private router: Router
     ) {}
 
@@ -144,7 +152,96 @@ export class CommandesManagementComponent implements OnInit {
     }
 
     changeOrderStatus(order: DocumentVente, newStatus: number) {
-        order.docEtat = newStatus;
+        // Reset current order to ensure we're working with the latest data
+        this.currentOrder = order;
+
+        if (newStatus === 0) {
+            this.confirmationService.confirm({
+                message: "Voulez-vous vraiment changer l'etat de cette commande à en attente ?",
+                header: 'Confirmation',
+                icon: 'pi pi-exclamation-triangle',
+                acceptLabel: 'Oui',
+                rejectLabel: 'Non',
+                rejectButtonStyleClass: 'p-button-danger',
+                accept: () => {
+                    this.changeOrderStatus2(order.docId, newStatus, 'en attente');
+                },
+                reject: () => {
+                    this.resetOrderStatus(order);
+                }
+            });
+        } else if (newStatus === 1) {
+            this.confirmationService.confirm({
+                message: "Voulez-vous vraiment changer l'etat de cette commande à accepté ?",
+                header: 'Confirmation',
+                icon: 'pi pi-exclamation-triangle',
+                acceptLabel: 'Oui',
+                rejectLabel: 'Non',
+                rejectButtonStyleClass: 'p-button-danger',
+                accept: () => {
+                    this.changeOrderStatus2(order.docId, newStatus, 'accepted');
+                },
+                reject: () => {
+                    this.resetOrderStatus(order);
+                }
+            });
+        } else if (newStatus === 2) {
+            // Open the rejection dialog for status 2
+            this.rejectionNote = ''; // Clear previous notes
+            this.rejectionDialogVisible = true;
+        }
+    }
+
+    // Reset the dropdown to previous value if action is cancelled
+    resetOrderStatus(order: DocumentVente) {
+        // Find the original order in the orders array
+        const originalOrder = this.orders.find((o) => o.docId === order.docId);
+        if (originalOrder) {
+            order.docEtat = originalOrder.docEtat;
+        }
+        this.loadOrders(); // Reload to ensure UI is in sync
+    }
+
+    confirmRejection() {
+        if (this.currentOrder && this.rejectionNote.trim()) {
+            this.changeOrderStatus2(this.currentOrder.docId, 2, this.rejectionNote);
+            this.rejectionDialogVisible = false;
+        } else {
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Please provide a reason for rejection'
+            });
+        }
+    }
+
+    cancelRejection() {
+        if (this.currentOrder) {
+            this.resetOrderStatus(this.currentOrder);
+        }
+        this.rejectionDialogVisible = false;
+    }
+
+    changeOrderStatus2(orderId: number, newStatus: number, note: string) {
+        this.commandeService.updateEtatDocument(orderId, newStatus, note).subscribe({
+            next: () => {
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Success',
+                    detail: 'Order status updated successfully'
+                });
+                this.loadOrders(); // Reload orders after update
+            },
+            error: (error) => {
+                console.error('Error updating order status:', error);
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: 'Failed to update order status'
+                });
+                this.loadOrders(); // Reload to reset UI
+            }
+        });
     }
 
     viewOrderDetails(docPiece: string) {
@@ -162,10 +259,20 @@ export class CommandesManagementComponent implements OnInit {
             accept: () => {
                 this.commandeService.deleteDocumentVente(docId).subscribe({
                     next: () => {
+                        this.messageService.add({
+                            severity: 'success',
+                            summary: 'Success',
+                            detail: 'Order deleted successfully'
+                        });
                         this.loadOrders(); // Reload orders after deletion
                     },
                     error: (error) => {
                         console.error('Error deleting order:', error);
+                        this.messageService.add({
+                            severity: 'error',
+                            summary: 'Error',
+                            detail: 'Failed to delete order'
+                        });
                     }
                 });
             }

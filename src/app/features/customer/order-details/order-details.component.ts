@@ -16,6 +16,7 @@ import { DividerModule } from 'primeng/divider';
 import { SkeletonModule } from 'primeng/skeleton';
 import { CommonModule } from '@angular/common';
 import { Divider } from 'primeng/divider';
+import { MessageModule } from 'primeng/message';
 //forpdf exportation
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -25,7 +26,7 @@ import 'jspdf-autotable';
     templateUrl: './order-details.component.html',
     styleUrls: ['./order-details.component.css'],
     providers: [MessageService],
-    imports: [CommonModule, RouterModule, CardModule, ButtonModule, TableModule, ToastModule, TagModule, DividerModule, SkeletonModule, Divider]
+    imports: [CommonModule, MessageModule, RouterModule, CardModule, ButtonModule, TableModule, ToastModule, TagModule, DividerModule, SkeletonModule, Divider]
 })
 export class OrderDetailsComponent implements OnInit {
     orderDocPiece: string | null = null;

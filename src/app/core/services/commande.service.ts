@@ -35,6 +35,9 @@ export class CommandeService {
     deleteDocumentVente(int: number) {
         return this.http.delete(`${this.apiUrl}/${int}`);
     }
+    updateEtatDocument(id: number, etat: number, note: string) {
+        return this.http.patch(`${this.apiUrl}/updateEtat/${id}?etat=${etat}&note=${note}`, null);
+    }
     //pour Doc Ligne Commande-------------------------------------
     getLignesCommandeParDocPiece(docPiece: string): Observable<DocumentVenteLigne[]> {
         return this.http.get<DocumentVenteLigne[]>(`${this.apiUrlLigneCommande}/piece/${docPiece}`);

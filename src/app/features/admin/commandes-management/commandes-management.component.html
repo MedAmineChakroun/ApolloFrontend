@@ -98,8 +98,8 @@
                 </td>
                 <td>
                     <div class="flex gap-2 justify-content-center">
-                        <button pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-text p-button-info" pTooltip="View Details" tooltipPosition="top" (click)="viewOrderDetails(order.docPiece)"></button>
-                        <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger" pTooltip="Supprimer" tooltipPosition="top" (click)="supprimerCommande(order.docId)"></button>
+                        <button pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-info" pTooltip="View Details" tooltipPosition="top" (click)="viewOrderDetails(order.docPiece)"></button>
+                        <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" pTooltip="Supprimer" tooltipPosition="top" (click)="supprimerCommande(order.docId)"></button>
                     </div>
                 </td>
             </tr>
@@ -117,4 +117,22 @@
         </ng-template>
     </p-table>
 </div>
+
+<!-- Rejection Dialog -->
+<p-dialog [(visible)]="rejectionDialogVisible" [style]="{ width: '450px' }" header="Refuser la commande" [modal]="true" [draggable]="false" [resizable]="false" [closable]="false">
+    <div class="p-fluid">
+        <div class="field">
+            <label for="rejectionNote" class="font-medium mb-2 block">Motif de refus</label>
+            <textarea id="rejectionNote" pInputText [(ngModel)]="rejectionNote" [rows]="5" [cols]="30" placeholder="Veuillez saisir la raison du refus..." class="w-full" autofocus required> </textarea>
+        </div>
+    </div>
+    <ng-template pTemplate="footer">
+        <div class="flex justify-content-between gap-2">
+            <button pButton pRipple label="Annuler" icon="pi pi-times" class="p-button-outlined p-button-danger" (click)="cancelRejection()"></button>
+            <button pButton pRipple label="Confirmer" icon="pi pi-check" class="p-button-primary-500" (click)="confirmRejection()"></button>
+        </div>
+    </ng-template>
+</p-dialog>
+
 <p-confirmDialog></p-confirmDialog>
+<p-toast></p-toast>
