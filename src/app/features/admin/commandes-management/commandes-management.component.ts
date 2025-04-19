@@ -20,11 +20,12 @@ import { ToastModule } from 'primeng/toast';
 import { CardModule } from 'primeng/card';
 import { BadgeModule } from 'primeng/badge';
 import { DialogModule } from 'primeng/dialog';
+import { ToolbarModule } from 'primeng/toolbar';
 
 @Component({
     selector: 'app-orders-management',
     standalone: true,
-    imports: [CommonModule, FormsModule, TableModule, ButtonModule, RippleModule, InputTextModule, DropdownModule, TooltipModule, TagModule, ConfirmDialogModule, ToastModule, CardModule, BadgeModule, DialogModule],
+    imports: [CommonModule, ToolbarModule, FormsModule, TableModule, ButtonModule, RippleModule, InputTextModule, DropdownModule, TooltipModule, TagModule, ConfirmDialogModule, ToastModule, CardModule, BadgeModule, DialogModule],
     providers: [ConfirmationService, MessageService],
     templateUrl: './commandes-management.component.html',
     styleUrls: ['./commandes-management.component.css']
@@ -39,7 +40,7 @@ export class CommandesManagementComponent implements OnInit {
     globalFilter: string = '';
     statusFilter: string | null = null;
     isSyncRoute = false; // Flag to track if we're on the sync route
-
+    totalCommandes = 0;
     // New properties for rejection dialog
     rejectionDialogVisible: boolean = false;
     currentOrder: DocumentVente | null = null;
@@ -74,6 +75,7 @@ export class CommandesManagementComponent implements OnInit {
                 } else {
                     this.orders = data;
                 }
+                this.totalCommandes = this.orders.length;
                 this.filteredOrders = [...this.orders];
                 this.loadArticleCounts();
                 this.loading = false;
