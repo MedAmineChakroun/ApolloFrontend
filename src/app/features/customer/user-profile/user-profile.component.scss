@@ -1,59 +1,28 @@
-.user-profile-container {
-    min-height: 100%;
+// Main container styles
+.profile-page-container {
+    min-height: 100vh;
     background-color: var(--surface-ground);
 }
 
-:host ::ng-deep {
-    .p-card {
-        border-radius: 12px;
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+// Header styles
+.profile-header {
+    position: relative;
+
+    .header-background {
         overflow: hidden;
-    }
-
-    .p-inputtext {
-        width: 100%;
-    }
-
-    .p-inputtext.ng-invalid.ng-touched {
-        border-color: var(--red-500);
-    }
-
-    .p-inputgroup-addon {
-        background-color: var(--surface-100);
-        color: var(--primary-color);
-        border-color: var(--surface-300);
-    }
-
-    .p-button {
-        &.p-button-rounded {
-            width: 36px;
-            height: 36px;
-        }
-
-        &.bg-white {
-            background-color: white !important;
-            color: var(--primary-color) !important;
-
-            &:hover {
-                background-color: white !important;
-                box-shadow: 0 0 0 1px var(--primary-color);
-            }
-        }
     }
 }
 
-.avatar-container {
+// Profile avatar container
+.profile-avatar-container {
     position: relative;
-    width: 150px;
-    height: 150px;
-    margin: 0 auto;
+    width: 128px;
+    height: 128px;
 
     img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        border-radius: 50%;
-        border: 4px solid var(--surface-200);
         transition: all 0.3s ease;
     }
 
@@ -81,26 +50,48 @@
     }
 }
 
+// Loading overlay
+.avatar-loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 50%;
+    z-index: 2;
+}
+
+// Background colors
 .bg-primary {
     background-color: var(--primary-color);
+
+    &:hover {
+        background-color: var(--primary-600);
+    }
 }
 
 .bg-danger {
     background-color: var(--red-500);
+
+    &:hover {
+        background-color: var(--red-600);
+    }
 }
 
+// Text colors
 .text-success {
     color: var(--green-500);
 }
 
-.border-bottom {
-    border-bottom: 1px solid var(--surface-200);
-}
-
+// Badge styles
 .badge {
     display: inline-flex;
     align-items: center;
-    padding: 0.25rem 0.5rem;
+    padding: 0.25rem 0.75rem;
     border-radius: 16px;
     font-size: 0.75rem;
     font-weight: 600;
@@ -116,26 +107,91 @@
     }
 }
 
-.account-sidebar {
-    background-color: var(--surface-50);
-    border-radius: 8px;
-    padding: 1rem;
+// Form styling
+:host ::ng-deep {
+    .p-inputtext {
+        width: 100%;
+        transition: all 0.2s;
+
+        &:focus {
+            border-color: var(--primary-400);
+            box-shadow: 0 0 0 1px var(--primary-200);
+        }
+
+        &.ng-invalid.ng-touched {
+            border-color: var(--red-500);
+        }
+    }
+
+    .p-button {
+        transition: all 0.2s;
+
+        &.p-button-rounded {
+            width: 36px;
+            height: 36px;
+        }
+
+        &.p-button-text {
+            color: var(--gray-700);
+
+            &:hover {
+                background-color: var(--surface-100);
+            }
+        }
+
+        &.p-button-white {
+            background-color: white !important;
+            color: var(--primary-color) !important;
+
+            &:hover {
+                background-color: var(--gray-50) !important;
+                box-shadow: 0 0 0 1px var(--primary-color);
+            }
+        }
+
+        &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+    }
+
+    .p-inputgroup-addon {
+        background-color: var(--surface-100);
+        color: var(--primary-color);
+        border-color: var(--surface-300);
+    }
 }
 
-.avatar-loading-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: rgba(255, 255, 255, 0.7);
-    border-radius: 50%;
-    z-index: 2;
+// Activity log
+.activity-item {
+    padding: 0.75rem 0;
+
+    &:not(:last-child) {
+        border-bottom: 1px solid var(--surface-100);
+    }
 }
 
-.opacity-50 {
-    opacity: 0.5;
+// Animations
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+    }
+}
+
+.pulse-animation {
+    animation: pulse 2s infinite;
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+    .profile-header {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+    }
 }

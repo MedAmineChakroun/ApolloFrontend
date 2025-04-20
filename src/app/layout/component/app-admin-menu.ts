@@ -46,8 +46,8 @@ import { filter } from 'rxjs/operators';
                     </a>
 
                     <a routerLink="/store/admin/orders/sync" class="submenu-item" [ngClass]="{ 'active-item': activeMenu === '/store/admin/orders/sync' }">
-                        <i class="pi pi-times-circle"></i>
-                        <span>non-sync</span>
+                        <i class="pi pi-check-circle"></i>
+                        <span>Liste synchronisé</span>
                     </a>
                 </div>
             </div>
@@ -72,8 +72,8 @@ import { filter } from 'rxjs/operators';
                         <span>Liste clients</span>
                     </a>
                     <a routerLink="/store/admin/clients/sync" class="submenu-item" [ngClass]="{ 'active-item': activeMenu === '/store/admin/clients/sync' }">
-                        <i class="pi pi-times-circle mr-2"></i>
-                        <span>non-sync</span>
+                        <i class="pi pi-check-circle mr-2"></i>
+                        <span>Liste synchronisé</span>
                     </a>
                 </div>
             </div>

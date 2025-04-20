@@ -9,7 +9,7 @@
         </ng-template>
         <p-toolbar styleClass="mb-4">
             <div class="p-toolbar-group-start">
-                <h3>{{ isSyncRoute ? 'Liste commandes non synchronisés' : 'Liste commandes' }}</h3>
+                <h3>{{ isSyncRoute ? 'Liste commandes synchronisés' : 'Liste commandes' }}</h3>
             </div>
 
             <div class="p-toolbar-group-end">
@@ -110,8 +110,8 @@
                     <td><p-tag [value]="getSyncStatusLabel(order.docFlag)" [severity]="getSyncStatusSeverity(order.docFlag)" [icon]="getSyncStatusIcon(order.docFlag)"> </p-tag></td>
                     <td>
                         <div class="flex gap-2 justify-content-center">
-                            <button pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-info" pTooltip="View Details" tooltipPosition="top" (click)="viewOrderDetails(order.docPiece)"></button>
-                            <button pButton pRipple icon="pi pi-sync" class="p-button-rounded p-button-help" pTooltip="Changer sync Etat" tooltipPosition="top" (click)="changerCommandeFlag(order)"></button>
+                            <button pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-info" pTooltip="Voir Details" tooltipPosition="top" (click)="viewOrderDetails(order.docPiece)"></button>
+                            <button pButton pRipple icon="pi pi-user" class="p-button-rounded p-button-help" pTooltip="Voir client" tooltipPosition="top" (click)="viewCustomerDetails(order)"></button>
                             <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" pTooltip="Supprimer" tooltipPosition="top" (click)="supprimerCommande(order.docId)"></button>
                         </div>
                     </td>

@@ -16,6 +16,7 @@ export class UserService {
     getUserByCode(code: string): Observable<Client> {
         return this.http.get<Client>(`${this.apiUrl}/code/${code}`);
     }
+
     getUsers(): Observable<Client[]> {
         return this.http.get<Client[]>(this.apiUrl);
     }

@@ -71,7 +71,7 @@ export class CommandesManagementComponent implements OnInit {
             next: (data) => {
                 // If on sync route, filter to only show orders with docFlag === 0
                 if (this.isSyncRoute) {
-                    this.orders = data.filter((order) => order.docFlag === 0);
+                    this.orders = data.filter((order) => order.docFlag === 1);
                 } else {
                     this.orders = data;
                 }
@@ -334,33 +334,7 @@ export class CommandesManagementComponent implements OnInit {
     getSyncStatusIcon(flag: number): string {
         return flag === 1 ? 'pi pi-check-circle' : 'pi pi-exclamation-triangle';
     }
-    changerCommandeFlag(order: DocumentVente) {
-        const newFlag = order.docFlag === 1 ? 0 : 1;
-        const newStatus = newFlag === 1 ? 'synchroniser' : 'non synchroniser';
-
-        this.confirmationService.confirm({
-            message: 'Voulez-vous vraiment ' + newStatus + ' cette commande ?',
-            header: 'Confirmation',
-            icon: 'pi pi-exclamation-triangle',
-            acceptLabel: 'Oui',
-            rejectLabel: 'Non',
-            rejectButtonStyleClass: 'p-button-danger',
-            accept: () => {
-                this.commandeService.updateFlagDocument(order.docId, newFlag).subscribe({
-                    next: () => {
-                        this.messageService.add({
-                            severity: 'success',
-                            summary: 'Success',
-                            detail: 'Order flag updated successfully'
-                        });
-                        this.loadOrders(); // Reload orders after update
-                    },
-                    error: (err) => {
-                        console.error('Erreur lors de la mise à jour du flag :', err);
-                        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Order flag updated successfully' });
-                    }
-                });
-            }
-        });
+    viewCustomerDetails(order: DocumentVente) {
+        this.router.navigate([`/store/admin/users/${order.docTiersCode}`]);
     }
 }

@@ -13,7 +13,8 @@ import { updateUser } from '../../../store/user/user.actions';
 import { InputMaskModule } from 'primeng/inputmask';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { InputTextModule } from 'primeng/inputtext';
-
+import { ActivatedRoute } from '@angular/router';
+import { TagModule } from 'primeng/tag';
 interface DecodedToken {
     Id: string;
     ClientId: string;
@@ -28,7 +29,7 @@ interface DecodedToken {
 @Component({
     selector: 'app-user-profile',
     standalone: true,
-    imports: [ReactiveFormsModule, CommonModule, ButtonModule, InputMaskModule, ProgressSpinnerModule, InputTextModule],
+    imports: [ReactiveFormsModule, CommonModule, ButtonModule, InputMaskModule, ProgressSpinnerModule, InputTextModule, TagModule],
     templateUrl: './user-profile.component.html',
     styleUrls: ['./user-profile.component.scss']
 })
@@ -38,12 +39,13 @@ export class UserProfileComponent implements OnInit {
     isAvatarLoading: boolean = false;
     clientData: Client | null = null;
     userEmail: string = '';
-
+    routeUrl: boolean = false;
     constructor(
         private fb: FormBuilder,
         private userService: UserService,
         private toastr: ToastrService,
-        private store: Store
+        private store: Store,
+        private route: ActivatedRoute
     ) {
         this.profileForm = this.fb.group({
             id: [''],
@@ -59,32 +61,46 @@ export class UserProfileComponent implements OnInit {
 
     ngOnInit(): void {
         // Get email from JWT token
-        this.getUserEmailFromToken();
+        const id = this.route.snapshot.paramMap.get('id') || '';
+        this.routeUrl = id !== '' ? true : false;
 
-        // Get user data from store
-        this.store.select(selectUser).subscribe(
-            (client) => {
-                if (client) {
-                    this.clientData = client;
-                    this.userId = typeof client.tiersId === 'string' ? parseInt(client.tiersId, 10) : client.tiersId;
-
-                    this.profileForm.patchValue({
-                        id: client.tiersId,
-                        userName: client.tiersIntitule,
-                        email: this.userEmail, // Use email from token
-                        address: client.tiersAdresse1,
-                        postalCode: client.tiersCodePostal,
-                        city: client.tiersVille,
-                        country: client.tiersPays,
-                        phone: client.tiersTel1
-                    });
+        if (this.routeUrl) {
+            this.userService.getUserByCode(id).subscribe({
+                next: (data) => {
+                    this.clientData = data;
+                },
+                error: () => {
+                    this.toastr.error('Erreur lors du chargement des données utilisateur.');
                 }
-            },
-            (error) => {
-                this.toastr.error('Erreur lors du chargement des données utilisateur.');
-                console.error('Store error:', error);
-            }
-        );
+            });
+        } else {
+            this.getUserEmailFromToken();
+
+            // Get user data from store
+            this.store.select(selectUser).subscribe(
+                (client) => {
+                    if (client) {
+                        this.clientData = client;
+                        this.userId = typeof client.tiersId === 'string' ? parseInt(client.tiersId, 10) : client.tiersId;
+
+                        this.profileForm.patchValue({
+                            id: client.tiersId,
+                            userName: client.tiersIntitule,
+                            email: this.userEmail, // Use email from token
+                            address: client.tiersAdresse1,
+                            postalCode: client.tiersCodePostal,
+                            city: client.tiersVille,
+                            country: client.tiersPays,
+                            phone: client.tiersTel1
+                        });
+                    }
+                },
+                (error) => {
+                    this.toastr.error('Erreur lors du chargement des données utilisateur.');
+                    console.error('Store error:', error);
+                }
+            );
+        }
     }
 
     private getUserEmailFromToken(): void {
@@ -195,5 +211,12 @@ export class UserProfileComponent implements OnInit {
         console.error('Update error:', error);
         const errorMessage = error.error?.message || 'Failed to update profile';
         this.toastr.error(errorMessage, 'Update Error');
+    }
+    getRole(id: number) {
+        this.userService.getUserRole(id).subscribe({
+            next: (response) => {
+                return response.role;
+            }
+        });
     }
 }

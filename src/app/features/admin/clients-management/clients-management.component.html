@@ -9,7 +9,7 @@
 
         <p-toolbar styleClass="mb-4">
             <div class="p-toolbar-group-start">
-                <h3>{{ isSyncRoute ? 'Liste Clients non synchronisés' : 'Liste Clients' }}</h3>
+                <h3>{{ isSyncRoute ? 'Liste Clients synchronisés' : 'Liste Clients' }}</h3>
             </div>
 
             <div class="p-toolbar-group-end">
@@ -42,28 +42,26 @@
 
             <ng-template pTemplate="header">
                 <tr>
-                    <th style="width: 3rem !important ; padding: 0 !important"></th>
+                    <th style="min-width: 5rem"></th>
                     <th pSortableColumn="tiersCode" style="width: 6rem">Code <p-sortIcon field="tiersCode"></p-sortIcon></th>
                     <th pSortableColumn="tiersIntitule" style="width: 8rem">Name <p-sortIcon field="tiersIntitule"></p-sortIcon></th>
-                    <th pSortableColumn="tiersVille" style="width: 8rem">City <p-sortIcon field="tiersVille"></p-sortIcon></th>
-                    <th pSortableColumn="tiersPays" style="width: 12rem">Country<p-sortIcon field="tiersPays"></p-sortIcon></th>
-                    <th pSortableColumn="tiersTel1" style="width: 12rem">Phone <p-sortIcon field="tiersTel1"></p-sortIcon></th>
+                    <th pSortableColumn="tiersPays" style="min-width: 8rem">Country<p-sortIcon field="tiersPays"></p-sortIcon></th>
+                    <th pSortableColumn="tiersTel1" style="min-width: 10rem">Phone <p-sortIcon field="tiersTel1"></p-sortIcon></th>
                     <th pSortableColumn="tiersEmail" style="width: 8rem">Email <p-sortIcon field="tiersEmail"></p-sortIcon></th>
-                    <th pSortableColumn="tiersFlag" style="min-width: 12rem" class="text-center">ERP Sync <p-sortIcon field="tiersFlag"></p-sortIcon></th>
+                    <th pSortableColumn="tiersFlag" style="min-width: 10rem">ERP Sync <p-sortIcon field="tiersFlag"></p-sortIcon></th>
                     <th style="min-width: 10rem">Actions</th>
                 </tr>
             </ng-template>
 
             <ng-template pTemplate="body" let-client>
                 <tr>
-                    <td width="5rem" style="width: 3rem !important ; padding: 0 !important">
+                    <td class="mr-0" style="padding: 0 !important">
                         <div class="profile-image ml-4">
                             <img [src]="clientImage || 'assets/general/default-avatar.jpg'" alt="Client Profile" />
                         </div>
                     </td>
                     <td>#{{ client.tiersCode }}</td>
                     <td>{{ client.tiersIntitule }}</td>
-                    <td>{{ client.tiersVille }}</td>
                     <td>{{ client.tiersPays }}</td>
                     <td>{{ client.tiersTel1 }}</td>
                     <td>{{ client.tiersEmail }}</td>
@@ -72,7 +70,7 @@
                     </td>
                     <td class="flex gap-2 justify-content-center">
                         <button pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-info" (click)="viewClientDetails(client)" pTooltip="Voir Detail" tooltipPosition="top"></button>
-                        <button pButton pRipple icon="pi pi-sync" class="p-button-rounded p-button-help" (click)="changeUserFlag(client)" pTooltip="Changer Etat" tooltipPosition="top"></button>
+                        <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-help" pTooltip="transfer pfd" tooltipPosition="top"></button>
                         <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="confirmDelete(client)" pTooltip="supprimer" tooltipPosition="top"></button>
                     </td>
                 </tr>

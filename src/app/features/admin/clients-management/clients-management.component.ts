@@ -89,7 +89,7 @@ export class ClientsManagementComponent implements OnInit {
                             if (!roleData.roles.includes('admin')) {
                                 // Check if we're on sync route and filter by tiersFlag
                                 if (this.isSyncRoute) {
-                                    if (client.tiersFlag === 0) {
+                                    if (client.tiersFlag === 1) {
                                         this.clients.push(client);
                                     }
                                 } else {
@@ -167,14 +167,7 @@ export class ClientsManagementComponent implements OnInit {
     }
 
     viewClientDetails(client: Client) {
-        this.selectedClient = client;
-        this.dialogVisible = true;
-        this.editMode = false;
-
-        // Reset form if needed
-        if (this.clientForm) {
-            this.resetForm();
-        }
+        this.router.navigate([`/store/admin/users/${client.tiersCode}`]);
     }
 
     closeDialog() {
@@ -193,33 +186,6 @@ export class ClientsManagementComponent implements OnInit {
         // Placeholder for photo upload functionality
         // This would typically open a file picker and handle the upload
         this.toastr.info('Photo upload functionality will be implemented soon', 'Information');
-    }
-
-    changeUserFlag(client: Client): void {
-        const newFlag = client.tiersFlag === 1 ? 0 : 1;
-        const oldStatus = client.tiersFlag === 1 ? 'synchroniser' : 'non synchroniser';
-        const newStatus = newFlag === 1 ? 'synchroniser' : 'non synchroniser';
-
-        this.confirmationService.confirm({
-            message: `Voulez-vous vraiment changer l'état du client "${client.tiersIntitule}" de ${oldStatus} à ${newStatus} ?`,
-            header: 'Confirmation',
-            icon: 'pi pi-exclamation-triangle',
-            acceptLabel: 'Oui',
-            rejectLabel: 'Non',
-            rejectButtonStyleClass: 'p-button-danger', // ← le bouton "Non" devient rouge
-            accept: () => {
-                this.userService.updateUserFlag(client.tiersId, newFlag).subscribe({
-                    next: () => {
-                        this.loadClients();
-                        this.toastr.success('État du client mis à jour avec succès', 'Succès');
-                    },
-                    error: (err) => {
-                        console.error('Erreur lors de la mise à jour du flag :', err);
-                        this.toastr.error("Échec de la mise à jour de l'état du client", 'Erreur');
-                    }
-                });
-            }
-        });
     }
 
     // Helper methods for flag status
