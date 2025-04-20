@@ -163,7 +163,7 @@ import { CartItem } from '../../models/cart-item';
                     <!-- Cart Icon with Badge for Desktop -->
                     <div class="cart-icon" (click)="navigateToCart()" *ngIf="!IsAdmin()">
                         <i class="pi pi-shopping-cart"></i>
-                        <span *ngIf="cartItems.length > 0" class="cart-badge">{{ cartItems.length }}</span>
+                        <span *ngIf="cartItems.length > 0" class="cart-badge">{{ cartTotal }}</span>
                     </div>
                 </div>
 
@@ -185,7 +185,7 @@ import { CartItem } from '../../models/cart-item';
                     <!-- Cart Icon for Mobile -->
                     <div class="cart-icon" (click)="navigateToCart()" type="button" class="layout-topbar-action" *ngIf="!IsAdmin()">
                         <i class="pi pi-shopping-cart"></i>
-                        <span *ngIf="cartItems.length > 0" class="cart-badge">{{ cartItems.length }}</span>
+                        <span *ngIf="cartItems.length > 0" class="cart-badge">{{ cartTotal }}</span>
                         <span>Cart</span>
                     </div>
 
@@ -248,6 +248,7 @@ export class AppTopbar implements OnInit, OnDestroy {
     isConnected = false;
     cartItems: CartItem[] = [];
     showCart = false;
+    cartTotal: number = 0;
     private cartSubscription?: Subscription;
     constructor(
         public layoutService: LayoutService,
@@ -261,6 +262,9 @@ export class AppTopbar implements OnInit, OnDestroy {
         this.isConnected = this.authService.isAuthenticated();
         this.cartSubscription = this.cartService.getCartItems().subscribe((items) => {
             this.cartItems = items;
+        });
+        this.cartService.getCartItemCount().subscribe((total) => {
+            this.cartTotal = total;
         });
     }
 

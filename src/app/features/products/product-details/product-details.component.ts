@@ -6,6 +6,7 @@ import { TagModule } from 'primeng/tag';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TooltipModule } from 'primeng/tooltip';
 import { RippleModule } from 'primeng/ripple';
+import { FormsModule } from '@angular/forms';
 import { ProductsService } from '../../../core/services/products.service';
 import { CartService } from '../../../core/services/cart.service';
 import { Product } from '../../../models/Product';
@@ -16,12 +17,14 @@ type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | undefined;
 @Component({
     selector: 'app-product-details',
     standalone: true,
-    imports: [CommonModule, RouterModule, ButtonModule, TagModule, SkeletonModule, TooltipModule, RippleModule],
-    templateUrl: './product-details.component.html'
+    imports: [CommonModule, RouterModule, ButtonModule, TagModule, SkeletonModule, TooltipModule, RippleModule, FormsModule],
+    templateUrl: './product-details.component.html',
+    styleUrls: ['./product-details.component.scss']
 })
 export class ProductDetailsComponent implements OnInit {
     product: Product | null = null;
     error: string | null = null;
+    quantity: number = 1;
     private readonly DEFAULT_PRODUCT_IMAGE = 'assets/general/product-default.png';
 
     constructor(
@@ -80,16 +83,27 @@ export class ProductDetailsComponent implements OnInit {
         return stockValue === 0;
     }
 
+    incrementQuantity(): void {
+        this.quantity += 1;
+    }
+
+    decrementQuantity(): void {
+        if (this.quantity > 1) {
+            this.quantity -= 1;
+        }
+    }
+
     addToCart(product: Product) {
-        this.cartService.addToCart(product);
+        // Add specified quantity to cart
+        for (let i = 0; i < this.quantity; i++) {
+            this.cartService.addToCart(product);
+        }
 
         // Show success toast
-        this.toastr.success(`${product.artIntitule} added to cart`, 'Added to Cart', {
-            timeOut: 2000,
-            progressBar: true,
-            progressAnimation: 'increasing',
-            positionClass: 'toast-bottom-right'
-        });
+        this.toastr.success(`${this.quantity} × ${product.artIntitule} added to cart`, 'Added to Cart', { timeOut: 3000 });
+
+        // Reset quantity
+        this.quantity = 1;
 
         // Add animation to cart icon (optional)
         const cartIcon = document.querySelector('.cart-icon');

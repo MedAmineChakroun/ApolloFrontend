@@ -1,84 +1,110 @@
-<div class="product-details-container p-4">
-    <div *ngIf="product" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="product-details-container p-6 max-w-7xl mx-auto">
+    <div *ngIf="product" class="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <!-- Product Image Section -->
-        <div class="product-image-section">
-            <div class="relative group">
-                <img
-                    src="http://localhost:91/Images/{{ product.artImageUrl }}"
-                    [alt]="product.artIntitule"
-                    class="w-full h-auto rounded-lg shadow-sm transition-transform duration-300 group-hover:scale-105"
-                    (error)="handleProductImageError($event)"
-                />
-                <div class="absolute top-4 right-4">
-                    <p-tag [value]="getStockStatus(product.artEtat)" [severity]="getStockSeverity(product.artEtat)" class="text-lg"> </p-tag>
+        <div class="lg:col-span-5 xl:col-span-6">
+            <div class="sticky top-24">
+                <div class="relative group overflow-hidden rounded-2xl shadow-sm">
+                    <img
+                        src="http://localhost:91/Images/{{ product.artImageUrl }}"
+                        [alt]="product.artIntitule"
+                        class="w-full h-auto object-cover transition-all duration-500 ease-in-out group-hover:scale-105"
+                        (error)="handleProductImageError($event)"
+                    />
+                    <div class="absolute top-6 right-6">
+                        <p-tag
+                            [value]="getStockStatus(product.artEtat)"
+                            [severity]="getStockSeverity(product.artEtat)"
+                            [style]="{
+                                'font-size': '0.9rem',
+                                'font-weight': '600',
+                                padding: '0.5rem 1rem'
+                            }"
+                        ></p-tag>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Product Info Section -->
-        <div class="product-info flex flex-col">
+        <div class="lg:col-span-7 xl:col-span-6 flex flex-col">
             <!-- Basic Info -->
-            <div class="mb-6">
-                <div class="flex items-start justify-between">
-                    <div>
-                        <h1 class="text-3xl font-bold mb-2">{{ product.artIntitule }}</h1>
-                        <p class="text-gray-600">Category: {{ product.artFamille }}</p>
+            <div class="mb-8">
+                <div class="mb-4">
+                    <h1 class="text-4xl font-bold mb-2 text-gray-900">{{ product.artIntitule }}</h1>
+                    <div class="flex items-center text-gray-600">
+                        <i class="pi pi-tag mr-2"></i>
+                        <span>{{ product.artFamille }}</span>
                     </div>
-                    <div class="text-right">
-                        <div class="text-3xl font-bold text-primary mb-2">
-                            {{ product.artPrixVente | currency: 'TND' : 'symbol' : '1.2-2' }}
-                        </div>
-                        <div class="text-sm text-gray-500">Unit: {{ product.artUnite }}</div>
+                </div>
+
+                <div class="flex items-center mb-4">
+                    <div class="text-3xl font-bold text-primary">
+                        {{ product.artPrixVente | currency: 'TND' : 'symbol' : '1.2-2' }}
                     </div>
+                    <div *ngIf="product.artTvaTaux > 0" class="ml-3 text-sm bg-gray-100 text-gray-600 px-2 py-1 rounded">+ {{ product.artTvaTaux }}% VAT</div>
                 </div>
             </div>
 
             <!-- Product Details -->
-            <div class="bg-surface-50 rounded-lg p-6 mb-6">
-                <h2 class="text-xl font-semibold mb-4">Product Details</h2>
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="col-span-2 md:col-span-1">
-                        <div class="mb-4">
-                            <span class="text-gray-600">Product Code:</span>
-                            <p class="font-medium">{{ product.artCode }}</p>
-                        </div>
-                        <div class="mb-4">
-                            <span class="text-gray-600">Category:</span>
-                            <p class="font-medium">{{ product.artFamille }}</p>
-                        </div>
+            <div class="bg-surface-50 rounded-xl p-6 mb-8 border border-gray-100 shadow-sm">
+                <h2 class="text-xl font-semibold mb-5 flex items-center">
+                    <i class="pi pi-info-circle mr-2 text-primary"></i>
+                    Product Details
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-4">
+                    <div class="product-detail-item">
+                        <div class="text-sm text-gray-500 mb-1">Product Code</div>
+                        <div class="font-medium text-gray-800">{{ product.artCode }}</div>
                     </div>
-                    <div class="col-span-2 md:col-span-1">
-                        <div class="mb-4">
-                            <span class="text-gray-600">Stock Status:</span>
-                            <p class="font-medium" [ngClass]="{ 'text-green-600': !isOutOfStock(product.artEtat), 'text-red-600': isOutOfStock(product.artEtat) }">
-                                {{ getStockStatus(product.artEtat) }}
-                            </p>
-                        </div>
-                        <div class="mb-4">
-                            <span class="text-gray-600">Unit Type:</span>
-                            <p class="font-medium">{{ product.artUnite }}</p>
+                    <div class="product-detail-item">
+                        <div class="text-sm text-gray-500 mb-1">Category</div>
+                        <div class="font-medium text-gray-800">{{ product.artFamille }}</div>
+                    </div>
+                    <div class="product-detail-item">
+                        <div class="text-sm text-gray-500 mb-1">Unit Type</div>
+                        <div class="font-medium text-gray-800">{{ product.artUnite }}</div>
+                    </div>
+                    <div class="product-detail-item">
+                        <div class="text-sm text-gray-500 mb-1">Stock Status</div>
+                        <div class="font-medium" [ngClass]="{ 'text-green-600': !isOutOfStock(product.artEtat), 'text-red-600': isOutOfStock(product.artEtat) }">
+                            {{ getStockStatus(product.artEtat) }}
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Actions Section -->
-            <div class="mt-auto">
-                <div class="flex flex-col gap-4">
-                    <p-button
-                        label="Add to Cart"
-                        icon="pi pi-shopping-cart"
-                        [disabled]="isOutOfStock(product.artEtat)"
-                        (onClick)="addToCart(product)"
-                        styleClass="w-full p-button-lg"
-                        [pTooltip]="isOutOfStock(product.artEtat) ? 'This product is currently out of stock' : ''"
-                        tooltipPosition="top"
-                        pRipple
-                    >
-                    </p-button>
-                    <div class="flex gap-4">
-                        <p-button label="Back to Products" icon="pi pi-arrow-left" styleClass="p-button-outlined w-full" routerLink="/store/products"> </p-button>
-                        <p-button icon="pi pi-heart" styleClass="p-button-outlined p-button-secondary" pTooltip="Add to Wishlist" tooltipPosition="top"> </p-button>
+            <div class="mt-auto space-y-4">
+                <div class="flex flex-col gap-3">
+                    <div class="flex items-center mb-2">
+                        <div class="mr-4">
+                            <label for="quantity" class="block text-gray-600 text-sm mb-1">Quantity</label>
+                            <div class="flex items-center border border-gray-300 rounded-lg overflow-hidden">
+                                <button class="w-10 h-10 bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors" [disabled]="quantity <= 1 || isOutOfStock(product.artEtat)" (click)="decrementQuantity()">
+                                    <i class="pi pi-minus text-gray-600"></i>
+                                </button>
+                                <input type="number" id="quantity" class="w-12 h-10 text-center border-none focus:outline-none" [(ngModel)]="quantity" min="1" [disabled]="isOutOfStock(product.artEtat)" />
+                                <button class="w-10 h-10 bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors" [disabled]="isOutOfStock(product.artEtat)" (click)="incrementQuantity()">
+                                    <i class="pi pi-plus text-gray-600"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="flex-grow">
+                            <p-button
+                                label="Add to Cart"
+                                icon="pi pi-shopping-cart"
+                                [disabled]="isOutOfStock(product.artEtat)"
+                                (onClick)="addToCart(product)"
+                                styleClass="w-full p-button-lg p-button-raised shadow-md"
+                                [pTooltip]="isOutOfStock(product.artEtat) ? 'This product is currently out of stock' : ''"
+                                tooltipPosition="top"
+                                pRipple
+                            ></p-button>
+                        </div>
+                    </div>
+                    <div class="flex gap-3 mt-2">
+                        <p-button icon="pi pi-share-alt" styleClass="p-button-rounded p-button-outlined p-button-secondary" pTooltip="Share Product" tooltipPosition="bottom"></p-button>
+                        <p-button label="Back to Products" icon="pi pi-arrow-left" styleClass="p-button-text ml-auto" routerLink="/store/products"></p-button>
                     </div>
                 </div>
             </div>
@@ -86,38 +112,60 @@
     </div>
 
     <!-- Loading State -->
-    <div *ngIf="!product && !error" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div *ngIf="!product && !error" class="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <!-- Skeleton for Image -->
-        <div class="product-image">
-            <p-skeleton height="500px" styleClass="rounded-lg"></p-skeleton>
+        <div class="lg:col-span-5 xl:col-span-6">
+            <p-skeleton height="600px" styleClass="rounded-xl"></p-skeleton>
         </div>
 
         <!-- Skeleton for Info -->
-        <div class="product-info">
-            <p-skeleton width="80%" height="2rem" styleClass="mb-4"></p-skeleton>
-            <p-skeleton width="60%" height="1.5rem" styleClass="mb-4"></p-skeleton>
+        <div class="lg:col-span-7 xl:col-span-6">
+            <p-skeleton width="40%" height="1rem" styleClass="mb-6"></p-skeleton>
+            <p-skeleton width="80%" height="2.5rem" styleClass="mb-2"></p-skeleton>
+            <p-skeleton width="40%" height="1.5rem" styleClass="mb-4"></p-skeleton>
+            <p-skeleton width="30%" height="2rem" styleClass="mb-8"></p-skeleton>
 
-            <div class="flex items-center gap-4 mb-6">
-                <p-skeleton width="40%" height="2rem"></p-skeleton>
-                <p-skeleton width="30%" height="1.5rem"></p-skeleton>
+            <div class="mb-8">
+                <p-skeleton width="40%" height="1.5rem" styleClass="mb-4"></p-skeleton>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p-skeleton width="60%" height="1rem" styleClass="mb-1"></p-skeleton>
+                        <p-skeleton width="80%" height="1.5rem"></p-skeleton>
+                    </div>
+                    <div>
+                        <p-skeleton width="60%" height="1rem" styleClass="mb-1"></p-skeleton>
+                        <p-skeleton width="80%" height="1.5rem"></p-skeleton>
+                    </div>
+                    <div>
+                        <p-skeleton width="60%" height="1rem" styleClass="mb-1"></p-skeleton>
+                        <p-skeleton width="80%" height="1.5rem"></p-skeleton>
+                    </div>
+                    <div>
+                        <p-skeleton width="60%" height="1rem" styleClass="mb-1"></p-skeleton>
+                        <p-skeleton width="80%" height="1.5rem"></p-skeleton>
+                    </div>
+                </div>
             </div>
 
-            <div class="mb-6">
-                <p-skeleton width="60%" height="1.5rem" styleClass="mb-2"></p-skeleton>
-                <p-skeleton width="100%" height="4rem"></p-skeleton>
+            <div class="flex items-center gap-4 mb-4">
+                <p-skeleton width="15%" height="3rem"></p-skeleton>
+                <p-skeleton width="85%" height="3rem"></p-skeleton>
             </div>
-
-            <div class="flex flex-col gap-4">
-                <p-skeleton height="3rem"></p-skeleton>
-                <p-skeleton height="3rem"></p-skeleton>
+            <div class="flex gap-2">
+                <p-skeleton shape="circle" size="3rem"></p-skeleton>
+                <p-skeleton shape="circle" size="3rem"></p-skeleton>
+                <p-skeleton width="40%" height="3rem" styleClass="ml-auto"></p-skeleton>
             </div>
         </div>
     </div>
 
     <!-- Error State -->
-    <div *ngIf="error" class="text-center py-8">
-        <i class="pi pi-exclamation-triangle text-4xl text-red-500 mb-4"></i>
-        <p class="text-xl text-red-500 mb-4">{{ error }}</p>
-        <p-button label="Back to Products" icon="pi pi-arrow-left" routerLink="/store/products" styleClass="p-button-outlined"> </p-button>
+    <div *ngIf="error" class="bg-red-50 border border-red-200 rounded-xl p-8 text-center my-8">
+        <div class="mb-4 text-red-500">
+            <i class="pi pi-exclamation-circle text-6xl"></i>
+        </div>
+        <h2 class="text-2xl font-bold text-red-700 mb-4">Product Not Found</h2>
+        <p class="text-lg text-red-600 mb-6">{{ error }}</p>
+        <p-button label="Return to Products" icon="pi pi-arrow-left" routerLink="/store/products" styleClass="p-button-raised"></p-button>
     </div>
 </div>

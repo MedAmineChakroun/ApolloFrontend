@@ -3,13 +3,13 @@
         <ng-template pTemplate="header" *ngIf="!isNonSyncRoute">
             <div class="flex justify-content-between align-items-center p-3 bg-primary-500" style="border-radius: 12px 12px 0 0">
                 <h2 class="text-white m-0">Clients Management</h2>
-                <span class="text-white font-bold">Total Clients: {{ totalClients - 1 }}</span>
+                <span class="text-white font-bold">Total Clients: {{ this.clients.length }}</span>
             </div>
         </ng-template>
         <ng-template pTemplate="header" *ngIf="isNonSyncRoute">
             <div class="flex justify-content-between align-items-center p-3 bg-purple-500" style="border-radius: 12px 12px 0 0">
                 <h2 class="text-white m-0">Clients Management</h2>
-                <span class="text-white font-bold">Total Clients: {{ totalClients - 1 }}</span>
+                <span class="text-white font-bold">Total Clients: {{ this.clients.length }}</span>
             </div>
         </ng-template>
         <p-toolbar styleClass="mb-4">
