@@ -13,137 +13,18 @@ import { ButtonModule } from 'primeng/button';
 import { BadgeModule } from 'primeng/badge';
 import { SidebarModule } from 'primeng/sidebar';
 import { CartItem } from '../../models/cart-item';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { NotificationService } from '../../core/services/notifications.service';
+import { Notification } from '../../models/notification';
+import { Store } from '@ngrx/store';
+import { selectUserCode, selectUserId } from '../../store/user/user.selectors';
 
 @Component({
     selector: 'app-topbar',
     standalone: true,
-    imports: [RouterModule, CommonModule, StyleClassModule, ConfirmDialogModule, ButtonModule, BadgeModule, SidebarModule],
-    providers: [ConfirmationService, CartService],
-    styles: [
-        `
-            :host ::ng-deep .p-sidebar {
-                width: 35rem;
-                background: var(--surface-overlay);
-                box-shadow:
-                    0 4px 6px -1px rgba(0, 0, 0, 0.1),
-                    0 2px 4px -1px rgba(0, 0, 0, 0.06);
-                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            }
-
-            :host ::ng-deep .p-sidebar-header {
-                padding: 1.5rem;
-                border-bottom: 1px solid var(--surface-border);
-                background: var(--surface-section);
-                border-top-left-radius: var(--content-border-radius);
-                border-top-right-radius: var(--content-border-radius);
-            }
-
-            :host ::ng-deep .p-sidebar-content {
-                padding: 0;
-                height: calc(100vh - 4rem);
-                overflow-y: auto;
-
-                &::-webkit-scrollbar {
-                    width: 8px;
-                }
-
-                &::-webkit-scrollbar-track {
-                    background: var(--surface-section);
-                    border-radius: 4px;
-                }
-
-                &::-webkit-scrollbar-thumb {
-                    background: var(--surface-border);
-                    border-radius: 4px;
-
-                    &:hover {
-                        background: var(--surface-hover);
-                    }
-                }
-            }
-
-            :host ::ng-deep .p-sidebar-footer {
-                padding: 1rem 1.5rem;
-                border-top: 1px solid var(--surface-border);
-                background: var(--surface-section);
-                border-bottom-left-radius: var(--content-border-radius);
-                border-bottom-right-radius: var(--content-border-radius);
-            }
-
-            .cart-icon {
-                position: relative;
-                cursor: pointer;
-                padding: 8px;
-                transition: transform 0.3s ease;
-
-                &:hover {
-                    transform: scale(1.1);
-                }
-
-                i {
-                    font-size: 1.5rem;
-                    color: var(--text-color);
-                }
-            }
-
-            .cart-badge {
-                position: absolute;
-                top: -5px;
-                right: -5px;
-                background: var(--primary-color);
-                color: var(--primary-contrast-color);
-                border-radius: 50%;
-                padding: 0.25rem 0.5rem;
-                font-size: 0.75rem;
-                font-weight: 600;
-                min-width: 1.5rem;
-                height: 1.5rem;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                transition: all 0.3s ease;
-
-                &:hover {
-                    transform: scale(1.1);
-                }
-            }
-
-            .mobile-cart-badge {
-                background: var(--primary-color);
-                color: var(--primary-contrast-color);
-                border-radius: 1rem;
-                padding: 0.25rem 0.5rem;
-                font-size: 0.75rem;
-                font-weight: 600;
-                margin-left: 0.5rem;
-            }
-
-            @media screen and (max-width: 991px) {
-                .layout-topbar-menu {
-                    position: absolute;
-                    top: 100%;
-                    right: 0;
-                    background: var(--surface-overlay);
-                    border: 1px solid var(--surface-border);
-                    border-radius: var(--border-radius);
-                    padding: 0.5rem;
-                    min-width: 200px;
-                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-                    z-index: 1000;
-                }
-
-                .layout-topbar-menu button.layout-topbar-action {
-                    width: 100%;
-                    justify-content: flex-start;
-                    padding: 0.75rem 1rem;
-
-                    &:hover {
-                        background: var(--surface-hover);
-                    }
-                }
-            }
-        `
-    ],
+    imports: [RouterModule, CommonModule, StyleClassModule, ConfirmDialogModule, ButtonModule, BadgeModule, SidebarModule, OverlayPanelModule],
+    providers: [ConfirmationService, CartService, NotificationService],
+    styleUrls: ['./app.topbar.css'],
     template: /*html*/ `
         <p-confirmDialog></p-confirmDialog>
         <div class="layout-topbar">
@@ -159,7 +40,13 @@ import { CartItem } from '../../models/cart-item';
 
             <div class="layout-topbar-actions">
                 <!-- Desktop View -->
-                <div class="hidden lg:flex">
+                <div class="hidden lg:flex gap-3">
+                    <!-- Notification Icon with Badge for Desktop -->
+                    <div class="notification-icon" (click)="op.toggle($event)">
+                        <i class="pi pi-bell"></i>
+                        <span *ngIf="unreadNotificationsCount > 0" class="notification-badge">{{ unreadNotificationsCount }}</span>
+                    </div>
+
                     <!-- Cart Icon with Badge for Desktop -->
                     <div class="cart-icon" (click)="navigateToCart()" *ngIf="!IsAdmin()">
                         <i class="pi pi-shopping-cart"></i>
@@ -182,12 +69,19 @@ import { CartItem } from '../../models/cart-item';
 
                 <!-- Mobile Menu -->
                 <div class="layout-topbar-menu hidden lg:hidden">
+                    <!-- Notification Icon for Mobile -->
+                    <button type="button" class="layout-topbar-action" (click)="op.toggle($event)">
+                        <i class="pi pi-bell"></i>
+                        <span *ngIf="unreadNotificationsCount > 0" class="mobile-notification-badge">{{ unreadNotificationsCount }}</span>
+                        <span>Notifications</span>
+                    </button>
+
                     <!-- Cart Icon for Mobile -->
-                    <div class="cart-icon" (click)="navigateToCart()" type="button" class="layout-topbar-action" *ngIf="!IsAdmin()">
+                    <button (click)="navigateToCart()" type="button" class="layout-topbar-action" *ngIf="!IsAdmin()">
                         <i class="pi pi-shopping-cart"></i>
-                        <span *ngIf="cartItems.length > 0" class="cart-badge">{{ cartTotal }}</span>
+                        <span *ngIf="cartItems.length > 0" class="mobile-cart-badge">{{ cartTotal }}</span>
                         <span>Cart</span>
-                    </div>
+                    </button>
 
                     <!-- Authenticated User Menu Items -->
                     <div *ngIf="isConnected">
@@ -241,6 +135,79 @@ import { CartItem } from '../../models/cart-item';
                 </div>
             </div>
         </div>
+
+        <!-- Notification Panel -->
+        <p-overlayPanel #op [dismissable]="true" [showCloseIcon]="true" [style]="{ width: '350px' }" class="fixed">
+            <ng-template pTemplate>
+                <div class="notification-header">
+                    <h3 class="m-0 text-lg font-medium">Notifications</h3>
+                    <button pButton class="p-button-text p-button-sm" label="Marker comme lu" (click)="markAllAsRead()" *ngIf="unreadNotificationsCount > 0"></button>
+                </div>
+
+                <div class="notification-list">
+                    <!-- Unread Notifications -->
+                    <div class="notification-section" *ngIf="unreadNotifications.length > 0">
+                        <div class="section-header">
+                            <span class="section-title">New</span>
+                            <span class="section-count">{{ unreadNotifications.length }}</span>
+                        </div>
+                        <div class="notification-items">
+                            <div class="notification-item unread" *ngFor="let notification of unreadNotifications" (click)="readNotification(notification)">
+                                <div class="notification-icon" [ngClass]="getIconClass(notification.type)">
+                                    <i class="pi" [ngClass]="getIconType(notification.type)"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <div class="notification-title">{{ notification.title }}</div>
+                                    <div class="notification-message">{{ notification.message }}</div>
+                                    <div class="notification-meta">
+                                        <span class="notification-time">{{ formatDate(notification.createdAt) }}</span>
+                                        <span class="notification-type" *ngIf="notification.type">{{ notification.type }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Read Notifications -->
+                    <div class="notification-section" *ngIf="readNotifications.length > 0">
+                        <div class="section-header">
+                            <span class="section-title">Earlier</span>
+                            <span class="section-count">{{ readNotifications.length }}</span>
+                        </div>
+                        <div class="notification-items">
+                            <div class="notification-item" *ngFor="let notification of readNotifications" (click)="readNotification(notification)">
+                                <div class="notification-icon faded" [ngClass]="getIconClass(notification.type)">
+                                    <i class="pi" [ngClass]="getIconType(notification.type)"></i>
+                                </div>
+                                <div class="notification-content">
+                                    <div class="notification-title">{{ notification.title }}</div>
+                                    <div class="notification-message">{{ notification.message }}</div>
+                                    <div class="notification-meta">
+                                        <span class="notification-time">{{ formatDate(notification.createdAt) }}</span>
+                                        <span class="notification-type" *ngIf="notification.type">{{ notification.type }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- No Notifications -->
+                    <div class="empty-notification" *ngIf="notifications.length === 0">
+                        <div class="empty-icon">
+                            <i class="pi pi-bell-slash"></i>
+                        </div>
+                        <div class="empty-text">
+                            <div class="empty-title">No notifications</div>
+                            <div class="empty-message">You're all caught up!</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="notification-footer" *ngIf="notifications.length > 0">
+                    <button pButton class="p-button-text" label="votre liste de notifications"></button>
+                </div>
+            </ng-template>
+        </p-overlayPanel>
     `
 })
 export class AppTopbar implements OnInit, OnDestroy {
@@ -250,27 +217,118 @@ export class AppTopbar implements OnInit, OnDestroy {
     showCart = false;
     cartTotal: number = 0;
     private cartSubscription?: Subscription;
+    private notificationSubscription?: Subscription;
+    private unreadCountSubscription?: Subscription;
+
+    notifications: Notification[] = [];
+    unreadNotifications: Notification[] = [];
+    readNotifications: Notification[] = [];
+    unreadNotificationsCount: number = 0;
+
+    tiersCode: string = '';
+
     constructor(
         public layoutService: LayoutService,
         private authService: AuthenticationService,
         private router: Router,
         private confirmationService: ConfirmationService,
-        private cartService: CartService
+        private cartService: CartService,
+        private notificationService: NotificationService,
+        private store: Store
     ) {}
 
     ngOnInit() {
         this.isConnected = this.authService.isAuthenticated();
+
         this.cartSubscription = this.cartService.getCartItems().subscribe((items) => {
             this.cartItems = items;
         });
+
         this.cartService.getCartItemCount().subscribe((total) => {
             this.cartTotal = total;
         });
+
+        if (this.isConnected) {
+            this.loadNotifications();
+        }
     }
 
     ngOnDestroy() {
         if (this.cartSubscription) {
             this.cartSubscription.unsubscribe();
+        }
+    }
+
+    loadNotifications() {
+        if (this.isConnected) {
+            this.store.select(selectUserCode).subscribe((userCode) => {
+                this.tiersCode = userCode ?? ''; // Default to 0 if userId is undefined
+
+                // Now use this.tiersId in the getNotifications call
+                this.notificationSubscription = this.notificationService.getNotifications(this.tiersCode).subscribe((notifications) => {
+                    this.notifications = notifications;
+
+                    this.updateNotificationLists();
+                });
+            });
+
+            // Subscribe to unread count
+            this.unreadCountSubscription = this.notificationService.getUnreadCount().subscribe((count) => {
+                this.unreadNotificationsCount = count;
+            });
+        }
+    }
+
+    updateNotificationLists() {
+        this.unreadNotifications = this.notifications.filter((notification) => !notification.isRead);
+        this.readNotifications = this.notifications.filter((notification) => notification.isRead);
+    }
+
+    readNotification(notification: Notification) {
+        if (!notification.isRead) {
+            this.notificationService.markAsRead(notification.id).subscribe(() => {
+                notification.isRead = true;
+                this.updateNotificationLists();
+            });
+        }
+
+        if (notification.type === 'commande') {
+            this.router.navigate(['/store/customer/orders']);
+        }
+    }
+
+    markAllAsRead() {
+        // Since the backend doesn't support marking all as read,
+        // we'll mark each unread notification individually
+        const markPromises = this.unreadNotifications.map((notification) => this.notificationService.markAsRead(notification.id));
+
+        // Wait for all notifications to be marked as read
+        Promise.all(markPromises).then(() => {
+            // Update all notifications to read
+            this.notifications.forEach((notification) => (notification.isRead = true));
+            this.updateNotificationLists();
+        });
+    }
+
+    formatDate(dateInput: Date | string): string {
+        const now = new Date();
+        // Ensure we're working with a Date object
+        const notificationDate = dateInput instanceof Date ? dateInput : new Date(dateInput);
+
+        const diff = now.getTime() - notificationDate.getTime();
+
+        const seconds = Math.floor(diff / 1000);
+        const minutes = Math.floor(seconds / 60);
+        const hours = Math.floor(minutes / 60);
+        const days = Math.floor(hours / 24);
+        if (days > 0) {
+            return `${days} day${days > 1 ? 's' : ''} ago`;
+        } else if (hours > 0) {
+            return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+        } else if (minutes > 0) {
+            return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+        } else {
+            return 'maintenant';
         }
     }
 
@@ -317,10 +375,49 @@ export class AppTopbar implements OnInit, OnDestroy {
     toggleDarkMode() {
         this.layoutService.layoutConfig.update((state) => ({ ...state, darkTheme: !state.darkTheme }));
     }
+
     navigateToOrders() {
         this.router.navigate(['/store/customer/orders']);
     }
+
     IsAdmin() {
+        if (!this.authService.isAuthenticated()) return false;
+        const role = this.authService.getUserRole();
+        if (role === 'admin') {
+            return true;
+        }
         return false;
+    }
+    getIconClass(type: string | undefined): string {
+        if (!type) return 'icon-default';
+
+        switch (type.toLowerCase()) {
+            case 'commande':
+                return 'icon-order';
+            case 'article':
+                return 'icon-payment';
+            case 'alert':
+                return 'icon-alert';
+            case 'error':
+                return 'icon-error';
+            default:
+                return 'icon-default';
+        }
+    }
+    getIconType(type: string | undefined): string {
+        if (!type) return 'pi-bell';
+
+        switch (type.toLowerCase()) {
+            case 'commande':
+                return 'pi-shopping-bag';
+            case 'article':
+                return 'pi-shopping-cart';
+            case 'alert':
+                return 'pi-exclamation-circle';
+            case 'error':
+                return 'pi-times-circle';
+            default:
+                return 'pi-bell';
+        }
     }
 }
