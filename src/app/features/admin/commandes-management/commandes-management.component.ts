@@ -39,7 +39,8 @@ export class CommandesManagementComponent implements OnInit {
     articleCounts: { [key: string]: number } = {};
     globalFilter: string = '';
     statusFilter: string | null = null;
-    isSyncRoute = false; // Flag to track if we're on the sync route
+    isSyncRoute = false;
+    isNonSyncRoute = false;
     totalCommandes = 0;
     // New properties for rejection dialog
     rejectionDialogVisible: boolean = false;
@@ -61,6 +62,7 @@ export class CommandesManagementComponent implements OnInit {
 
     ngOnInit() {
         this.isSyncRoute = this.router.url === '/store/admin/orders/sync';
+        this.isNonSyncRoute = this.router.url === '/store/admin/synchronize/commandes';
         this.loadOrders();
     }
 
@@ -72,6 +74,8 @@ export class CommandesManagementComponent implements OnInit {
                 // If on sync route, filter to only show orders with docFlag === 0
                 if (this.isSyncRoute) {
                     this.orders = data.filter((order) => order.docFlag === 1);
+                } else if (this.isNonSyncRoute) {
+                    this.orders = data.filter((order) => order.docFlag === 0);
                 } else {
                     this.orders = data;
                 }
@@ -336,5 +340,12 @@ export class CommandesManagementComponent implements OnInit {
     }
     viewCustomerDetails(order: DocumentVente) {
         this.router.navigate([`/store/admin/users/${order.docTiersCode}`]);
+    }
+    synchronizeCommandes() {
+        this.messageService.add({
+            severity: 'info',
+            summary: 'Info',
+            detail: 'Synchronisation en cours...'
+        });
     }
 }

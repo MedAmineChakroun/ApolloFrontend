@@ -11,6 +11,7 @@ export default [
     { path: 'clients/sync', component: ClientsManagementComponent },
     { path: 'orders', component: CommandesManagementComponent },
     { path: 'orders/sync', component: CommandesManagementComponent },
-    { path: 'users/:id', component: UserProfileComponent }
-    // { path: 'sellers', component: SellersComponent },
+    { path: 'users/:id', component: UserProfileComponent },
+    { path: 'synchronize/clients', component: ClientsManagementComponent },
+    { path: 'synchronize/commandes', component: CommandesManagementComponent }
 ] as Routes;

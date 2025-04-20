@@ -106,7 +106,7 @@ import { filter } from 'rxjs/operators';
 
             <!-- Sync Commandes -->
             <div class="menu-category menu-item-container">
-                <a routerLink="/store/admin/sync/orders" class="menu-item" [ngClass]="{ 'active-item': activeMenu === '/store/admin/sync/orders' }">
+                <a routerLink="/store/admin/synchronize/commandes" class="menu-item" [ngClass]="{ 'active-item': activeMenu === '/store/admin/synchronize/commandes' }">
                     <i class="pi pi-sync"></i>
                     <span>Sync Commandes</span>
                 </a>
@@ -122,7 +122,7 @@ import { filter } from 'rxjs/operators';
 
             <!-- Sync Clients -->
             <div class="menu-category menu-item-container">
-                <a routerLink="/store/admin/sync/clients" class="menu-item" [ngClass]="{ 'active-item': activeMenu === '/store/admin/sync/clients' }">
+                <a routerLink="/store/admin/synchronize/clients" class="menu-item" [ngClass]="{ 'active-item': activeMenu === '/store/admin/synchronize/clients' }">
                     <i class="pi pi-sync"></i>
                     <span>Sync Clients</span>
                 </a>

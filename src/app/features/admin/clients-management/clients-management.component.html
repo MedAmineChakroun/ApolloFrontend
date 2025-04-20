@@ -1,19 +1,25 @@
 <div class="container">
     <p-card>
-        <ng-template pTemplate="header">
+        <ng-template pTemplate="header" *ngIf="!isNonSyncRoute">
             <div class="flex justify-content-between align-items-center p-3 bg-primary-500" style="border-radius: 12px 12px 0 0">
                 <h2 class="text-white m-0">Clients Management</h2>
                 <span class="text-white font-bold">Total Clients: {{ totalClients - 1 }}</span>
             </div>
         </ng-template>
-
+        <ng-template pTemplate="header" *ngIf="isNonSyncRoute">
+            <div class="flex justify-content-between align-items-center p-3 bg-purple-500" style="border-radius: 12px 12px 0 0">
+                <h2 class="text-white m-0">Clients Management</h2>
+                <span class="text-white font-bold">Total Clients: {{ totalClients - 1 }}</span>
+            </div>
+        </ng-template>
         <p-toolbar styleClass="mb-4">
             <div class="p-toolbar-group-start">
                 <h3>{{ isSyncRoute ? 'Liste Clients synchronisés' : 'Liste Clients' }}</h3>
             </div>
 
             <div class="p-toolbar-group-end">
-                <p-button label="Export to CSV" icon="pi pi-download" styleClass="p-button-success mr-2" (click)="exportToCSV()"> </p-button>
+                <p-button label="Export to CSV" *ngIf="!isNonSyncRoute" icon="pi pi-download" styleClass="p-button-success mr-2" (click)="exportToCSV()"> </p-button>
+                <p-button label="Synchroniser" *ngIf="isNonSyncRoute" icon="pi pi-sync" [raised]="true" severity="help" (click)="synchronizeClients()" class="mr-2" />
                 <button pButton label="Refresh" icon="pi pi-refresh" class="p-button-outlined" (click)="loadClients()"></button>
             </div>
         </p-toolbar>
@@ -57,7 +63,7 @@
                 <tr>
                     <td class="mr-0" style="padding: 0 !important">
                         <div class="profile-image ml-4">
-                            <img [src]="clientImage || 'assets/general/default-avatar.jpg'" alt="Client Profile" />
+                            <img [src]="clientImage || 'assets/general/default-avatar.jpg'" alt="Client Profile" style="width: 50; height: 50px; border-radius: 50%; object-fit: cover" />
                         </div>
                     </td>
                     <td>#{{ client.tiersCode }}</td>
@@ -70,7 +76,6 @@
                     </td>
                     <td class="flex gap-2 justify-content-center">
                         <button pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-info" (click)="viewClientDetails(client)" pTooltip="Voir Detail" tooltipPosition="top"></button>
-                        <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-help" pTooltip="transfer pfd" tooltipPosition="top"></button>
                         <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="confirmDelete(client)" pTooltip="supprimer" tooltipPosition="top"></button>
                     </td>
                 </tr>

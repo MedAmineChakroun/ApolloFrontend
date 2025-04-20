@@ -35,8 +35,8 @@ export class ClientsManagementComponent implements OnInit {
     editMode = false;
     clientForm!: FormGroup;
     clientImage: string | null = null;
-    isSyncRoute = false; // Flag to track if we're on the sync route
-
+    isSyncRoute = false;
+    isNonSyncRoute = false;
     @ViewChild('dt') table!: Table;
 
     // Services injection
@@ -49,7 +49,7 @@ export class ClientsManagementComponent implements OnInit {
     ngOnInit() {
         // Check if current route is the sync route
         this.isSyncRoute = this.router.url === '/store/admin/clients/sync';
-
+        this.isNonSyncRoute = this.router.url === '/store/admin/synchronize/clients';
         this.loadClients();
         this.getClientsCount();
         this.initForm();
@@ -90,6 +90,10 @@ export class ClientsManagementComponent implements OnInit {
                                 // Check if we're on sync route and filter by tiersFlag
                                 if (this.isSyncRoute) {
                                     if (client.tiersFlag === 1) {
+                                        this.clients.push(client);
+                                    }
+                                } else if (this.isNonSyncRoute) {
+                                    if (client.tiersFlag === 0) {
                                         this.clients.push(client);
                                     }
                                 } else {
@@ -266,5 +270,8 @@ export class ClientsManagementComponent implements OnInit {
             console.error('Error exporting CSV:', error);
             this.toastr.error('Failed to export CSV file', 'Error');
         }
+    }
+    synchronizeClients() {
+        this.toastr.info('Clients will be synchronized soon', 'Information');
     }
 }
