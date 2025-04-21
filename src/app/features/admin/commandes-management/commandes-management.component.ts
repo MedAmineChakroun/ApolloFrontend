@@ -242,7 +242,7 @@ export class CommandesManagementComponent implements OnInit {
                 this.messageService.add({
                     severity: 'success',
                     summary: 'Success',
-                    detail: 'Order status updated successfully'
+                    detail: 'le client est notifié du changement de statut'
                 });
                 this.loadOrders(); // Reload orders after update
             },

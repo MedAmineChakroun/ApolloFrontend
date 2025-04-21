@@ -46,27 +46,6 @@ export class NotificationService {
         );
     }
 
-    // Mark all notifications as read (we'll need to add this to the backend)
-    markAllAsRead(tiersCode: number): Observable<any> {
-        // This would need to be implemented on the backend
-        // For now, we'll mark each notification as read individually
-        const unreadNotifications = this.notificationsSubject.value.filter((n) => !n.isRead);
-
-        // This is just a placeholder - you would need to implement this endpoint on the backend
-        console.warn('markAllAsRead is not implemented on the backend');
-
-        // Update local state
-        const updatedNotifications = this.notificationsSubject.value.map((n) => ({ ...n, isRead: true }));
-        this.notificationsSubject.next(updatedNotifications);
-        this.updateUnreadCount(updatedNotifications);
-
-        // Return an observable that completes successfully
-        return new Observable((observer) => {
-            observer.next(true);
-            observer.complete();
-        });
-    }
-
     // Get the current notifications as an observable
     getCurrentNotifications(): Observable<Notification[]> {
         return this.notificationsSubject.asObservable();

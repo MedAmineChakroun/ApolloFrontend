@@ -310,7 +310,7 @@ export class AppTopbar implements OnInit, OnDestroy {
     markAllAsRead() {
         // Since the backend doesn't support marking all as read,
         // we'll mark each unread notification individually
-        const markPromises = this.unreadNotifications.map((notification) => this.notificationService.markAsRead(notification.id));
+        const markPromises = this.unreadNotifications.map((notification) => this.readNotification(notification));
 
         // Wait for all notifications to be marked as read
         Promise.all(markPromises).then(() => {
