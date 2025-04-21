@@ -18,6 +18,7 @@ import { NotificationService } from '../../core/services/notifications.service';
 import { Notification } from '../../models/notification';
 import { Store } from '@ngrx/store';
 import { selectUserCode, selectUserId } from '../../store/user/user.selectors';
+import { SignalRService } from '../../core/services/signalr.service';
 
 @Component({
     selector: 'app-topbar',
@@ -234,7 +235,8 @@ export class AppTopbar implements OnInit, OnDestroy {
         private confirmationService: ConfirmationService,
         private cartService: CartService,
         private notificationService: NotificationService,
-        private store: Store
+        private store: Store,
+        private signalRService: SignalRService
     ) {}
 
     ngOnInit() {
@@ -249,6 +251,14 @@ export class AppTopbar implements OnInit, OnDestroy {
         });
 
         if (this.isConnected) {
+            this.store.select(selectUserCode).subscribe((userCode) => {
+                if (userCode) {
+                    this.tiersCode = userCode;
+                    this.signalRService.startConnection(this.tiersCode); // ✅ Use correct tiers code
+                    this.subscribeToNotifications();
+                }
+            });
+
             this.loadNotifications();
         }
     }
@@ -419,5 +429,14 @@ export class AppTopbar implements OnInit, OnDestroy {
             default:
                 return 'pi-bell';
         }
+    }
+    private subscribeToNotifications() {
+        this.signalRService.notification$.subscribe((notif) => {
+            if (notif) {
+                this.notifications.unshift(notif);
+                this.unreadNotificationsCount++;
+                this.updateNotificationLists();
+            }
+        });
     }
 }

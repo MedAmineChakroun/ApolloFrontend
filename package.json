@@ -22,6 +22,7 @@
         "@auth0/angular-jwt": "^5.2.0",
         "@fortawesome/fontawesome-free": "^6.7.2",
         "@google/generative-ai": "^0.24.0",
+        "@microsoft/signalr": "^8.0.7",
         "@ngrx/store": "^19.0.1",
         "@ngrx/store-devtools": "^19.0.1",
         "@primeng/themes": "^19.0.5",
