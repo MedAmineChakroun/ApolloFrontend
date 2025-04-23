@@ -13,12 +13,14 @@ import { Product } from '../../../models/Product';
 import { ToastrService } from 'ngx-toastr';
 import { RatingModule } from 'primeng/rating';
 import { RatingComponent } from './rating/rating.component';
+import { SimilarComponent } from './similar/similar.component';
+import { ImageModule } from 'primeng/image';
 type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | undefined;
 
 @Component({
     selector: 'app-product-details',
     standalone: true,
-    imports: [RatingComponent, RatingModule, CommonModule, RouterModule, ButtonModule, TagModule, SkeletonModule, TooltipModule, RippleModule, FormsModule],
+    imports: [ImageModule, SimilarComponent, RatingComponent, RatingModule, CommonModule, RouterModule, ButtonModule, TagModule, SkeletonModule, TooltipModule, RippleModule, FormsModule],
     templateUrl: './product-details.component.html',
     styleUrls: ['./product-details.component.css']
 })
