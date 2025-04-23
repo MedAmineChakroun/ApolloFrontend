@@ -21,6 +21,9 @@ export interface Product {
 
 @Injectable()
 export class ProductService {
+    getTopRated() {
+        throw new Error('Method not implemented.');
+    }
     getProductsData() {
         return [
             {

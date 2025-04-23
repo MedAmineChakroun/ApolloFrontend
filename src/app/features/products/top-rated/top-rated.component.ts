@@ -5,46 +5,43 @@ import { CarouselModule } from 'primeng/carousel';
 import { GalleriaModule } from 'primeng/galleria';
 import { ImageModule } from 'primeng/image';
 import { TagModule } from 'primeng/tag';
-import { Product, ProductService } from '../../../pages/service/product.service';
-import { PhotoService } from '../../../pages/service/photo.service';
+import { ProductsService } from '../../../core/services/products.service';
+import { Product } from '../../../models/Product';
+import { RatingModule } from 'primeng/rating';
+import { FormsModule } from '@angular/forms';
+
+type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' | undefined;
 
 @Component({
     selector: 'app-top-rated',
-    imports: [ButtonModule, CommonModule, CarouselModule, GalleriaModule, ImageModule, TagModule],
+    imports: [FormsModule, ButtonModule, CommonModule, CarouselModule, GalleriaModule, ImageModule, TagModule, RatingModule],
     templateUrl: './top-rated.component.html',
     styleUrl: './top-rated.component.css',
-    providers: [ProductService, PhotoService]
+    providers: [ProductsService]
 })
 export class TopRatedComponent {
     products!: Product[];
+    ratedProducts: { article: Product; averageRating: number; ratingCount: number }[] = [];
 
     images!: any[];
-    constructor(
-        private productService: ProductService,
-        private photoService: PhotoService
-    ) {}
+    private readonly DEFAULT_PRODUCT_IMAGE = 'assets/general/product-default.png';
+    constructor(private productServices: ProductsService) {}
 
     ngOnInit() {
-        this.productService.getProductsSmall().then((products) => {
-            this.products = products;
-        });
-
-        this.photoService.getImages().then((images) => {
-            this.images = images;
+        this.productServices.getTopRatedProducts().subscribe((response) => {
+            this.ratedProducts = response.products;
+            this.products = response.products.map((item) => item.article);
         });
     }
+    handleProductImageError(event: any): void {
+        event.target.src = this.DEFAULT_PRODUCT_IMAGE;
+    }
 
-    getSeverity(status: string) {
-        switch (status) {
-            case 'INSTOCK':
-                return 'success';
-            case 'LOWSTOCK':
-                return 'warn';
-            case 'OUTOFSTOCK':
-                return 'danger';
-            default:
-                return 'success';
-        }
+    getSeverity(stockValue: number): TagSeverity {
+        return stockValue > 0 ? 'success' : 'danger';
+    }
+    getSeverityValue(stockValue: number): string {
+        return stockValue > 0 ? 'En Stock' : 'Sold out';
     }
     carouselResponsiveOptions: any[] = [
         {

@@ -1,21 +1,29 @@
-<div class="font-semibold text-xl mb- 4"><h2 class="font-semibold text-xl mb-4">Les plus Notés</h2></div>
-<p-carousel [value]="products" [numVisible]="5" [numScroll]="4" [circular]="true" [autoplayInterval]="8500" [responsiveOptions]="carouselResponsiveOptions">
-    <ng-template let-product #item>
+<div class="font-semibold text-xl mb-4">
+    <h2 class="font-semibold text-xl mb-4">Les plus Notés</h2>
+</div>
+
+<p-carousel [value]="ratedProducts" [numVisible]="5" [numScroll]="4" [circular]="true" [autoplayInterval]="8500" [responsiveOptions]="carouselResponsiveOptions">
+    <ng-template let-ratedProduct pTemplate="item">
         <div class="border border-surface rounded-border m-2 p-4 recommend">
             <div class="mb-4">
                 <div class="relative mx-auto">
-                    <img src="/assets/general/product-default.png" [alt]="product.name" class="w-full rounded-border" />
+                    <img src="http://localhost:91/Images/{{ ratedProduct.article.artImageUrl }}" [alt]="ratedProduct.article.artIntitule" (error)="handleProductImageError($event)" class="w-full rounded-border" />
                     <div class="absolute bg-black/70 rounded-border" [ngStyle]="{ 'left.px': 5, 'top.px': 5 }">
-                        <p-tag [value]="product.inventoryStatus" [severity]="getSeverity(product.inventoryStatus)" />
+                        <p-tag [value]="getSeverityValue(ratedProduct.article.artEtat)" [severity]="getSeverity(ratedProduct.article.artEtat)" />
                     </div>
                 </div>
             </div>
-            <div class="mb-4 font-medium">{{ product.name }}</div>
+            <div class="mb-4 font-medium">{{ ratedProduct.article.artIntitule }}</div>
             <div class="flex justify-between items-center">
-                <div class="mt-0 font-semibold text-xl">{{ '$' + product.price }}</div>
+                <div class="mt-0 font-semibold text-xl">{{ '$' + ratedProduct.article.artPrixVente }}</div>
                 <span>
                     <p-button icon="pi pi-shopping-cart" styleClass="ml-2" />
                 </span>
+            </div>
+            <!-- Display rating information using p-rating -->
+            <div class="mt-2 flex items-center">
+                <p-rating [ngModel]="ratedProduct.averageRating" [readonly]="true"></p-rating>
+                <span class="ml-2 text-sm text-gray-600">({{ ratedProduct.ratingCount }} avis)</span>
             </div>
         </div>
     </ng-template>

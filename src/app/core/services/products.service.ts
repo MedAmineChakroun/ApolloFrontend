@@ -26,7 +26,10 @@ export class ProductsService {
         return this.http.get<Product>(`https://localhost:7257/api/Produits/Code/${code}`);
     }
     getTopSalesProducts(): Observable<Product[]> {
-        return this.http.get<Product[]>('https://localhost:7257/api/Produits/topSales');
+        return this.http.get<Product[]>(`https://localhost:7257/api/Produits/topSales/${20}`);
+    }
+    getTopRatedProducts(): Observable<{ products: { article: Product; averageRating: number; ratingCount: number }[]; count: number }> {
+        return this.http.get<{ products: { article: Product; averageRating: number; ratingCount: number }[]; count: number }>(`https://localhost:7257/api/Produits/toprated/${20}`);
     }
     /**
      * Extract products from API response, handling different response formats
