@@ -1,5 +1,5 @@
 <div class="font-semibold text-xl mb- 4"><h2 class="font-semibold text-xl mb-4">Recommender pour vous</h2></div>
-<p-carousel [value]="products" [numVisible]="5" [numScroll]="4" [circular]="true" [autoplayInterval]="5000" [responsiveOptions]="carouselResponsiveOptions">
+<p-carousel [value]="products" [numVisible]="5" [numScroll]="4" [circular]="true" [autoplayInterval]="7500" [responsiveOptions]="carouselResponsiveOptions">
     <ng-template let-product #item>
         <div class="border border-surface rounded-border m-2 p-4 recommend">
             <div class="mb-4">
@@ -14,7 +14,6 @@
             <div class="flex justify-between items-center">
                 <div class="mt-0 font-semibold text-xl">{{ '$' + product.price }}</div>
                 <span>
-                    <p-button icon="pi pi-heart" severity="secondary" [outlined]="true" />
                     <p-button icon="pi pi-shopping-cart" styleClass="ml-2" />
                 </span>
             </div>

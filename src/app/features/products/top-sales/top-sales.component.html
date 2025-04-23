@@ -1,20 +1,19 @@
 <div class="font-semibold text-xl mb- 4"><h2 class="font-semibold text-xl mb-4">Les plus vendus</h2></div>
-<p-carousel [value]="products" [numVisible]="5" [numScroll]="4" [circular]="true" [autoplayInterval]="5500" [responsiveOptions]="carouselResponsiveOptions">
+<p-carousel [value]="products" [numVisible]="5" [numScroll]="4" [circular]="true" [autoplayInterval]="8500" [responsiveOptions]="carouselResponsiveOptions">
     <ng-template let-product #item>
         <div class="border border-surface rounded-border m-2 p-4 recommend">
             <div class="mb-4">
                 <div class="relative mx-auto">
-                    <img src="/assets/general/product-default.png" [alt]="product.name" class="w-full rounded-border" />
+                    <img src="http://localhost:91/Images/{{ product.artImageUrl }}" [alt]="product.artIntitule" (error)="handleProductImageError($event)" class="w-full rounded-border" />
                     <div class="absolute bg-black/70 rounded-border" [ngStyle]="{ 'left.px': 5, 'top.px': 5 }">
-                        <p-tag [value]="product.inventoryStatus" [severity]="getSeverity(product.inventoryStatus)" />
+                        <p-tag [value]="getSeverityValue(product.artEtat)" [severity]="getSeverity(product.artEtat)" />
                     </div>
                 </div>
             </div>
-            <div class="mb-4 font-medium">{{ product.name }}</div>
+            <div class="mb-4 font-medium">{{ product.artIntitule }}</div>
             <div class="flex justify-between items-center">
-                <div class="mt-0 font-semibold text-xl">{{ '$' + product.price }}</div>
+                <div class="mt-0 font-semibold text-xl">{{ '$' + product.artPrixVente }}</div>
                 <span>
-                    <p-button icon="pi pi-heart" severity="secondary" [outlined]="true" />
                     <p-button icon="pi pi-shopping-cart" styleClass="ml-2" />
                 </span>
             </div>

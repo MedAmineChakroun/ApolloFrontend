@@ -5,46 +5,40 @@ import { CarouselModule } from 'primeng/carousel';
 import { GalleriaModule } from 'primeng/galleria';
 import { ImageModule } from 'primeng/image';
 import { TagModule } from 'primeng/tag';
-import { Product, ProductService } from '../../../pages/service/product.service';
-import { PhotoService } from '../../../pages/service/photo.service';
+import { Product } from '../../../models/Product';
+import { ProductsService } from '../../../core/services/products.service';
+type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' | undefined;
 
 @Component({
     selector: 'app-top-sales',
     imports: [ButtonModule, CommonModule, CarouselModule, GalleriaModule, ImageModule, TagModule],
     templateUrl: './top-sales.component.html',
     styleUrl: './top-sales.component.css',
-    providers: [ProductService, PhotoService]
+    providers: [ProductsService]
 })
-export class TopSalesComponent {
+export class TopSalesComponent implements OnInit {
     products!: Product[];
 
     images!: any[];
-    constructor(
-        private productService: ProductService,
-        private photoService: PhotoService
-    ) {}
+    private readonly DEFAULT_PRODUCT_IMAGE = 'assets/general/product-default.png';
+
+    constructor(private productService: ProductsService) {}
 
     ngOnInit() {
-        this.productService.getProductsSmall().then((products) => {
+        this.productService.getTopSalesProducts().subscribe((products) => {
+            console.log('Top Sales Products:', products);
             this.products = products;
         });
-
-        this.photoService.getImages().then((images) => {
-            this.images = images;
-        });
+    }
+    handleProductImageError(event: any): void {
+        event.target.src = this.DEFAULT_PRODUCT_IMAGE;
     }
 
-    getSeverity(status: string) {
-        switch (status) {
-            case 'INSTOCK':
-                return 'success';
-            case 'LOWSTOCK':
-                return 'warn';
-            case 'OUTOFSTOCK':
-                return 'danger';
-            default:
-                return 'success';
-        }
+    getSeverity(stockValue: number): TagSeverity {
+        return stockValue > 0 ? 'success' : 'danger';
+    }
+    getSeverityValue(stockValue: number): string {
+        return stockValue > 0 ? 'En Stock' : 'Sold out';
     }
     carouselResponsiveOptions: any[] = [
         {

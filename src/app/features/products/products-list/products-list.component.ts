@@ -382,7 +382,7 @@ export class products implements OnInit {
 
     // artEtat is 1 for in stock, 0 for out of stock
     getStockStatus(stockValue: number): string {
-        return stockValue > 0 ? 'IN STOCK' : 'OUT OF STOCK';
+        return stockValue > 0 ? 'En STOCK' : 'Sold out';
     }
 
     getStockSeverity(stockValue: number): TagSeverity {

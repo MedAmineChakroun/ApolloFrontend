@@ -25,6 +25,9 @@ export class ProductsService {
     getProductsByCode(code: string): Observable<Product> {
         return this.http.get<Product>(`https://localhost:7257/api/Produits/Code/${code}`);
     }
+    getTopSalesProducts(): Observable<Product[]> {
+        return this.http.get<Product[]>('https://localhost:7257/api/Produits/topSales');
+    }
     /**
      * Extract products from API response, handling different response formats
      * @param response API response
