@@ -1,5 +1,5 @@
 <div class="mt-4 mb-4">
-    <p-carousel [showIndicators]="false" [value]="carouselItems" [numVisible]="1" [numScroll]="1" [circular]="true" [autoplayInterval]="5000" [responsiveOptions]="carouselResponsiveOptions">
+    <p-carousel [showIndicators]="true" [value]="carouselItems" [numVisible]="1" [numScroll]="1" [circular]="true" [autoplayInterval]="5000" [responsiveOptions]="carouselResponsiveOptions">
         <ng-template let-item pTemplate="item">
             <div class="relative cursor-pointer justifuy-center items-center flex flex-col">
                 <img [src]="item.image" [alt]="item.title" class="object-cover rounded-lg" onError="this.src='assets/product-default.png'" />

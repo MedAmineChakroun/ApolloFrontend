@@ -7,6 +7,7 @@ import { ImageModule } from 'primeng/image';
 import { TagModule } from 'primeng/tag';
 import { Product } from '../../../models/Product';
 import { ProductsService } from '../../../core/services/products.service';
+import { Router } from '@angular/router';
 type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' | undefined;
 
 @Component({
@@ -14,7 +15,7 @@ type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contr
     imports: [ButtonModule, CommonModule, CarouselModule, GalleriaModule, ImageModule, TagModule],
     templateUrl: './top-sales.component.html',
     styleUrl: './top-sales.component.css',
-    providers: [ProductsService]
+    providers: [ProductsService, Router]
 })
 export class TopSalesComponent implements OnInit {
     products!: Product[];
@@ -22,7 +23,10 @@ export class TopSalesComponent implements OnInit {
     images!: any[];
     private readonly DEFAULT_PRODUCT_IMAGE = 'assets/general/product-default.png';
 
-    constructor(private productService: ProductsService) {}
+    constructor(
+        private productService: ProductsService,
+        private router: Router
+    ) {}
 
     ngOnInit() {
         this.productService.getTopSalesProducts().subscribe((products) => {
@@ -57,4 +61,7 @@ export class TopSalesComponent implements OnInit {
             numScroll: 1
         }
     ];
+    navigateToProductDetails(productId: string) {
+        this.router.navigate(['/store/products', productId]);
+    }
 }

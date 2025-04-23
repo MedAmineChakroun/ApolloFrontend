@@ -7,6 +7,7 @@ import { ImageModule } from 'primeng/image';
 import { TagModule } from 'primeng/tag';
 import { ProductsService } from '../../../../core/services/products.service';
 import { Product } from '../../../../models/Product';
+import { Router } from '@angular/router';
 
 type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' | undefined;
 
@@ -15,7 +16,7 @@ type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contr
     imports: [ButtonModule, CommonModule, CarouselModule, GalleriaModule, ImageModule, TagModule],
     templateUrl: './similar.component.html',
     styleUrl: './similar.component.css',
-    providers: [ProductsService]
+    providers: [ProductsService, Router]
 })
 export class SimilarComponent {
     @Input() productFamille: string = '';
@@ -24,7 +25,10 @@ export class SimilarComponent {
     images!: any[];
     private readonly DEFAULT_PRODUCT_IMAGE = 'assets/general/product-default.png';
 
-    constructor(private productService: ProductsService) {}
+    constructor(
+        private productService: ProductsService,
+        private router: Router
+    ) {}
 
     ngOnInit() {
         this.productService.getSimilarProductsByFamille(this.productFamille).subscribe((products) => {
@@ -59,4 +63,7 @@ export class SimilarComponent {
             numScroll: 1
         }
     ];
+    navigateToProductDetails(productId: string) {
+        this.router.navigate(['/store/products', productId]);
+    }
 }

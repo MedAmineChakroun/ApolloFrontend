@@ -7,13 +7,14 @@ import { ImageModule } from 'primeng/image';
 import { TagModule } from 'primeng/tag';
 import { Product, ProductService } from '../../../pages/service/product.service';
 import { PhotoService } from '../../../pages/service/photo.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-recommended-products',
     imports: [ButtonModule, CommonModule, CarouselModule, GalleriaModule, ImageModule, TagModule],
     templateUrl: './recommended-products.component.html',
     styleUrl: './recommended-products.component.css',
-    providers: [ProductService, PhotoService]
+    providers: [ProductService, PhotoService, Router]
 })
 export class RecommendedProductsComponent {
     products!: Product[];
@@ -21,7 +22,8 @@ export class RecommendedProductsComponent {
     images!: any[];
     constructor(
         private productService: ProductService,
-        private photoService: PhotoService
+        private photoService: PhotoService,
+        private router: Router
     ) {}
 
     ngOnInit() {
@@ -63,4 +65,7 @@ export class RecommendedProductsComponent {
             numScroll: 1
         }
     ];
+    navigateToProductDetails(productId: string) {
+        this.router.navigate(['/store/products', productId]);
+    }
 }

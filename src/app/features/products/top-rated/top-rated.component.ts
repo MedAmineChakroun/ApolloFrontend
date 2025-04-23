@@ -9,6 +9,7 @@ import { ProductsService } from '../../../core/services/products.service';
 import { Product } from '../../../models/Product';
 import { RatingModule } from 'primeng/rating';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' | undefined;
 
@@ -17,7 +18,7 @@ type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contr
     imports: [FormsModule, ButtonModule, CommonModule, CarouselModule, GalleriaModule, ImageModule, TagModule, RatingModule],
     templateUrl: './top-rated.component.html',
     styleUrl: './top-rated.component.css',
-    providers: [ProductsService]
+    providers: [ProductsService, Router]
 })
 export class TopRatedComponent {
     products!: Product[];
@@ -25,7 +26,10 @@ export class TopRatedComponent {
 
     images!: any[];
     private readonly DEFAULT_PRODUCT_IMAGE = 'assets/general/product-default.png';
-    constructor(private productServices: ProductsService) {}
+    constructor(
+        private productServices: ProductsService,
+        private router: Router
+    ) {}
 
     ngOnInit() {
         this.productServices.getTopRatedProducts().subscribe((response) => {
@@ -60,4 +64,7 @@ export class TopRatedComponent {
             numScroll: 1
         }
     ];
+    navigateToProductDetails(productId: string) {
+        this.router.navigate(['/store/products', productId]);
+    }
 }
