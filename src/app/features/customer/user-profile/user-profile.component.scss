@@ -1,12 +1,13 @@
 // Main container styles
 .profile-page-container {
     min-height: 100vh;
-    background-color: var(--surface-ground);
+    background-color: var(--surface-ground-purple-600);
 }
 
 // Header styles
 .profile-header {
     position: relative;
+    border-radius: 12px 12px 0 0;
 
     .header-background {
         overflow: hidden;
@@ -193,5 +194,6 @@
     .profile-header {
         padding-top: 2rem;
         padding-bottom: 2rem;
+        border-radius: 12px 12px 0 0;
     }
 }

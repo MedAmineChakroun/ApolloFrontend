@@ -16,8 +16,10 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { CartService } from '../../../core/services/cart.service';
 import { ToastrService } from 'ngx-toastr';
 import { RippleModule } from 'primeng/ripple';
-
-// Define the allowed severity types for p-tag
+import { RecommendedProductsComponent } from '../recommended-products/recommended-products.component';
+import { TopRatedComponent } from '../top-rated/top-rated.component';
+import { TopSalesComponent } from '../top-sales/top-sales.component';
+import { AdsCarouselComponent } from '../ads-carousel/ads-carousel.component';
 type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' | undefined;
 
 interface SortOption {
@@ -29,7 +31,24 @@ interface SortOption {
 @Component({
     selector: 'app-products-list',
     standalone: true,
-    imports: [CommonModule, DataViewModule, FormsModule, SelectButtonModule, PickListModule, OrderListModule, TagModule, ButtonModule, DropdownModule, InputTextModule, InputGroupModule, RippleModule],
+    imports: [
+        AdsCarouselComponent,
+        TopSalesComponent,
+        TopRatedComponent,
+        RecommendedProductsComponent,
+        CommonModule,
+        DataViewModule,
+        FormsModule,
+        SelectButtonModule,
+        PickListModule,
+        OrderListModule,
+        TagModule,
+        ButtonModule,
+        DropdownModule,
+        InputTextModule,
+        InputGroupModule,
+        RippleModule
+    ],
     templateUrl: './products-list.component.html',
     styleUrls: ['./products-list.component.css'],
     providers: [ProductsService]
@@ -39,7 +58,6 @@ export class products implements OnInit {
     private readonly DEFAULT_PRODUCT_IMAGE = 'assets/general/product-default.png';
 
     layout: 'list' | 'grid' = 'grid';
-    options = ['list', 'grid'];
     products: Product[] = [];
     filteredProducts: Product[] = [];
     searchQuery: string = '';
@@ -194,10 +212,14 @@ export class products implements OnInit {
             const queryParams: any = { ...this.route.snapshot.queryParams };
             delete queryParams.category;
 
-            this.router.navigate([], {
-                relativeTo: this.route,
-                queryParams: queryParams
-            });
+            this.router
+                .navigate([], {
+                    relativeTo: this.route,
+                    queryParams: queryParams
+                })
+                .then(() => {
+                    this.scrollToProductGrid();
+                });
         }
     }
 
@@ -210,10 +232,14 @@ export class products implements OnInit {
             const queryParams: any = { ...this.route.snapshot.queryParams };
             delete queryParams.inStock;
 
-            this.router.navigate([], {
-                relativeTo: this.route,
-                queryParams: queryParams
-            });
+            this.router
+                .navigate([], {
+                    relativeTo: this.route,
+                    queryParams: queryParams
+                })
+                .then(() => {
+                    this.scrollToProductGrid();
+                });
         }
     }
 
@@ -232,6 +258,7 @@ export class products implements OnInit {
             .then(() => {
                 // Turn off loading after navigation is complete
                 this.isSearching = false;
+                this.scrollToProductGrid();
             });
     }
 
@@ -255,6 +282,7 @@ export class products implements OnInit {
                 .then(() => {
                     // Turn off loading after navigation is complete
                     this.isSearching = false;
+                    this.scrollToProductGrid();
                 });
         }
     }
@@ -279,11 +307,15 @@ export class products implements OnInit {
         const value = event.value.value;
 
         // Update URL with sort parameter
-        this.router.navigate([], {
-            relativeTo: this.route,
-            queryParams: { sort: value },
-            queryParamsHandling: 'merge'
-        });
+        this.router
+            .navigate([], {
+                relativeTo: this.route,
+                queryParams: { sort: value },
+                queryParamsHandling: 'merge'
+            })
+            .then(() => {
+                this.scrollToProductGrid();
+            });
 
         this.updateSortingFromOption(value);
         this.applyFilters();
@@ -293,26 +325,31 @@ export class products implements OnInit {
      * Apply all active filters to the products
      */
     applyFilters() {
+        const { priceMin, priceMax, category, inStock, search } = this.filters;
+
+        // Determine if any filters are active
+        const isFilterActive =
+            priceMin > 0 ||
+            priceMax < 5000 || // 5000 is your max default, so user reduced it
+            !!category?.trim() ||
+            !!inStock ||
+            !!search?.trim();
+
         // First apply filters
         this.filteredProducts = this.products.filter((product) => {
-            // Price filter
-            const matchesPrice = product.artPrixVente >= this.filters.priceMin && (this.filters.priceMax === 0 || product.artPrixVente <= this.filters.priceMax);
+            const matchesPrice = product.artPrixVente >= priceMin && (priceMax === 0 || product.artPrixVente <= priceMax);
 
-            // Category filter (if specified)
-            const matchesCategory = !this.filters.category || product.artFamille.toLowerCase() === this.filters.category.toLowerCase();
+            const matchesCategory = !category || product.artFamille.toLowerCase() === category.toLowerCase();
 
-            // In-stock filter (if specified)
-            const matchesInStock = !this.filters.inStock || product.artEtat > 0;
+            const matchesInStock = !inStock || product.artEtat > 0;
 
-            // Search filter
-            const searchTerm = this.filters.search.toLowerCase();
+            const searchTerm = search.toLowerCase();
             const matchesSearch = !searchTerm || product.artIntitule.toLowerCase().includes(searchTerm) || product.artCode.toLowerCase().includes(searchTerm) || product.artFamille.toLowerCase().includes(searchTerm);
 
-            // Return true if all conditions are met
             return matchesPrice && matchesCategory && matchesInStock && matchesSearch;
         });
 
-        // Then apply sorting if applicable
+        // Apply sorting if needed
         if (this.sortOrder !== 0) {
             this.filteredProducts.sort((a, b) => {
                 const valueA = a[this.sortField as keyof Product];
@@ -325,6 +362,22 @@ export class products implements OnInit {
                 return 0;
             });
         }
+
+        // Scroll only if filters are active
+        if (isFilterActive) {
+            this.scrollToProductGrid();
+        }
+    }
+
+    private scrollToProductGrid() {
+        setTimeout(() => {
+            const gridElement = document.getElementById('grid');
+            if (gridElement) {
+                const yOffset = -80; // adjust this based on sticky header height, etc.
+                const y = gridElement.getBoundingClientRect().top + window.scrollY + yOffset;
+                window.scrollTo({ top: y, behavior: 'auto' }); // instant scroll
+            }
+        }, 50); // Wait 500ms before trying to scroll
     }
 
     // artEtat is 1 for in stock, 0 for out of stock

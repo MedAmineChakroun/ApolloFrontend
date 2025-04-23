@@ -1,0 +1,76 @@
+.rating-container {
+    margin: 0.5rem 0;
+    padding: 1rem;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+}
+
+.rating-summary {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.rating-average {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.rating-label {
+    font-weight: 500;
+    margin-right: 0.5rem;
+}
+
+.rating-value {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #ff9800;
+    margin-right: 0.5rem;
+}
+
+.rating-votes {
+    margin-left: 1rem;
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.user-rating {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #dee2e6;
+}
+
+.user-rating h4 {
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.rating-stars {
+    margin-bottom: 0.5rem;
+}
+
+.rating-message {
+    color: #6c757d;
+    font-style: italic;
+}
+
+.login-prompt {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #dee2e6;
+    font-size: 0.9rem;
+}
+
+.login-prompt a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.login-prompt a:hover {
+    text-decoration: underline;
+}

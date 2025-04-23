@@ -1,0 +1,22 @@
+<div class="rating-container">
+    <p-toast></p-toast>
+
+    <div class="rating-summary">
+        <div class="rating-average">
+            <span class="rating-label">Average Rating:</span>
+            <span class="rating-value">{{ averageRating | number: '1.1-1' }}/5</span>
+            <p-rating [ngModel]="averageRating" [readonly]="true"></p-rating>
+        </div>
+    </div>
+
+    <div class="user-rating" *ngIf="isLoggedIn">
+        <h4>Rate this product</h4>
+        <div class="rating-stars">
+            <p-rating [(ngModel)]="userRating" (onRate)="onRateChange($event.value)"></p-rating>
+        </div>
+    </div>
+
+    <div class="login-prompt" *ngIf="!isLoggedIn">
+        <p>Please <a href="/auth/login">log in</a> to rate this product</p>
+    </div>
+</div>

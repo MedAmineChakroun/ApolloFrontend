@@ -11,15 +11,16 @@ import { ProductsService } from '../../../core/services/products.service';
 import { CartService } from '../../../core/services/cart.service';
 import { Product } from '../../../models/Product';
 import { ToastrService } from 'ngx-toastr';
-
+import { RatingModule } from 'primeng/rating';
+import { RatingComponent } from './rating/rating.component';
 type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | undefined;
 
 @Component({
     selector: 'app-product-details',
     standalone: true,
-    imports: [CommonModule, RouterModule, ButtonModule, TagModule, SkeletonModule, TooltipModule, RippleModule, FormsModule],
+    imports: [RatingComponent, RatingModule, CommonModule, RouterModule, ButtonModule, TagModule, SkeletonModule, TooltipModule, RippleModule, FormsModule],
     templateUrl: './product-details.component.html',
-    styleUrls: ['./product-details.component.scss']
+    styleUrls: ['./product-details.component.css']
 })
 export class ProductDetailsComponent implements OnInit {
     product: Product | null = null;

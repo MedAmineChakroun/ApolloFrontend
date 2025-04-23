@@ -444,9 +444,14 @@ export class AppMenu implements OnInit {
         delete currentParams['category'];
         this.filters.category = '';
 
-        this.router.navigate(['/store/products'], {
-            queryParams: currentParams
-        });
+        this.router
+            .navigate(['/store/products'], {
+                queryParams: currentParams
+            })
+            .then(() => {
+                // After navigation completes, scroll to grid
+                this.scrollToProductGrid();
+            });
     }
 
     navigateToOnSale() {
@@ -460,9 +465,14 @@ export class AppMenu implements OnInit {
             delete currentParams['inStock'];
         }
 
-        this.router.navigate(['/store/products'], {
-            queryParams: currentParams
-        });
+        this.router
+            .navigate(['/store/products'], {
+                queryParams: currentParams
+            })
+            .then(() => {
+                // After navigation completes, scroll to grid
+                this.scrollToProductGrid();
+            });
     }
 
     navigateToCategory(category: string) {
@@ -473,9 +483,14 @@ export class AppMenu implements OnInit {
         currentParams['category'] = category;
         this.filters.category = category;
 
-        this.router.navigate(['/store/products'], {
-            queryParams: currentParams
-        });
+        this.router
+            .navigate(['/store/products'], {
+                queryParams: currentParams
+            })
+            .then(() => {
+                // After navigation completes, scroll to grid
+                this.scrollToProductGrid();
+            });
     }
 
     navigateToCommandes(type: string) {
@@ -519,9 +534,24 @@ export class AppMenu implements OnInit {
         currentParams['priceMin'] = this.priceRange[0];
         currentParams['priceMax'] = this.priceRange[1];
 
-        this.router.navigate(['/store/products'], {
-            queryParams: currentParams
-        });
+        this.router
+            .navigate(['/store/products'], {
+                queryParams: currentParams
+            })
+            .then(() => {
+                // After navigation completes, scroll to grid
+                this.scrollToProductGrid();
+            });
+    }
+    private scrollToProductGrid() {
+        setTimeout(() => {
+            const gridElement = document.getElementById('grid');
+            if (gridElement) {
+                const yOffset = -80; // adjust this based on sticky header height, etc.
+                const y = gridElement.getBoundingClientRect().top + window.scrollY + yOffset;
+                window.scrollTo({ top: y, behavior: 'auto' }); // instant scroll
+            }
+        }, 50); // Wait 500ms before trying to scroll
     }
 
     logout() {

@@ -1,7 +1,11 @@
 <div class="flex flex-col">
     <div class="card">
+        <app-recommended-products class="mb-2"></app-recommended-products>
+        <app-top-sales class="mb-2"></app-top-sales>
+        <app-top-rated class="mb-2"></app-top-rated>
+        <app-ads-carousel class="mb-2"></app-ads-carousel>
         <!-- Header section with title and active filters -->
-        <div class="flex flex-col md:flex-row mb-3 gap-3">
+        <div class="flex flex-col md:flex-row mb-3 gap-3" id="grid">
             <div class="flex-1">
                 <h2 class="font-semibold text-xl m-0">{{ pageTitle }}</h2>
                 <span class="text-sm text-surface-600 block mt-2" *ngIf="filteredProducts.length > 0"> Showing {{ filteredProducts.length }} products </span>
@@ -58,51 +62,6 @@
                                 </ng-template>
                             </p-dropdown>
                         </div>
-                        <p-select-button [(ngModel)]="layout" [options]="options" [allowEmpty]="false">
-                            <ng-template #item let-option>
-                                <i class="pi" [ngClass]="{ 'pi-bars': option === 'list', 'pi-table': option === 'grid' }"></i>
-                            </ng-template>
-                        </p-select-button>
-                    </div>
-                </div>
-            </ng-template>
-
-            <ng-template #list let-items>
-                <div class="flex flex-col">
-                    <div *ngFor="let product of items; let i = index">
-                        <div
-                            class="flex flex-col sm:flex-row sm:items-center p-6 gap-4 cursor-pointer hover:bg-surface-50 transition-colors duration-200"
-                            [ngClass]="{ 'border-t border-surface': i !== 0 }"
-                            (click)="navigateToProductDetails(product.artId)"
-                        >
-                            <div class="md:w-40 relative mx-auto">
-                                <img src="http://localhost:91/Images/{{ product.artImageUrl }}" [alt]="product.artIntitule" class="card-img-top" (error)="handleProductImageError($event)" style="max-width: 250px; height: 200px; object-fit: fill" />
-                            </div>
-                            <div class="flex flex-col md:flex-row justify-between md:items-center flex-1 gap-6">
-                                <div class="flex flex-row md:flex-col justify-between items-start gap-2">
-                                    <div>
-                                        <span class="font-medium text-surface-500 dark:text-surface-400 text-sm">{{ product.artFamille }}</span>
-                                        <div class="text-lg font-medium mt-2">{{ product.artIntitule }}</div>
-                                        <div class="text-sm text-surface-400">{{ product.artCode }}</div>
-                                    </div>
-                                </div>
-                                <div class="flex flex-col md:items-end gap-8">
-                                    <div class="flex flex-col items-end">
-                                        <span class="text-xl font-semibold">{{ product.artPrixVente | currency: 'TND' : 'symbol' : '1.2-2' }}</span>
-                                        <p-tag [value]="getStockStatus(product.artEtat)" [severity]="getStockSeverity(product.artEtat)" class="mt-2"></p-tag>
-                                    </div>
-                                    <div class="flex flex-row-reverse md:flex-row gap-2">
-                                        <p-button
-                                            (onClick)="$event.stopPropagation(); addToCart(product)"
-                                            icon="pi pi-shopping-cart"
-                                            label="Ajouter au panier"
-                                            [disabled]="isOutOfStock(product.artEtat)"
-                                            styleClass="flex-auto md:flex-initial whitespace-nowrap"
-                                        ></p-button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </ng-template>
@@ -142,7 +101,7 @@
             </ng-template>
 
             <ng-template #empty>
-                <div class="flex flex-column align-items-center p-5">
+                <div class="flex flex-column align-items-center p-5" id="grid">
                     <i class="pi pi-filter-slash text-5xl text-surface-500 mb-4"></i>
                     <h3>No products found</h3>
                     <p>Try adjusting your filters or search query to find what you're looking for.</p>

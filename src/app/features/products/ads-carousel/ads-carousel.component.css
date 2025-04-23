@@ -1,0 +1,39 @@
+:host ::ng-deep .p-carousel .p-carousel-indicators .p-carousel-indicator.p-highlight button {
+    background-color: var(--primary-color);
+}
+
+:host ::ng-deep .p-carousel .p-carousel-indicators .p-carousel-indicator button {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.2);
+    transition: background-color 0.2s;
+}
+
+:host ::ng-deep .p-carousel .p-carousel-content {
+    min-height: 30rem;
+}
+
+:host ::ng-deep .p-carousel .p-carousel-content .p-carousel-prev,
+:host ::ng-deep .p-carousel .p-carousel-content .p-carousel-next {
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 50%;
+    margin: 0 1rem;
+    color: var(--primary-color);
+    width: 40px;
+    height: 40px;
+}
+
+:host ::ng-deep .p-carousel .p-carousel-content .p-carousel-prev:hover,
+:host ::ng-deep .p-carousel .p-carousel-content .p-carousel-next:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.carousel-promo-card {
+    transition: transform 0.3s;
+}
+
+.carousel-promo-card:hover {
+    transform: translateY(-5px);
+}
