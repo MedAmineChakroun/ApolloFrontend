@@ -1,22 +1,23 @@
-<div class="font-semibold text-xl mb- 4"><h2 class="font-semibold text-xl mb-4">Tu peux aussi aimer</h2></div>
-<p-carousel [value]="products" [numVisible]="5" [numScroll]="2" [circular]="true" [autoplayInterval]="4000" [responsiveOptions]="carouselResponsiveOptions">
-    <ng-template let-product #item>
-        <div class="border border-surface rounded-border m-2 p-4 recommend">
-            <div class="mb-4" (click)="navigateToProductDetails(product.artId)">
-                <div class="relative mx-auto">
-                    <img src="http://localhost:91/Images/{{ product.artImageUrl }}" [alt]="product.artIntitule" (error)="handleProductImageError($event)" class="w-full rounded-border" />
-                    <div class="absolute bg-black/70 rounded-border" [ngStyle]="{ 'left.px': 5, 'top.px': 5 }">
-                        <p-tag [value]="getSeverityValue(product.artEtat)" [severity]="getSeverity(product.artEtat)" />
+<div class="my-4">
+    <h2 class="font-semibold text-xl mb-4">Tu peux aussi aimer</h2>
+
+    <p-carousel [value]="products" [numVisible]="5" [numScroll]="3" [circular]="true" [autoplayInterval]="5000" [responsiveOptions]="carouselResponsiveOptions">
+        <ng-template let-product pTemplate="item">
+            <div class="border border-surface-200 rounded-lg m-2 p-3 product-card transition-all duration-300 hover:shadow-lg">
+                <div class="relative mb-3" (click)="navigateToProductDetails(product.artId)">
+                    <div class="product-image-container">
+                        <img src="http://localhost:91/Images/{{ product.artImageUrl }}" [alt]="product.artIntitule" (error)="handleProductImageError($event)" class="mx-auto object-contain h-48 w-full" />
+                    </div>
+                    <div class="absolute top-2 left-2">
+                        <p-tag [value]="getSeverityValue(product.artEtat)" [severity]="getSeverity(product.artEtat)"></p-tag>
                     </div>
                 </div>
+                <div class="h-16 mb-2 font-medium text-sm overflow-hidden">{{ product.artIntitule }}</div>
+                <div class="flex justify-between items-center">
+                    <div class="font-semibold text-lg">{{ product.artPrixVente | currency: 'TND ' : 'symbol' : '1.0-0' }}</div>
+                    <p-button icon="pi pi-shopping-cart" styleClass="p-button-rounded p-button-sm" (click)="navigateToProductDetails(product.artId)"></p-button>
+                </div>
             </div>
-            <div class="mb-4 font-medium">{{ product.artIntitule }}</div>
-            <div class="flex justify-between items-center">
-                <div class="mt-0 font-semibold text-xl">{{ '$' + product.artPrixVente }}</div>
-                <span>
-                    <p-button icon="pi pi-shopping-cart" styleClass="ml-2" (click)="navigateToProductDetails(product.artId)" />
-                </span>
-            </div>
-        </div>
-    </ng-template>
-</p-carousel>
+        </ng-template>
+    </p-carousel>
+</div>

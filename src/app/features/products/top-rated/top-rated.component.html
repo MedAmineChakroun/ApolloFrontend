@@ -2,7 +2,7 @@
     <h2 class="font-semibold text-xl mb-4">Les plus Notés</h2>
 </div>
 
-<p-carousel [value]="ratedProducts" [numVisible]="5" [numScroll]="3" [circular]="true" [autoplayInterval]="4200" [responsiveOptions]="carouselResponsiveOptions">
+<p-carousel [value]="ratedProducts" [numVisible]="6" [numScroll]="3" [circular]="true" [autoplayInterval]="4200" [responsiveOptions]="carouselResponsiveOptions">
     <ng-template let-ratedProduct pTemplate="item">
         <div class="border border-surface rounded-border m-2 p-4 recommend">
             <div class="mb-4" (click)="navigateToProductDetails(ratedProduct.article.artId)">
@@ -15,7 +15,7 @@
             </div>
             <div class="mb-4 font-medium">{{ ratedProduct.article.artIntitule }}</div>
             <div class="flex justify-between items-center">
-                <div class="mt-0 font-semibold text-xl">{{ '$' + ratedProduct.article.artPrixVente }}</div>
+                <div class="mt-0 font-semibold text-xl">{{ ratedProduct.article.artPrixVente + ' TND' }}</div>
                 <span>
                     <p-button icon="pi pi-shopping-cart" styleClass="ml-2" (click)="navigateToProductDetails(ratedProduct.article.artId)" />
                 </span>

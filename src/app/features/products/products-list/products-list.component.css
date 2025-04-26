@@ -4,23 +4,69 @@
     }
 }
 
-.card-img-top {
-    height: 200px;
-    object-fit: cover;
-    width: 100%;
-    border-radius: 8px;
-    transition: opacity 0.3s ease;
+/* Grid layout updates for better responsiveness */
+.grid {
+    display: grid;
+    gap: 1rem;
 }
 
-/* Ensure consistent spacing in containers */
-.relative {
+/* Product card styling */
+.product-card-wrapper {
+    height: 100%;
+    padding: 0.5rem;
+}
+
+.product-card {
+    transition: all 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Product title styling with ellipsis for overflow */
+.product-title {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: 3rem;
+}
+
+/* Enhanced image container */
+.product-image-container {
+    aspect-ratio: 1/1;
+    overflow: hidden;
+    background-color: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     position: relative;
+    border-radius: 0.5rem 0.5rem 0 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 5px;
+}
+
+/* Image styling */
+.product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.product-card:hover .product-image {
+    transform: scale(1.08);
 }
 
 /* Search input styling */
 ::ng-deep .p-inputgroup {
     width: 100%;
-    max-width: 100%;
 }
 
 ::ng-deep .p-inputtext {
@@ -48,22 +94,18 @@
     background-color: var(--surface-100);
 }
 
-.py-1 {
-    padding-top: 0.25rem;
-    padding-bottom: 0.25rem;
-}
+/* Responsive adjustments */
+@media (max-width: 640px) {
+    .product-image-container {
+        aspect-ratio: 4/3;
+    }
 
-.px-3 {
-    padding-left: 0.75rem;
-    padding-right: 0.75rem;
+    ::ng-deep .p-dropdown {
+        width: 100%;
+    }
 }
 
 @media (max-width: 768px) {
-    ::ng-deep .p-dropdown {
-        width: 100%;
-        max-width: 100%;
-    }
-
     ::ng-deep .p-dataview .p-dataview-header > div > div {
         margin-bottom: 0.5rem;
     }
@@ -72,10 +114,10 @@
 @media (min-width: 768px) {
     ::ng-deep .p-inputgroup {
         width: 350px;
-        max-width: 350px;
     }
 }
 
+/* Button styling */
 ::ng-deep .p-button.p-button-loading .p-button-label {
     opacity: 0.6;
 }
@@ -95,18 +137,12 @@
         transform: translateY(0);
     }
     50% {
-        transform: translateY(-10px);
+        transform: translateY(-5px);
     }
 }
 
 .animate-bounce {
     animation: bounce 0.5s ease-in-out;
-}
-
-/* Add to cart button hover effect */
-:host ::ng-deep .p-button:not(:disabled):hover {
-    transform: translateY(-2px);
-    transition: transform 0.2s ease;
 }
 
 /* Loading state animation */
@@ -133,16 +169,4 @@
 
 :host ::ng-deep .toast-error {
     background-color: var(--red-500);
-}
-
-/* Product card hover effect */
-.product-card {
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
-}
-
-.product-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }

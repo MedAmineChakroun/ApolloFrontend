@@ -183,7 +183,6 @@ export class ShoppingCartComponent implements OnInit {
     updateQuantity(productId: number, quantity: number): void {
         if (quantity > 0) {
             this.store.dispatch(CartActions.updateQuantity({ productId, quantity }));
-            this.toastr.success('Quantity updated');
         }
     }
 

@@ -1,26 +1,24 @@
 <div class="product-details-container p-6 max-w-7xl mx-auto">
-    <div *ngIf="product" class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        <!-- Product Image Section -->
-        <div class="lg:col-span-5 xl:col-span-6 flex justify-center">
-            <div class="relative">
-                <div class="relative group overflow-hidden rounded-2xl shadow-sm">
-                    <img
-                        src="http://localhost:91/Images/{{ product.artImageUrl }}"
-                        [alt]="product.artIntitule"
-                        class="w-full h-auto object-cover transition-all duration-500 ease-in-out group-hover:scale-105"
-                        (error)="handleProductImageError($event)"
-                    />
-                    <div class="absolute top-6 right-6">
-                        <p-tag
-                            [value]="getStockStatus(product.artEtat)"
-                            [severity]="getStockSeverity(product.artEtat)"
-                            [style]="{
-                                'font-size': '0.9rem',
-                                'font-weight': '600',
-                                padding: '0.5rem 1rem'
-                            }"
-                        ></p-tag>
-                    </div>
+    <div *ngIf="product" class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        <!-- Product Image Section - Enhanced -->
+        <div class="lg:col-span-5 xl:col-span-6">
+            <div class="product-image-wrapper rounded-2xl shadow-md bg-white overflow-hidden">
+                <!-- Stock status badge -->
+                <div class="absolute top-4 left-4 z-10">
+                    <p-tag
+                        [value]="getStockStatus(product.artEtat)"
+                        [severity]="getStockSeverity(product.artEtat)"
+                        [style]="{
+                            'font-size': '0.9rem',
+                            'font-weight': '600',
+                            padding: '0.5rem 1rem'
+                        }"
+                    ></p-tag>
+                </div>
+
+                <!-- Product image with improved display -->
+                <div class="product-image-container relative group">
+                    <img src="http://localhost:91/Images/{{ product.artImageUrl }}" [alt]="product.artIntitule" class="product-image w-full transition-all duration-500 ease-in-out group-hover:scale-105" (error)="handleProductImageError($event)" />
                 </div>
             </div>
         </div>
@@ -28,9 +26,9 @@
         <!-- Product Info Section -->
         <div class="lg:col-span-7 xl:col-span-6 flex flex-col">
             <!-- Basic Info -->
-            <div class="">
+            <div class="mb-6">
                 <div class="mb-4">
-                    <h1 class="text-4xl font-bold mb-2 text-gray-900">{{ product.artIntitule }}</h1>
+                    <h1 class="text-3xl sm:text-4xl font-bold mb-2 text-gray-900">{{ product.artIntitule }}</h1>
                     <div class="flex items-center text-gray-600">
                         <i class="pi pi-tag mr-2"></i>
                         <span>{{ product.artFamille }}</span>
@@ -38,15 +36,17 @@
                 </div>
 
                 <div class="flex items-center mb-4">
-                    <div class="text-3xl font-bold text-primary">
+                    <div class="text-2xl sm:text-3xl font-bold text-primary">
                         {{ product.artPrixVente | currency: 'TND' : 'symbol' : '1.2-2' }}
                     </div>
                     <div *ngIf="product.artTvaTaux > 0" class="ml-3 text-sm bg-gray-100 text-gray-600 px-2 py-1 rounded">+ {{ product.artTvaTaux }}% VAT</div>
                 </div>
+
+                <div class="mb-2">
+                    <app-rating [productId]="product.artId"></app-rating>
+                </div>
             </div>
-            <div class="mb-2">
-                <app-rating [productId]="product.artId"></app-rating>
-            </div>
+
             <!-- Product Details -->
             <div class="bg-surface-50 rounded-xl p-6 mb-8 border border-gray-100 shadow-sm">
                 <h2 class="text-xl font-semibold mb-5 flex items-center">
@@ -77,43 +77,44 @@
 
             <!-- Actions Section -->
             <div class="mt-auto space-y-4">
-                <div class="flex flex-col gap-3">
-                    <div class="flex items-center mb-2">
-                        <div class="mr-4">
-                            <label for="quantity" class="block text-gray-600 text-sm mb-1">Quantity</label>
-                            <div class="flex items-center border border-gray-300 rounded-lg overflow-hidden">
-                                <button class="w-10 h-10 bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors" [disabled]="quantity <= 1 || isOutOfStock(product.artEtat)" (click)="decrementQuantity()">
-                                    <i class="pi pi-minus text-gray-600"></i>
-                                </button>
-                                <input type="number" id="quantity" class="w-12 h-10 text-center border-none focus:outline-none" [(ngModel)]="quantity" min="1" [disabled]="isOutOfStock(product.artEtat)" />
-                                <button class="w-10 h-10 bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors" [disabled]="isOutOfStock(product.artEtat)" (click)="incrementQuantity()">
-                                    <i class="pi pi-plus text-gray-600"></i>
-                                </button>
-                            </div>
+                <div class="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+                    <div class="quantity-control">
+                        <label for="quantity" class="block text-gray-600 text-sm mb-1">Quantity</label>
+                        <div class="flex items-center border border-gray-300 rounded-lg overflow-hidden">
+                            <button class="w-10 h-10 bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors" [disabled]="quantity <= 1 || isOutOfStock(product.artEtat)" (click)="decrementQuantity()">
+                                <i class="pi pi-minus text-gray-600"></i>
+                            </button>
+                            <input type="number" id="quantity" class="w-12 h-10 text-center border-none focus:outline-none" [(ngModel)]="quantity" min="1" [disabled]="isOutOfStock(product.artEtat)" />
+                            <button class="w-10 h-10 bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors" [disabled]="isOutOfStock(product.artEtat)" (click)="incrementQuantity()">
+                                <i class="pi pi-plus text-gray-600"></i>
+                            </button>
                         </div>
-                        <div class="flex-grow">
-                            <p-button
-                                label="Add to Cart"
-                                icon="pi pi-shopping-cart"
-                                [disabled]="isOutOfStock(product.artEtat)"
-                                (onClick)="addToCart(product)"
-                                styleClass="w-full p-button-lg p-button-raised shadow-md"
-                                [pTooltip]="isOutOfStock(product.artEtat) ? 'This product is currently out of stock' : ''"
-                                tooltipPosition="top"
-                                pRipple
-                            ></p-button>
-                        </div>
+                    </div>
+                    <div class="flex-grow">
+                        <p-button
+                            label="Add to Cart"
+                            icon="pi pi-shopping-cart"
+                            [disabled]="isOutOfStock(product.artEtat)"
+                            (onClick)="addToCart(product)"
+                            styleClass="w-full p-button-lg p-button-raised shadow-md"
+                            [pTooltip]="isOutOfStock(product.artEtat) ? 'This product is currently out of stock' : ''"
+                            tooltipPosition="top"
+                            pRipple
+                        ></p-button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Similar Products Section -->
     <app-similar *ngIf="product" [productFamille]="product.artFamille"></app-similar>
+
     <!-- Loading State -->
     <div *ngIf="!product && !error" class="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <!-- Skeleton for Image -->
         <div class="lg:col-span-5 xl:col-span-6">
-            <p-skeleton height="600px" styleClass="rounded-xl"></p-skeleton>
+            <p-skeleton height="500px" styleClass="rounded-xl"></p-skeleton>
         </div>
 
         <!-- Skeleton for Info -->
@@ -148,11 +149,6 @@
             <div class="flex items-center gap-4 mb-4">
                 <p-skeleton width="15%" height="3rem"></p-skeleton>
                 <p-skeleton width="85%" height="3rem"></p-skeleton>
-            </div>
-            <div class="flex gap-2">
-                <p-skeleton shape="circle" size="3rem"></p-skeleton>
-                <p-skeleton shape="circle" size="3rem"></p-skeleton>
-                <p-skeleton width="40%" height="3rem" styleClass="ml-auto"></p-skeleton>
             </div>
         </div>
     </div>

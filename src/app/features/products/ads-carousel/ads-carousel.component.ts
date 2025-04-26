@@ -29,22 +29,23 @@ export class AdsCarouselComponent {
     initCarouselItems() {
         this.carouselItems = [
             {
-                image: 'assets/promo/promo1.png',
+                image: 'assets/promo/ad6.png',
                 title: 'New Arrivals',
                 subtitle: 'Check out our latest products',
                 link: '/products?sort=newest'
             },
+
             {
-                image: 'assets/promo/promo2.png',
-                title: 'Special Offers',
-                subtitle: 'Limited time discounts',
-                link: '/products?category=promotion'
-            },
-            {
-                image: 'assets/promo/promo3.png',
+                image: 'assets/promo/ad4_1.jpg',
                 title: 'Seasonal Collection',
                 subtitle: 'Discover our seasonal items',
                 link: '/products?category=seasonal'
+            },
+            {
+                image: 'assets/promo/ad5.jpg',
+                title: 'Special Offers',
+                subtitle: 'Limited time discounts',
+                link: '/products?category=promotion'
             }
         ];
     }

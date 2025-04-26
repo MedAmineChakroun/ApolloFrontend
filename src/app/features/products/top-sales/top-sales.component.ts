@@ -44,16 +44,16 @@ export class TopSalesComponent implements OnInit {
     getSeverityValue(stockValue: number): string {
         return stockValue > 0 ? 'En Stock' : 'Sold out';
     }
-    carouselResponsiveOptions: any[] = [
+    carouselResponsiveOptions = [
         {
             breakpoint: '1024px',
             numVisible: 3,
-            numScroll: 3
+            numScroll: 1
         },
         {
             breakpoint: '768px',
             numVisible: 2,
-            numScroll: 2
+            numScroll: 1
         },
         {
             breakpoint: '560px',

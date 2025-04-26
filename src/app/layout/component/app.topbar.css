@@ -338,3 +338,405 @@
     font-size: 0.875rem;
     color: var(--text-color-secondary);
 }
+/* Categories Menu Styles */
+.categories-container {
+    display: flex;
+    align-items: center;
+    margin-right: 15px;
+    position: relative;
+}
+
+.categories-menu {
+    position: relative;
+    cursor: pointer;
+}
+
+.categories-button {
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    font-size: larger;
+    border-radius: 4px;
+    transition: all 0.3s;
+}
+
+.categories-button:hover {
+    background-color: var(--surface-hover);
+}
+
+.categories-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 220px;
+    padding: 10px 0;
+    background-color: var(--surface-card);
+    border-radius: 6px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    margin-top: 0px;
+}
+
+.categories-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.category-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 16px;
+    color: var(--text-color);
+    transition: all 0.2s;
+    text-decoration: none;
+}
+
+.category-item:hover {
+    background-color: var(--surface-hover);
+}
+
+.category-item i {
+    margin-right: 10px;
+    font-size: 1rem;
+}
+
+/* Mobile Categories Menu */
+.mobile-categories-menu {
+    position: absolute;
+    top: 100%;
+    left: -0;
+    right: 0;
+    background-color: var(--surface-card);
+    border-radius: 6px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    margin-top: 0px;
+}
+
+.mobile-category-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    color: var(--text-color);
+    transition: all 0.2s;
+    text-decoration: none;
+    border-bottom: 1px solid var(--surface-border);
+}
+
+.mobile-category-item:last-child {
+    border-bottom: none;
+}
+
+.mobile-category-item i {
+    margin-right: 10px;
+    font-size: 1.2rem;
+}
+/* Improve category items display */
+.category-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 16px;
+    color: var(--text-color);
+    transition: all 0.2s;
+    text-decoration: none;
+    overflow: hidden; /* Hide overflow content */
+}
+
+.category-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 180px; /* Limit width of text */
+}
+
+.category-item:hover {
+    background-color: var(--surface-hover);
+}
+
+.category-item i {
+    margin-right: 10px;
+    font-size: 1rem;
+    flex-shrink: 0; /* Prevent icon from shrinking */
+}
+
+/* Make categories dropdown wider */
+.categories-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 250px; /* Increased from 220px */
+    max-width: 300px;
+    padding: 10px 0;
+    background-color: var(--surface-card);
+    border-radius: 6px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    margin-top: 0px;
+}
+
+/* Mobile categories improvements */
+.mobile-category-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    color: var(--text-color);
+    transition: all 0.2s;
+    text-decoration: none;
+    border-bottom: 1px solid var(--surface-border);
+    overflow: hidden;
+}
+
+.mobile-category-item .category-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mobile-categories-menu {
+    width: 90%; /* Make it take up more space on mobile */
+    margin: 0 auto;
+    left: 5%;
+    right: 5%;
+}
+/* Improve category items display */
+.category-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 16px;
+    color: var(--text-color);
+    transition: all 0.2s;
+    text-decoration: none;
+    overflow: hidden; /* Hide overflow content */
+}
+
+.category-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 180px; /* Limit width of text */
+}
+
+.category-item:hover {
+    background-color: var(--surface-hover);
+}
+
+.category-item i {
+    margin-right: 10px;
+    font-size: 1rem;
+    flex-shrink: 0; /* Prevent icon from shrinking */
+}
+
+/* Make categories dropdown wider */
+.categories-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 250px; /* Increased from 220px */
+    max-width: 300px;
+    padding: 10px 0;
+    background-color: var(--surface-card);
+    border-radius: 6px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    margin-top: 0px;
+}
+
+/* Mobile categories improvements */
+.mobile-category-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    color: var(--text-color);
+    transition: all 0.2s;
+    text-decoration: none;
+    border-bottom: 1px solid var(--surface-border);
+    overflow: hidden;
+}
+
+.mobile-category-item .category-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mobile-categories-menu {
+    width: 90%; /* Make it take up more space on mobile */
+    margin: 0 auto;
+    left: 5%;
+    right: 5%;
+} /* Improve category items display */
+.category-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 16px;
+    color: var(--text-color);
+    transition: all 0.2s;
+    text-decoration: none;
+    overflow: hidden; /* Hide overflow content */
+}
+
+.category-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 180px; /* Limit width of text */
+}
+
+.category-item:hover {
+    background-color: var(--surface-hover);
+}
+
+.category-item i {
+    margin-right: 10px;
+    font-size: 1rem;
+    flex-shrink: 0; /* Prevent icon from shrinking */
+}
+
+/* Make categories dropdown wider */
+.categories-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 250px; /* Increased from 220px */
+    max-width: 300px;
+    padding: 10px 0;
+    background-color: var(--surface-card);
+    border-radius: 6px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    margin-top: 0px;
+}
+
+/* Mobile categories improvements */
+.mobile-category-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    color: var(--text-color);
+    transition: all 0.2s;
+    text-decoration: none;
+    border-bottom: 1px solid var(--surface-border);
+    overflow: hidden;
+}
+
+.mobile-category-item .category-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mobile-categories-menu {
+    width: 90%; /* Make it take up more space on mobile */
+    margin: 0 auto;
+    left: 5%;
+    right: 5%;
+}
+/* Improve category items display */
+.category-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 16px;
+    color: var(--text-color);
+    transition: all 0.2s;
+    text-decoration: none;
+    overflow: hidden; /* Hide overflow content */
+}
+
+.category-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 180px; /* Limit width of text */
+}
+
+.category-item:hover {
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 6px;
+}
+
+.category-item i {
+    margin-right: 10px;
+    font-size: 1rem;
+    flex-shrink: 0; /* Prevent icon from shrinking */
+}
+
+/* Make categories dropdown wider */
+.categories-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 250px; /* Increased from 220px */
+    max-width: 300px;
+    padding: 10px 0;
+    background-color: var(--surface-card);
+    border-radius: 6px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    z-index: 999999;
+    margin-top: 0px;
+}
+
+/* Mobile categories improvements */
+.mobile-category-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    color: var(--text-color);
+    transition: all 0.2s;
+    text-decoration: none;
+    border-bottom: 1px solid var(--surface-border);
+    overflow: hidden;
+}
+
+.mobile-category-item .category-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mobile-categories-menu {
+    width: 90%; /* Make it take up more space on mobile */
+    margin: 0 auto;
+    left: 5%;
+    right: 5%;
+}
+.categories-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Creates 2 columns */
+    gap: 5px;
+    width: 100%;
+}
+
+/* Adjust category items for the grid layout */
+.category-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 12px;
+    color: var(--text-color);
+    transition: all 0.2s;
+    text-decoration: none;
+    overflow: hidden;
+}
+
+/* Make dropdown wider to accommodate columns */
+.categories-dropdown {
+    position: absolute;
+    top: 100%;
+    left: -150%;
+    min-width: 400px; /* Increased width for columns */
+    max-width: 450px;
+    padding: 10px;
+    background-color: var(--surface-card);
+    border-radius: 6px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    margin-top: 0px;
+}
+@media screen and (max-width: 768px) {
+    .mobile-categories-menu .categories-list {
+        grid-template-columns: 1fr; /* Single column for mobile */
+    }
+}

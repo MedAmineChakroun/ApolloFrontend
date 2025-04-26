@@ -35,5 +35,11 @@
 }
 
 .carousel-promo-card:hover {
-    transform: translateY(-5px);
+    transform: scale(0.97);
+}
+
+.carousel-promo-card img {
+    width: 100%;
+    height: auto;
+    max-height: 650px; /* Adjust as needed */
 }

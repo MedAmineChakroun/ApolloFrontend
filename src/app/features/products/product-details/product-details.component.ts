@@ -15,6 +15,8 @@ import { RatingModule } from 'primeng/rating';
 import { RatingComponent } from './rating/rating.component';
 import { SimilarComponent } from './similar/similar.component';
 import { ImageModule } from 'primeng/image';
+//import lazy loading for the image module from primeng
+
 type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | undefined;
 
 @Component({
