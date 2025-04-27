@@ -1,4 +1,4 @@
-import { Component, Renderer2, ViewChild } from '@angular/core';
+import { Component, Renderer2, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
@@ -7,6 +7,7 @@ import { AppSidebar } from './app.sidebar';
 import { AppFooter } from './app.footer';
 import { LayoutService } from '../service/layout.service';
 import { ChatbotComponent } from './chat-bot/chat-bot.component';
+import { AuthenticationService } from '../../core/services/authentication.service';
 @Component({
     selector: 'app-layout',
     standalone: true,
@@ -24,7 +25,8 @@ import { ChatbotComponent } from './chat-bot/chat-bot.component';
         <div class="layout-mask animate-fadein"></div>
     </div> `
 })
-export class AppLayout {
+export class AppLayout implements OnInit, OnDestroy {
+    isAdmin: boolean = false;
     overlayMenuOpenSubscription: Subscription;
 
     menuOutsideClickListener: any;
@@ -36,7 +38,8 @@ export class AppLayout {
     constructor(
         public layoutService: LayoutService,
         public renderer: Renderer2,
-        public router: Router
+        public router: Router,
+        private authService: AuthenticationService
     ) {
         this.overlayMenuOpenSubscription = this.layoutService.overlayOpen$.subscribe(() => {
             if (!this.menuOutsideClickListener) {
@@ -100,6 +103,15 @@ export class AppLayout {
         };
     }
 
+    ngOnInit() {
+        this.checkUserRole();
+
+        // Subscribe to authentication changes using the correct property
+        this.authService.authStatus$.subscribe(() => {
+            this.checkUserRole();
+        });
+    }
+
     ngOnDestroy() {
         if (this.overlayMenuOpenSubscription) {
             this.overlayMenuOpenSubscription.unsubscribe();
@@ -107,6 +119,36 @@ export class AppLayout {
 
         if (this.menuOutsideClickListener) {
             this.menuOutsideClickListener();
+        }
+    }
+
+    private checkUserRole() {
+        if (this.authService.isAuthenticated()) {
+            // Get user roles from token
+            const userRole = this.authService.getUserRole();
+            this.isAdmin = userRole === 'admin';
+
+            // Set sidebar state based on user role
+            if (!this.isAdmin) {
+                // For non-admin users, set the sidebar to closed by default
+                this.layoutService.layoutState.update((prev) => ({
+                    ...prev,
+                    staticMenuDesktopInactive: true
+                }));
+            } else {
+                // For admin users, keep the sidebar open by default
+                this.layoutService.layoutState.update((prev) => ({
+                    ...prev,
+                    staticMenuDesktopInactive: false
+                }));
+            }
+        } else {
+            this.isAdmin = false;
+            // Default to closed sidebar for unauthenticated users
+            this.layoutService.layoutState.update((prev) => ({
+                ...prev,
+                staticMenuDesktopInactive: true
+            }));
         }
     }
 }

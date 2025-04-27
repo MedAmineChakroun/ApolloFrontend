@@ -20,6 +20,10 @@ import { RecommendedProductsComponent } from '../recommended-products/recommende
 import { TopRatedComponent } from '../top-rated/top-rated.component';
 import { TopSalesComponent } from '../top-sales/top-sales.component';
 import { AdsCarouselComponent } from '../ads-carousel/ads-carousel.component';
+import { SliderModule } from 'primeng/slider';
+import { CheckboxModule } from 'primeng/checkbox';
+import { DialogModule } from 'primeng/dialog';
+
 type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' | undefined;
 
 interface SortOption {
@@ -47,7 +51,10 @@ interface SortOption {
         DropdownModule,
         InputTextModule,
         InputGroupModule,
-        RippleModule
+        RippleModule,
+        SliderModule,
+        CheckboxModule,
+        DialogModule
     ],
     templateUrl: './products-list.component.html',
     styleUrls: ['./products-list.component.css'],
@@ -63,6 +70,11 @@ export class products implements OnInit {
     searchQuery: string = '';
     isSearching: boolean = false;
     pageTitle: string = 'All Products';
+
+    // Price range slider
+    priceRange: number[] = [0, 5000]; // Default price range values
+    inStockOnly: boolean = false;
+    showPriceDialog: boolean = false;
 
     // Sort options
     sortField: string = 'price';
@@ -99,8 +111,14 @@ export class products implements OnInit {
         // Listen for query param changes
         this.route.queryParams.subscribe((params) => {
             // Update filters based on query params
-            if (params['priceMin']) this.filters.priceMin = +params['priceMin'];
-            if (params['priceMax']) this.filters.priceMax = +params['priceMax'];
+            if (params['priceMin']) {
+                this.filters.priceMin = +params['priceMin'];
+                this.priceRange[0] = +params['priceMin'];
+            }
+            if (params['priceMax']) {
+                this.filters.priceMax = +params['priceMax'];
+                this.priceRange[1] = +params['priceMax'];
+            }
             if (params['category']) {
                 this.filters.category = params['category'];
                 this.pageTitle = params['category']; // Update page title to show category
@@ -111,11 +129,13 @@ export class products implements OnInit {
             if (params['rating']) this.filters.rating = +params['rating'];
             if (params['inStock']) {
                 this.filters.inStock = params['inStock'] === 'true';
+                this.inStockOnly = params['inStock'] === 'true';
                 if (this.filters.inStock) {
                     this.pageTitle = 'In Stock Products';
                 }
             } else {
                 this.filters.inStock = false;
+                this.inStockOnly = false;
             }
             if (params['search']) {
                 this.filters.search = params['search'];
@@ -204,6 +224,65 @@ export class products implements OnInit {
     }
 
     /**
+     * Apply price filter
+     */
+    applyPriceFilter() {
+        // Get current query parameters to preserve other filters
+        const currentParams = { ...this.route.snapshot.queryParams };
+
+        // Update price range filters
+        this.filters.priceMin = this.priceRange[0];
+        this.filters.priceMax = this.priceRange[1];
+
+        // Update query parameters
+        currentParams['priceMin'] = this.priceRange[0];
+        currentParams['priceMax'] = this.priceRange[1];
+
+        // Close dialog if it's open
+        this.showPriceDialog = false;
+
+        this.router
+            .navigate([], {
+                relativeTo: this.route,
+                queryParams: currentParams
+            })
+            .then(() => {
+                this.scrollToProductGrid();
+            });
+    }
+
+    /**
+     * Toggle in-stock filter
+     */
+    toggleInStock() {
+        // Get current query parameters to preserve other filters
+        const currentParams = { ...this.route.snapshot.queryParams };
+
+        // Add or update the inStock parameter
+        if (this.inStockOnly) {
+            currentParams['inStock'] = 'true';
+        } else {
+            delete currentParams['inStock'];
+        }
+
+        this.router
+            .navigate([], {
+                relativeTo: this.route,
+                queryParams: currentParams
+            })
+            .then(() => {
+                this.scrollToProductGrid();
+            });
+    }
+
+    /**
+     * Open price filter dialog
+     */
+    openPriceFilterDialog() {
+        this.showPriceDialog = true;
+    }
+
+    /**
      * Clear category filter
      */
     clearCategoryFilter() {
@@ -231,6 +310,7 @@ export class products implements OnInit {
             // Create a new query params object without the inStock param
             const queryParams: any = { ...this.route.snapshot.queryParams };
             delete queryParams.inStock;
+            this.inStockOnly = false;
 
             this.router
                 .navigate([], {
@@ -377,21 +457,22 @@ export class products implements OnInit {
                 const y = gridElement.getBoundingClientRect().top + window.scrollY + yOffset;
                 window.scrollTo({ top: y, behavior: 'auto' }); // instant scroll
             }
-        }, 50); // Wait 500ms before trying to scroll
+        }, 50); // Wait 50ms before trying to scroll
     }
 
     // artEtat is 1 for in stock, 0 for out of stock
-    getStockStatus(stockValue: number): string {
-        return stockValue > 0 ? 'En STOCK' : 'Sold out';
-    }
 
-    getStockSeverity(stockValue: number): TagSeverity {
+    getSeverity(stockValue: number): TagSeverity {
         return stockValue > 0 ? 'success' : 'danger';
+    }
+    getSeverityValue(stockValue: number): string {
+        return stockValue > 0 ? 'En Stock' : 'Sold out';
     }
 
     isOutOfStock(stockValue: number): boolean {
         return stockValue === 0;
     }
+
     addToCart(product: Product) {
         this.cartService.addToCart(product);
 

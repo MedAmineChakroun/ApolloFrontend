@@ -112,7 +112,7 @@ Never guess. Always aim to be accurate, honest, and supportive. if you have dont
                     this.messageInput.nativeElement.focus();
                 }
                 this.scrollToBottom();
-            }, 300);
+            }, 50);
         }
     }
 

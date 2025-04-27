@@ -104,9 +104,6 @@ export class ProductDetailsComponent implements OnInit {
             this.cartService.addToCart(product);
         }
 
-        // Show success toast
-        this.toastr.success(`${this.quantity} × ${product.artIntitule} added to cart`, 'Added to Cart', { timeOut: 3000 });
-
         // Reset quantity
         this.quantity = 1;
 

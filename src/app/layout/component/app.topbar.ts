@@ -36,229 +36,11 @@ export interface Famille {
     imports: [MenuModule, RouterModule, CommonModule, StyleClassModule, ConfirmDialogModule, ButtonModule, BadgeModule, SidebarModule, OverlayPanelModule],
     providers: [ConfirmationService, CartService, NotificationService, ToastrService, ProductsService],
     styleUrls: ['./app.topbar.css'],
-    template: /*html*/ `
-        <p-confirmDialog></p-confirmDialog>
-        <div class="layout-topbar">
-            <div class="layout-topbar-logo-container">
-                <button class="layout-menu-button layout-topbar-action" (click)="layoutService.onMenuToggle()">
-                    <i class="pi pi-bars"></i>
-                </button>
-                <a class="layout-topbar-logo" routerLink="/">
-                    <img style="width: 3rem" src="assets/general/ApolloLogo.PNG" alt="Logo" />
-                    <span>Apollo Store</span>
-                </a>
-            </div>
-
-            <div class="layout-topbar-actions">
-                <!-- Desktop View -->
-                <div class="hidden lg:flex gap-3">
-                    <div class="categories-container hidden lg:block">
-                        <div class="categories-menu" (mouseenter)="showCategoriesMenu = true" (mouseleave)="showCategoriesMenu = false">
-                            <span class="categories-button">
-                                <i class="pi pi-th-large mr-2"></i>
-                                Categories
-                                <i class="pi pi-chevron-down ml-2"></i>
-                            </span>
-
-                            <div class="categories-dropdown" *ngIf="showCategoriesMenu">
-                                <div class="categories-list">
-                                    <a *ngFor="let category of categories" class="category-item" (click)="navigateToCategory(category)">
-                                        <i class="pi pi-tag mr-1"></i>
-                                        <span class="category-text">{{ category }}</span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Notification Icon with Badge for Desktop -->
-                    <div class="notification-icon" (click)="op.toggle($event)">
-                        <i class="pi pi-bell"></i>
-                        <span *ngIf="unreadNotificationsCount > 0" class="notification-badge">{{ unreadNotificationsCount }}</span>
-                    </div>
-
-                    <!-- Cart Icon with Badge for Desktop -->
-                    <button class="cart-icon" (click)="navigateToCart()" *ngIf="!IsAdmin()" type="button">
-                        <i class="pi pi-shopping-cart"></i>
-                        <span *ngIf="cartItems.length > 0" class="cart-badge">{{ cartTotal }}</span>
-                    </button>
-
-                    <button (click)="navigateToContact()" type="button" class="layout-topbar-action">
-                        <i class="pi pi-envelope"></i>
-                        <span>Contact</span>
-                    </button>
-                </div>
-
-                <!-- Mobile Menu Button -->
-                <button
-                    class="layout-topbar-menu-button layout-topbar-action lg:hidden"
-                    pStyleClass="@next"
-                    enterFromClass="hidden"
-                    enterActiveClass="animate-scalein"
-                    leaveToClass="hidden"
-                    leaveActiveClass="animate-fadeout"
-                    [hideOnOutsideClick]="true"
-                >
-                    <i class="pi pi-ellipsis-v"></i>
-                </button>
-
-                <!-- Mobile Menu -->
-                <div class="layout-topbar-menu hidden lg:hidden">
-                    <!-- Categories Menu - Mobile -->
-                    <button type="button" class="layout-topbar-action" (click)="showMobileCategoriesMenu = !showMobileCategoriesMenu">
-                        <i class="pi pi-th-large"></i>
-                        <span>Categories</span>
-                    </button>
-
-                    <div class="mobile-categories-menu" *ngIf="showMobileCategoriesMenu">
-                        <a *ngFor="let category of categories" class="mobile-category-item" (click)="navigateToCategory(category)">
-                            <i class="pi pi-tag mr-1"></i>
-                            <span class="category-text">{{ category }}</span>
-                        </a>
-                    </div>
-
-                    <!-- Notification Icon for Mobile -->
-                    <button type="button" class="layout-topbar-action" (click)="op.toggle($event)">
-                        <i class="pi pi-bell"></i>
-                        <span *ngIf="unreadNotificationsCount > 0" class="mobile-notification-badge">{{ unreadNotificationsCount }}</span>
-                        <span>Notifications</span>
-                    </button>
-
-                    <!-- Cart Icon for Mobile -->
-                    <button (click)="navigateToCart()" type="button" class="layout-topbar-action" *ngIf="!IsAdmin()">
-                        <i class="pi pi-shopping-cart"></i>
-                        <span *ngIf="cartItems.length > 0" class="mobile-cart-badge">{{ cartTotal }}</span>
-                        <span>Cart</span>
-                    </button>
-
-                    <!-- Authenticated User Menu Items -->
-                    <div *ngIf="isConnected">
-                        <button (click)="navigateToOrders()" class="layout-topbar-action" type="button" *ngIf="!IsAdmin()">
-                            <i class="pi pi-shopping-bag"></i>
-                            <span>Orders</span>
-                        </button>
-                        <button (click)="navigateToProfile()" type="button" class="layout-topbar-action">
-                            <i class="pi pi-user"></i>
-                            <span>Profile</span>
-                        </button>
-                        <button (click)="confirmLogout()" type="button" class="layout-topbar-action">
-                            <i class="pi pi-sign-out"></i>
-                            <span>Exit</span>
-                        </button>
-                    </div>
-
-                    <!-- Non-Authenticated User Menu Items -->
-                    <div *ngIf="!isConnected">
-                        <button (click)="navigateToLogin()" type="button" class="layout-topbar-action">
-                            <i class="pi pi-user"></i>
-                            <span>Login</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Desktop Menu -->
-                <div *ngIf="isConnected" class="layout-topbar-menu hidden lg:block">
-                    <div class="layout-topbar-menu-content">
-                        <button (click)="navigateToOrders()" class="layout-topbar-action" type="button" *ngIf="!IsAdmin()">
-                            <i class="pi pi-shopping-bag"></i>
-                            <span>Orders</span>
-                        </button>
-                        <button (click)="navigateToProfile()" type="button" class="layout-topbar-action">
-                            <i class="pi pi-user"></i>
-                            <span>Profile</span>
-                        </button>
-                        <button (click)="confirmLogout()" type="button" class="layout-topbar-action">
-                            <i class="pi pi-sign-out"></i>
-                            <span>Exit</span>
-                        </button>
-                    </div>
-                </div>
-                <div *ngIf="!isConnected" class="layout-topbar-menu hidden lg:block">
-                    <div class="layout-topbar-menu-content">
-                        <button (click)="navigateToLogin()" type="button" class="layout-topbar-action">
-                            <i class="pi pi-user"></i>
-                            <span>Login</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Notification Panel -->
-        <p-overlayPanel #op [dismissable]="true" [showCloseIcon]="true" [style]="{ width: '350px' }" class="fixed">
-            <ng-template pTemplate>
-                <div class="notification-header">
-                    <h3 class="m-0 text-lg font-medium">Notifications</h3>
-                    <button pButton class="p-button-text p-button-sm" label="Marker comme lu" (click)="markAllAsRead()" *ngIf="unreadNotificationsCount > 0"></button>
-                </div>
-
-                <div class="notification-list">
-                    <!-- Unread Notifications -->
-                    <div class="notification-section" *ngIf="unreadNotifications.length > 0">
-                        <div class="section-header">
-                            <span class="section-title">New</span>
-                            <span class="section-count">{{ unreadNotifications.length }}</span>
-                        </div>
-                        <div class="notification-items">
-                            <div class="notification-item unread" *ngFor="let notification of unreadNotifications" (click)="readNotification(notification)">
-                                <div class="notification-icon" [ngClass]="getIconClass(notification.type)">
-                                    <i class="pi" [ngClass]="getIconType(notification.type)"></i>
-                                </div>
-                                <div class="notification-content">
-                                    <div class="notification-title">{{ notification.title }}</div>
-                                    <div class="notification-message">{{ notification.message }}</div>
-                                    <div class="notification-meta">
-                                        <span class="notification-time">{{ formatDate(notification.createdAt) }}</span>
-                                        <span class="notification-type" *ngIf="notification.type">{{ notification.type }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Read Notifications -->
-                    <div class="notification-section" *ngIf="readNotifications.length > 0">
-                        <div class="section-header">
-                            <span class="section-title">Earlier</span>
-                            <span class="section-count">{{ readNotifications.length }}</span>
-                        </div>
-                        <div class="notification-items">
-                            <div class="notification-item" *ngFor="let notification of readNotifications" (click)="readNotification(notification)">
-                                <div class="notification-icon faded" [ngClass]="getIconClass(notification.type)">
-                                    <i class="pi" [ngClass]="getIconType(notification.type)"></i>
-                                </div>
-                                <div class="notification-content">
-                                    <div class="notification-title">{{ notification.title }}</div>
-                                    <div class="notification-message">{{ notification.message }}</div>
-                                    <div class="notification-meta">
-                                        <span class="notification-time">{{ formatDate(notification.createdAt) }}</span>
-                                        <span class="notification-type" *ngIf="notification.type">{{ notification.type }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- No Notifications -->
-                    <div class="empty-notification" *ngIf="notifications.length === 0">
-                        <div class="empty-icon">
-                            <i class="pi pi-bell-slash"></i>
-                        </div>
-                        <div class="empty-text">
-                            <div class="empty-title">No notifications</div>
-                            <div class="empty-message">You're all caught up!</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="notification-footer" *ngIf="notifications.length > 0">
-                    <button pButton class="p-button-text" label="votre liste de notifications"></button>
-                </div>
-            </ng-template>
-        </p-overlayPanel>
-    `
+    templateUrl: './app.topbar.html'
 })
 export class AppTopbar implements OnInit, OnDestroy {
     items!: MenuItem[];
+    loginMenuItems: MenuItem[] = [];
     isConnected = false;
     cartItems: CartItem[] = [];
     showCart = false;
@@ -300,7 +82,7 @@ export class AppTopbar implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.isConnected = this.authService.isAuthenticated();
-
+        this.initLoginMenuItems();
         this.cartSubscription = this.cartService.getCartItems().subscribe((items) => {
             this.cartItems = items;
         });
@@ -331,7 +113,24 @@ export class AppTopbar implements OnInit, OnDestroy {
             this.loadNotifications();
         }
     }
-
+    initLoginMenuItems() {
+        this.loginMenuItems = [
+            {
+                label: 'Login',
+                icon: 'pi pi-sign-in',
+                command: () => {
+                    this.navigateToLogin();
+                }
+            },
+            {
+                label: 'Register',
+                icon: 'pi pi-user-plus',
+                command: () => {
+                    this.navigateToRegister();
+                }
+            }
+        ];
+    }
     ngOnDestroy() {
         if (this.cartSubscription) {
             this.cartSubscription.unsubscribe();
@@ -499,7 +298,9 @@ export class AppTopbar implements OnInit, OnDestroy {
     navigateToLogin() {
         this.router.navigate(['/auth/login']);
     }
-
+    navigateToRegister() {
+        this.router.navigate(['/auth/register']);
+    }
     confirmLogout() {
         this.confirmationService.confirm({
             message: 'Êtes-vous sûr de vouloir vous déconnecter ?',
@@ -590,5 +391,47 @@ export class AppTopbar implements OnInit, OnDestroy {
     }
     navigateToContact() {
         this.router.navigate(['/store/help/contact']);
+    }
+    navigateToList() {
+        this.router.navigate(['/store/products']);
+    }
+    navigateToMeilleurVentes() {
+        this.router.navigate(['/store/products']).then(() => {
+            // After navigation completes, scroll to grid
+            setTimeout(() => {
+                const gridElement = document.getElementById('MeilleurVentes');
+                if (gridElement) {
+                    const yOffset = -80; // adjust this based on sticky header height, etc.
+                    const y = gridElement.getBoundingClientRect().top + window.scrollY + yOffset;
+                    window.scrollTo({ top: y, behavior: 'smooth' }); // instant scroll
+                }
+            }, 50);
+        });
+    }
+    navigateToListPlusNotes() {
+        this.router.navigate(['/store/products']).then(() => {
+            // After navigation completes, scroll to grid
+            setTimeout(() => {
+                const gridElement = document.getElementById('PlusNotes');
+                if (gridElement) {
+                    const yOffset = -80; // adjust this based on sticky header height, etc.
+                    const y = gridElement.getBoundingClientRect().top + window.scrollY + yOffset;
+                    window.scrollTo({ top: y, behavior: 'smooth' }); // instant scroll
+                }
+            }, 50);
+        });
+    }
+    navigateToListRecommendations() {
+        this.router.navigate(['/store/products']).then(() => {
+            // After navigation completes, scroll to grid
+            setTimeout(() => {
+                const gridElement = document.getElementById('Recommendations');
+                if (gridElement) {
+                    const yOffset = -80; // adjust this based on sticky header height, etc.
+                    const y = gridElement.getBoundingClientRect().top + window.scrollY + yOffset;
+                    window.scrollTo({ top: y, behavior: 'smooth' }); // instant scroll
+                }
+            }, 50);
+        });
     }
 }

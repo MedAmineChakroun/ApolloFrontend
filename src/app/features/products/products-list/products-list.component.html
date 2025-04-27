@@ -1,11 +1,11 @@
 <div class="flex flex-col">
     <div class="card">
-        <app-recommended-products class="mb-2"></app-recommended-products>
-        <app-top-sales class="mb-2"></app-top-sales>
-        <app-top-rated class="mb-2"></app-top-rated>
+        <app-recommended-products id class="mb-2"></app-recommended-products>
+        <app-top-sales id="MeilleurVentes" class="mb-2"></app-top-sales>
+        <app-top-rated id="PlusNotes" class="mb-2"></app-top-rated>
         <app-ads-carousel class="mb-2"></app-ads-carousel>
 
-        <!-- Header section with title and active filters -->
+        <!-- Update the header section to include price range filter -->
         <div class="flex flex-col md:flex-row mb-3 gap-3" id="grid">
             <div class="flex-1">
                 <h2 class="font-semibold text-xl m-0">{{ pageTitle }}</h2>
@@ -20,7 +20,8 @@
                     In Stock Only
                     <i class="pi pi-times ml-2"></i>
                 </div>
-                <div *ngIf="filters.priceMin > 0 || filters.priceMax < 5000" class="text-sm text-surface-600 py-1 px-3 bg-surface-100 rounded-full">
+
+                <div *ngIf="filters.priceMin > 0 || filters.priceMax < 5000" class="text-sm text-surface-600 py-1 px-3 bg-surface-100 rounded-full cursor-pointer" (click)="openPriceFilterDialog()">
                     Price: {{ filters.priceMin | currency: 'TND' : 'symbol' : '1.0-0' }} - {{ filters.priceMax | currency: 'TND' : 'symbol' : '1.0-0' }}
                     <i class="pi pi-filter ml-2"></i>
                 </div>
@@ -45,6 +46,16 @@
                         </form>
                     </div>
 
+                    <!-- In Stock Filter -->
+                    <div class="flex-1 border-left-1 p-3 flex flex-col justify-center">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <i class="pi pi-check-circle mr-2"></i>
+                                <span class="font-medium">Show only In Stock items</span>
+                            </div>
+                            <p-checkbox [binary]="true" [(ngModel)]="inStockOnly" (onChange)="toggleInStock()"></p-checkbox>
+                        </div>
+                    </div>
                     <!-- Sort and View Controls -->
                     <div class="flex items-center gap-3 w-full md:w-auto justify-between md:justify-end">
                         <div class="flex align-items-center">
@@ -64,6 +75,16 @@
                             </p-dropdown>
                         </div>
                     </div>
+                    <div class="flex-1 p-3">
+                        <div class="flex justify-between text-sm mb-2">
+                            <span>Min: TND{{ priceRange[0] }}</span>
+                            <span>Max: TND{{ priceRange[1] }}</span>
+                        </div>
+                        <p-slider [(ngModel)]="priceRange" [range]="true" [min]="0" [max]="5000" class="w-full"></p-slider>
+                        <div class="flex justify-end mt-3">
+                            <button pButton label="Apply" icon="pi pi-filter" (click)="applyPriceFilter()" class="p-button-sm"></button>
+                        </div>
+                    </div>
                 </div>
             </ng-template>
 
@@ -71,12 +92,15 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2 p-2">
                     <div *ngFor="let product of items; let i = index" class="product-card-wrapper">
                         <div class="product-card h-full border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 rounded flex flex-col cursor-pointer hover:shadow-lg transition-shadow duration-200">
-                            <div class="product-image-container relative" (click)="navigateToProductDetails(product.artId)">
-                                <img src="http://localhost:91/Images/{{ product.artImageUrl }}" [alt]="product.artIntitule" class="product-image" (error)="handleProductImageError($event)" />
-                                <div *ngIf="isOutOfStock(product.artEtat)" class="absolute top-2 left-2">
-                                    <p-tag [value]="getStockStatus(product.artEtat)" [severity]="getStockSeverity(product.artEtat)"></p-tag>
+                            <div class="relative mb-3" (click)="navigateToProductDetails(product.artId)">
+                                <div class="product-image-container">
+                                    <img src="http://localhost:91/Images/{{ product.artImageUrl }}" [alt]="product.artIntitule" (error)="handleProductImageError($event)" class="mx-auto object-contain h-48 w-full" />
+                                </div>
+                                <div class="absolute top-2 left-2">
+                                    <p-tag [value]="getSeverityValue(product.artEtat)" [severity]="getSeverity(product.artEtat)"></p-tag>
                                 </div>
                             </div>
+
                             <div class="p-4 flex flex-col flex-grow">
                                 <div class="flex flex-row justify-between items-start gap-2 mb-2">
                                     <div>
