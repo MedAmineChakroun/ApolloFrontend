@@ -12,7 +12,9 @@
                         <p-tag [value]="getSeverityValue(product.artEtat)" [severity]="getSeverity(product.artEtat)"></p-tag>
                     </div>
                 </div>
-                <div class="h-16 mb-2 font-medium text-sm overflow-hidden">{{ product.artIntitule }}</div>
+                <div class="h-16 mb-2 font-medium text-sm overflow-hidden">
+                    <h6>{{ product.artIntitule }}</h6>
+                </div>
                 <div class="flex justify-between items-center">
                     <div class="font-semibold text-lg">{{ product.artPrixVente | currency: 'TND ' : 'symbol' : '1.0-0' }}</div>
                     <p-button icon="pi pi-shopping-cart" styleClass=" p-button-sm" (click)="navigateToProductDetails(product.artId)"></p-button>

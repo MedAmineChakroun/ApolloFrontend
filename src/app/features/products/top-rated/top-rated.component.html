@@ -1,30 +1,39 @@
-<div class="font-semibold text-xl mb-4">
-    <h2 class="font-semibold text-xl mb-4">Les plus Notés</h2>
-</div>
+<div class="rated-section">
+    <div class="section-header">
+        <h2 class="font-semibold text-xl mb-4">Les plus Notés</h2>
+    </div>
 
-<p-carousel [value]="ratedProducts" [numVisible]="6" [numScroll]="3" [circular]="true" [autoplayInterval]="4200" [responsiveOptions]="carouselResponsiveOptions">
-    <ng-template let-ratedProduct pTemplate="item">
-        <div class="border border-surface rounded-border m-2 p-4 recommend">
-            <div class="mb-4" (click)="navigateToProductDetails(ratedProduct.article.artId)">
-                <div class="relative mx-auto">
-                    <img src="http://localhost:91/Images/{{ ratedProduct.article.artImageUrl }}" [alt]="ratedProduct.article.artIntitule" (error)="handleProductImageError($event)" class="w-full rounded-border" />
-                    <div class="absolute bg-black/70 rounded-border" [ngStyle]="{ 'left.px': 5, 'top.px': 5 }">
-                        <p-tag [value]="getSeverityValue(ratedProduct.article.artEtat)" [severity]="getSeverity(ratedProduct.article.artEtat)" />
+    <div class="rated-container">
+        <div class="carousel-wrapper">
+            <p-carousel [value]="ratedProducts" [numVisible]="5" [numScroll]="3" [circular]="true" [autoplayInterval]="4200" [responsiveOptions]="carouselResponsiveOptions">
+                <ng-template let-ratedProduct pTemplate="item">
+                    <div class="border border-surface rounded-border m-2 p-4 recommend">
+                        <div class="product-image-container" (click)="navigateToProductDetails(ratedProduct.article.artId)">
+                            <div class="relative mx-auto">
+                                <img src="http://localhost:91/Images/{{ ratedProduct.article.artImageUrl }}" [alt]="ratedProduct.article.artIntitule" (error)="handleProductImageError($event)" class="product-image rounded-border" />
+                                <div class="absolute bg-black/70 rounded-border" [ngStyle]="{ 'left.px': 5, 'top.px': 5 }">
+                                    <p-tag [value]="getSeverityValue(ratedProduct.article.artEtat)" [severity]="getSeverity(ratedProduct.article.artEtat)" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="product-title">{{ ratedProduct.article.artIntitule }}</div>
+                        <div class="flex justify-between items-center">
+                            <div class="product-price">{{ ratedProduct.article.artPrixVente + ' TND' }}</div>
+                            <span>
+                                <p-button icon="pi pi-shopping-cart" styleClass="ml-2" (click)="navigateToProductDetails(ratedProduct.article.artId)" />
+                            </span>
+                        </div>
+                        <div class="product-rating">
+                            <p-rating [ngModel]="ratedProduct.averageRating" [readonly]="true"></p-rating>
+                            <span class="rating-count">({{ ratedProduct.ratingCount }} avis)</span>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <div class="mb-4 font-medium">{{ ratedProduct.article.artIntitule }}</div>
-            <div class="flex justify-between items-center">
-                <div class="mt-0 font-semibold text-xl">{{ ratedProduct.article.artPrixVente + ' TND' }}</div>
-                <span>
-                    <p-button icon="pi pi-shopping-cart" styleClass="ml-2" (click)="navigateToProductDetails(ratedProduct.article.artId)" />
-                </span>
-            </div>
-            <!-- Display rating information using p-rating -->
-            <div class="mt-2 flex items-center">
-                <p-rating [ngModel]="ratedProduct.averageRating" [readonly]="true"></p-rating>
-                <span class="ml-2 text-sm text-gray-600">({{ ratedProduct.ratingCount }} avis)</span>
-            </div>
+                </ng-template>
+            </p-carousel>
         </div>
-    </ng-template>
-</p-carousel>
+
+        <div class="rated-image">
+            <img src="assets/general/promo3.png" alt="Les plus notés" />
+        </div>
+    </div>
+</div>

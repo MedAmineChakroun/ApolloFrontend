@@ -1,6 +1,52 @@
+.recommend-container {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+}
+
+.recommend-image {
+    flex: 0 0 auto;
+    width: 200px;
+}
+
+.recommend-image img {
+    display: inline-block;
+    width: 100%;
+    height: auto;
+    max-height: 400px;
+    object-fit: contain;
+}
+
+.carousel-wrapper {
+    flex: 1;
+    min-width: 0; /* Important pour éviter le débordement */
+}
+
+.p-carousel {
+    margin: 0;
+    padding: 2rem 0;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
 .recommend:hover {
     transform: translateY(-5px);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     transition: 0.3s;
+}
+
+/* Adaptatif pour les écrans plus petits */
+@media (max-width: 768px) {
+    .recommend-container {
+        flex-direction: column;
+    }
+
+    .recommend-image {
+        width: 100%;
+        max-width: 200px;
+        margin: 0 auto 16px;
+    }
 }

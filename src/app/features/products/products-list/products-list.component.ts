@@ -23,7 +23,7 @@ import { AdsCarouselComponent } from '../ads-carousel/ads-carousel.component';
 import { SliderModule } from 'primeng/slider';
 import { CheckboxModule } from 'primeng/checkbox';
 import { DialogModule } from 'primeng/dialog';
-
+import { PromoBannerComponent } from '../promo-banner/promo-banner.component';
 type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' | undefined;
 
 interface SortOption {
@@ -36,6 +36,7 @@ interface SortOption {
     selector: 'app-products-list',
     standalone: true,
     imports: [
+        PromoBannerComponent,
         AdsCarouselComponent,
         TopSalesComponent,
         TopRatedComponent,

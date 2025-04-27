@@ -1,0 +1,21 @@
+<!-- promo-banner.component.html -->
+<div class="promo-banner-container">
+    <!-- Left Column -->
+    <div class="promo-side-column">
+        <div (click)="navigateToProducts()" *ngFor="let item of promoItems" class="promo-card" [ngStyle]="{ 'background-image': 'url(' + item.imageUrl + ')' }"></div>
+    </div>
+
+    <!-- Center Carousel -->
+    <div class="carousel-container">
+        <p-carousel [value]="carouselItems" [numVisible]="1" [numScroll]="1" [circular]="true" [autoplayInterval]="4800" [responsiveOptions]="responsiveOptions" [showNavigators]="false">
+            <ng-template let-item pTemplate="item">
+                <div (click)="navigateToProducts()" class="carousel-item" [ngStyle]="{ 'background-image': 'url(' + item.imageUrl + ')' }"></div>
+            </ng-template>
+        </p-carousel>
+    </div>
+
+    <!-- Right Column -->
+    <div class="promo-side-column">
+        <div (click)="navigateToProducts()" *ngFor="let item of rightPromoItems" class="promo-card" [ngStyle]="{ 'background-image': 'url(' + item.imageUrl + ')' }"></div>
+    </div>
+</div>

@@ -20,6 +20,7 @@ type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contr
 })
 export class SimilarComponent {
     @Input() productFamille: string = '';
+    @Input() productId: number = 0;
     products!: Product[];
 
     images!: any[];
@@ -33,7 +34,8 @@ export class SimilarComponent {
     ngOnInit() {
         this.productService.getSimilarProductsByFamille(this.productFamille).subscribe((products) => {
             console.log('similar:', products);
-            this.products = products;
+            // Filter out the current product
+            this.products = products.filter((product) => product.artId !== this.productId);
         });
     }
     handleProductImageError(event: any): void {

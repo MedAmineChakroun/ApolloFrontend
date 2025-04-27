@@ -16,25 +16,25 @@
     <div class="layout-topbar-actions justify-items-center align-items-center">
         <!-- Desktop View -->
         <div class="hidden lg:flex gap-3">
-            <div class="categories-menu categories-container" (click)="navigateToListRecommendations()">
+            <div *ngIf="!IsAdmin()" class="categories-menu categories-container" (click)="navigateToListRecommendations()">
                 <span class="categories-button">
                     <i class="pi pi-sparkles mr-2"></i>
                     Pour Vous
                 </span>
             </div>
-            <div class="categories-menu categories-container" (click)="navigateToMeilleurVentes()">
+            <div *ngIf="!IsAdmin()" class="categories-menu categories-container" (click)="navigateToMeilleurVentes()">
                 <span class="categories-button">
                     <i class="pi pi-thumbs-up mr-2"></i>
                     Meilleurs ventes
                 </span>
             </div>
-            <div class="categories-menu categories-container" (click)="navigateToListPlusNotes()">
+            <div *ngIf="!IsAdmin()" class="categories-menu categories-container" (click)="navigateToListPlusNotes()">
                 <span class="categories-button">
                     <i class="pi pi-star mr-2"></i>
                     Plus Notés
                 </span>
             </div>
-            <div class="categories-container hidden lg:block">
+            <div *ngIf="!IsAdmin()" class="categories-container hidden lg:block">
                 <div class="categories-menu" (mouseenter)="showCategoriesMenu = true" (mouseleave)="showCategoriesMenu = false">
                     <span class="categories-button">
                         <i class="pi pi-th-large mr-2"></i>
@@ -52,12 +52,13 @@
                     </div>
                 </div>
             </div>
-            <div class="categories-menu categories-container" (click)="navigateToList()">
+            <div *ngIf="!IsAdmin()" class="categories-menu categories-container" (click)="navigateToList()">
                 <span class="categories-button">
                     <i class="pi pi-list mr-2"></i>
                     Acceuil
                 </span>
             </div>
+
             <div class="justify-items-center align-items-center flex">
                 <!-- Notification Icon with Badge for Desktop -->
                 <div class="notification-icon" (click)="op.toggle($event)">

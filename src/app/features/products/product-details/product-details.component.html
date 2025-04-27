@@ -108,7 +108,7 @@
     </div>
 
     <!-- Similar Products Section -->
-    <app-similar *ngIf="product" [productFamille]="product.artFamille"></app-similar>
+    <app-similar *ngIf="product" [productFamille]="product.artFamille" [productId]="product.artId"></app-similar>
 
     <!-- Loading State -->
     <div *ngIf="!product && !error" class="grid grid-cols-1 lg:grid-cols-12 gap-8">
