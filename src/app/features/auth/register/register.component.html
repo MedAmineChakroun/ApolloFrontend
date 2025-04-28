@@ -41,32 +41,37 @@
             </div>
         </div>
 
-        <!-- Right Colmn: Registration Form -->
+        <!-- Right Column: Registration Form - Modified to show individual error messages -->
         <div class="w-full md:w-3/5 p-8 overflow-y-auto" style="max-height: 90vh">
             <h2 class="text-surface-900 dark:text-surface-0 text-2xl font-medium mb-6">Create Your Account</h2>
 
             <div class="p-fluid">
-                <!-- Accuount Information Section -->
+                <!-- Account Information Section -->
                 <div class="mb-5">
                     <div class="text-surface-900 dark:text-surface-0 text-lg font-medium mb-3">Account Information</div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="field">
                             <label for="name" class="block text-surface-900 dark:text-surface-0 text-sm font-medium mb-2">Username*</label>
                             <input pInputText id="name" type="text" placeholder="Choose a username" class="w-full" [(ngModel)]="registerDto.name" required />
+                            <small *ngIf="usernameError" class="p-error block mt-1"> <i class="pi pi-exclamation-circle mr-1"></i>Name should not contain special characters </small>
+                            <small *ngIf="nameRequired" class="p-error block mt-1"> <i class="pi pi-exclamation-circle mr-1"></i>Name is required </small>
                         </div>
                         <div class="field">
                             <label for="email" class="block text-surface-900 dark:text-surface-0 text-sm font-medium mb-2">Email*</label>
                             <input pInputText id="email" type="email" placeholder="Email address" class="w-full" [(ngModel)]="registerDto.email" required />
+                            <small *ngIf="emailRequired" class="p-error block mt-1"> <i class="pi pi-exclamation-circle mr-1"></i>Email is required </small>
                         </div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
                         <div class="field">
                             <label for="password" class="block text-surface-900 dark:text-surface-0 text-sm font-medium mb-2">Password*</label>
                             <p-password id="password" [(ngModel)]="registerDto.password" placeholder="Create a password" [toggleMask]="true" styleClass="w-full" [feedback]="true" required></p-password>
+                            <small *ngIf="passwordRequired" class="p-error block mt-1"> <i class="pi pi-exclamation-circle mr-1"></i>Password is required </small>
                         </div>
                         <div class="field">
                             <label for="confirmPassword" class="block text-surface-900 dark:text-surface-0 text-sm font-medium mb-2">Confirm Password*</label>
                             <p-password id="confirmPassword" [(ngModel)]="registerDto.confirmPassword" placeholder="Confirm your password" [toggleMask]="true" styleClass="w-full" [feedback]="false" required></p-password>
+                            <small *ngIf="passwordMismatch" class="p-error block mt-1"> <i class="pi pi-exclamation-circle mr-1"></i>Please confirm your password </small>
                         </div>
                     </div>
                 </div>
@@ -94,6 +99,7 @@
                             <p-inputMask id="phone" [mask]="getPhoneMaskPattern()" [(ngModel)]="phoneNumber" placeholder="Enter phone number" styleClass="flex-1" [style]="{ width: '100%' }" [unmask]="true" required> </p-inputMask>
                         </div>
                         <small class="text-surface-600 dark:text-surface-400 block mt-1">Select your country code, then enter your phone number</small>
+                        <small *ngIf="phoneRequired" class="p-error block mt-1"> <i class="pi pi-exclamation-circle mr-1"></i>Phone number is required </small>
                     </div>
                 </div>
 
@@ -103,19 +109,23 @@
                     <div class="field mb-3">
                         <label for="address" class="block text-surface-900 dark:text-surface-0 text-sm font-medium mb-2">Street Address*</label>
                         <input pInputText id="address" type="text" placeholder="123 Main St" class="w-full" [(ngModel)]="registerDto.address" required />
+                        <small *ngIf="addressRequired" class="p-error block mt-1"> <i class="pi pi-exclamation-circle mr-1"></i>Address is required </small>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         <div class="field">
                             <label for="city" class="block text-surface-900 dark:text-surface-0 text-sm font-medium mb-2">City*</label>
                             <input pInputText id="city" type="text" placeholder="Your city" class="w-full" [(ngModel)]="registerDto.city" required />
+                            <small *ngIf="cityRequired" class="p-error block mt-1"> <i class="pi pi-exclamation-circle mr-1"></i>City is required </small>
                         </div>
                         <div class="field">
                             <label for="postalCode" class="block text-surface-900 dark:text-surface-0 text-sm font-medium mb-2">Postal Code*</label>
                             <input pInputText id="postalCode" type="text" placeholder="Postal code" class="w-full" [(ngModel)]="registerDto.postalCode" required />
+                            <small *ngIf="postalCodeRequired" class="p-error block mt-1"> <i class="pi pi-exclamation-circle mr-1"></i>Postal code is required </small>
                         </div>
                         <div class="field">
                             <label for="country" class="block text-surface-900 dark:text-surface-0 text-sm font-medium mb-2">Country*</label>
                             <input pInputText id="country" type="text" placeholder="Enter your country" class="w-full" [(ngModel)]="registerDto.country" required />
+                            <small *ngIf="countryRequired" class="p-error block mt-1"> <i class="pi pi-exclamation-circle mr-1"></i>Country is required </small>
                         </div>
                     </div>
                 </div>
@@ -126,22 +136,13 @@
                     <label for="agreeTerms" class="ml-2 text-surface-700 dark:text-surface-300"
                         >I agree to the <a (click)="openTermsConditions()" class="text-primary font-medium">Terms of Service</a> and <a (click)="openTermsConditions()" class="text-primary font-medium">Privacy Policy</a></label
                     >
+                    <small *ngIf="termsRequired" class="p-error block mt-1"> <i class="pi pi-exclamation-circle mr-1"></i>You must agree to the Terms of Service </small>
                 </div>
 
                 <!-- Buttons and Navigation -->
                 <p-button (click)="register()" [disabled]="loading" label="Create Account" styleClass="w-full mb-4" severity="success" raised></p-button>
 
                 <p style="text-align: center">Already have an account? <a class="font-medium no-underline ml-2 text-right cursor-pointer text-primary" routerLink="/auth/login">Log In</a></p>
-
-                <!-- Error Messages Section -->
-                <div *ngIf="errorMessage" class="mt-4 p-3 border-round bg-red-50 dark:bg-red-900/20 border-1 border-red-200 dark:border-red-800">
-                    <ul class="list-none p-0 m-0 text-left">
-                        <li *ngFor="let error of errorMessage.split('\n')" class="text-red-500 dark:text-red-300 mb-1 flex items-center">
-                            <i class="pi pi-exclamation-circle mr-2"></i>
-                            {{ error }}
-                        </li>
-                    </ul>
-                </div>
             </div>
         </div>
     </div>

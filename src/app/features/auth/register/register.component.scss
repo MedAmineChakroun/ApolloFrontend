@@ -1,5 +1,21 @@
+/* For links */
 a {
     color: var(--primary-color);
     text-decoration: underline;
     cursor: pointer;
+}
+
+/* For error messages */
+.p-error {
+    color: red !important;
+}
+
+/* If the above doesn't work, try targeting the error message elements more specifically */
+small.p-error {
+    color: red !important;
+}
+
+/* This will make sure error icons are also red */
+.p-error .pi-exclamation-circle {
+    color: red !important;
 }

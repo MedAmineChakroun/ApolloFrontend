@@ -45,6 +45,22 @@ export class RegisterComponent implements OnInit {
     selectedCountryCode: CountryCode | null = null;
     phoneNumber: string = '';
 
+    // Individual error flags
+    usernameError: boolean = false;
+    nameRequired: boolean = false;
+    emailRequired: boolean = false;
+    emailInvalid: boolean = false;
+    passwordRequired: boolean = false;
+    confirmPasswordRequired: boolean = false;
+    passwordMismatch: boolean = false;
+    countryCodeRequired: boolean = false;
+    phoneRequired: boolean = false;
+    addressRequired: boolean = false;
+    cityRequired: boolean = false;
+    postalCodeRequired: boolean = false;
+    countryRequired: boolean = false;
+    termsRequired: boolean = false;
+
     countryCodes: CountryCode[] = [
         { name: 'Tunisia', code: 'TN', dialCode: '+216' },
         { name: 'United States', code: 'US', dialCode: '+1' },
@@ -94,9 +110,28 @@ export class RegisterComponent implements OnInit {
         }
     }
 
+    // Reset all error flags
+    resetErrors() {
+        this.usernameError = false;
+        this.nameRequired = false;
+        this.emailRequired = false;
+        this.emailInvalid = false;
+        this.passwordRequired = false;
+        this.confirmPasswordRequired = false;
+        this.passwordMismatch = false;
+        this.countryCodeRequired = false;
+        this.phoneRequired = false;
+        this.addressRequired = false;
+        this.cityRequired = false;
+        this.postalCodeRequired = false;
+        this.countryRequired = false;
+        this.termsRequired = false;
+        this.errorMessage = '';
+    }
+
     register() {
         this.loading = true;
-        this.errorMessage = '';
+        this.resetErrors();
 
         // Validation before sending to service
         if (!this.validateForm()) {
@@ -147,57 +182,86 @@ export class RegisterComponent implements OnInit {
     }
 
     validateForm(): boolean {
-        let errors = [];
+        let isValid = true;
 
-        // Check required fields
-        if (!/^[a-zA-Z0-9]+$/.test(this.registerDto.name)) {
-            errors.push('Name should not contain special characters');
+        // Check username format
+        if (this.registerDto.name) {
+            if (!/^[a-zA-Z0-9]+$/.test(this.registerDto.name)) {
+                this.usernameError = true;
+                isValid = false;
+            }
+        } else {
+            this.nameRequired = true;
+            isValid = false;
         }
-        if (!this.registerDto.name) {
-            errors.push('Name is required');
-        }
+
+        // Check email
         if (!this.registerDto.email) {
-            errors.push('Email is required');
+            this.emailRequired = true;
+            isValid = false;
         } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.registerDto.email)) {
-            errors.push('Please enter a valid email address');
+            this.emailInvalid = true;
+            isValid = false;
         }
+
+        // Check password
         if (!this.registerDto.password) {
-            errors.push('Password is required');
+            this.passwordRequired = true;
+            isValid = false;
         }
+
+        // Check confirm password
         if (!this.registerDto.confirmPassword) {
-            errors.push('Please confirm your password');
+            this.confirmPasswordRequired = true;
+            isValid = false;
         } else if (this.registerDto.password !== this.registerDto.confirmPassword) {
-            errors.push('Passwords do not match');
+            this.passwordMismatch = true;
+            isValid = false;
         }
+
+        // Check country code
         if (!this.selectedCountryCode) {
-            errors.push('Please select a country code');
+            this.countryCodeRequired = true;
+            isValid = false;
         }
+
+        // Check phone number
         if (!this.phoneNumber) {
-            errors.push('Phone number is required');
+            this.phoneRequired = true;
+            isValid = false;
         }
+
+        // Check address
         if (!this.registerDto.address) {
-            errors.push('Address is required');
+            this.addressRequired = true;
+            isValid = false;
         }
+
+        // Check city
         if (!this.registerDto.city) {
-            errors.push('City is required');
+            this.cityRequired = true;
+            isValid = false;
         }
+
+        // Check postal code
         if (!this.registerDto.postalCode) {
-            errors.push('Postal code is required');
+            this.postalCodeRequired = true;
+            isValid = false;
         }
+
+        // Check country
         if (!this.registerDto.country) {
-            errors.push('Country is required');
+            this.countryRequired = true;
+            isValid = false;
         }
+
+        // Check terms agreement
         if (!this.registerDto.agreeTerms) {
-            errors.push('You must agree to the Terms of Service');
+            this.termsRequired = true;
+            isValid = false;
         }
 
-        // If there are errors, display them
-        if (errors.length > 0) {
-            this.errorMessage = errors.join('\n');
-            return false;
-        }
-
-        return true;
+        return isValid;
     }
 
     openTermsConditions() {
