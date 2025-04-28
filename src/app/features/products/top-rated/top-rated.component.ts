@@ -10,7 +10,8 @@ import { Product } from '../../../models/Product';
 import { RatingModule } from 'primeng/rating';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-
+import { Stock } from '../../../models/Stock';
+import { StockService } from '../../../core/services/stock.service';
 type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' | undefined;
 
 @Component({
@@ -18,23 +19,33 @@ type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contr
     imports: [FormsModule, ButtonModule, CommonModule, CarouselModule, GalleriaModule, ImageModule, TagModule, RatingModule],
     templateUrl: './top-rated.component.html',
     styleUrl: './top-rated.component.css',
-    providers: [ProductsService, Router]
+    providers: [ProductsService, Router, StockService]
 })
 export class TopRatedComponent {
     products!: Product[];
     ratedProducts: { article: Product; averageRating: number; ratingCount: number }[] = [];
-
+    stocks: Stock[] = [];
     images!: any[];
     private readonly DEFAULT_PRODUCT_IMAGE = 'assets/general/product-default.png';
     constructor(
         private productServices: ProductsService,
-        private router: Router
+        private router: Router,
+        private stockService: StockService
     ) {}
 
     ngOnInit() {
         this.productServices.getTopRatedProducts().subscribe((response) => {
             this.ratedProducts = response.products;
             this.products = response.products.map((item) => item.article);
+        });
+        this.stockService.getAllStock().subscribe((data) => {
+            this.stocks = data;
+        });
+        this.stockService.getAllStock().subscribe((stockData) => {
+            this.products = this.products.map((product) => {
+                const stock = stockData.find((s) => s.ArRef === product.artCode);
+                return { ...product, stockQuantity: stock?.AsQteSto ?? 0 };
+            });
         });
     }
     handleProductImageError(event: any): void {

@@ -1,7 +1,7 @@
 <div class="flex flex-col">
     <div class="card">
         <app-promo-banner class="mb-4"></app-promo-banner>
-        <app-recommended-products id class="mb-2"></app-recommended-products>
+        <app-recommended-products id="Recommendations" class="mb-2"></app-recommended-products>
         <app-top-sales id="MeilleurVentes" class="mb-2"></app-top-sales>
         <app-top-rated id="PlusNotes" class="mb-2"></app-top-rated>
         <app-ads-carousel class="mb-2"></app-ads-carousel>
@@ -98,7 +98,7 @@
                                     <img src="http://localhost:91/Images/{{ product.artImageUrl }}" [alt]="product.artIntitule" (error)="handleProductImageError($event)" class="mx-auto object-contain h-48 w-full" />
                                 </div>
                                 <div class="absolute top-2 left-2">
-                                    <p-tag [value]="getSeverityValue(product.artEtat)" [severity]="getSeverity(product.artEtat)"></p-tag>
+                                    <p-tag [value]="getSeverityValue(product.stockQuantity)" [severity]="getSeverity(product.stockQuantity)"></p-tag>
                                 </div>
                             </div>
 
@@ -115,7 +115,7 @@
                                         <span class="text-xl font-semibold">{{ product.artPrixVente | currency: 'TND' : 'symbol' : '1.2-2' }}</span>
                                     </div>
                                     <div class="block">
-                                        <p-button (onClick)="$event.stopPropagation(); addToCart(product)" icon="pi pi-shopping-cart" label="Ajouter au panier" [disabled]="isOutOfStock(product.artEtat)" styleClass="w-full" raised></p-button>
+                                        <p-button (onClick)="$event.stopPropagation(); addToCart(product)" icon="pi pi-shopping-cart" label="Ajouter au panier" [disabled]="isOutOfStock(product.stockQuantity)" styleClass="w-full" raised></p-button>
                                     </div>
                                 </div>
                             </div>

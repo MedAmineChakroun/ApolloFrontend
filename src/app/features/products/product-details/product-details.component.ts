@@ -15,6 +15,8 @@ import { RatingModule } from 'primeng/rating';
 import { RatingComponent } from './rating/rating.component';
 import { SimilarComponent } from './similar/similar.component';
 import { ImageModule } from 'primeng/image';
+import { StockService } from '../../../core/services/stock.service';
+import { Stock } from '../../../models/Stock';
 //import lazy loading for the image module from primeng
 
 type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | undefined;
@@ -30,13 +32,15 @@ export class ProductDetailsComponent implements OnInit {
     product: Product | null = null;
     error: string | null = null;
     quantity: number = 1;
+    stockQuantity: number = 0;
     private readonly DEFAULT_PRODUCT_IMAGE = 'assets/general/product-default.png';
 
     constructor(
         private route: ActivatedRoute,
         private productsService: ProductsService,
         private cartService: CartService,
-        private toastr: ToastrService
+        private toastr: ToastrService,
+        private stockService: StockService
     ) {}
 
     ngOnInit() {
@@ -61,6 +65,14 @@ export class ProductDetailsComponent implements OnInit {
                     this.product = response.data;
                 } else if (response) {
                     this.product = response;
+                    this.stockService.getStockByCode(response.artCode).subscribe({
+                        next: (stockData) => {
+                            this.stockQuantity = stockData.AsQteSto;
+                        },
+                        error: (err) => {
+                            console.error('Error loading stock data:', err);
+                        }
+                    });
                 } else {
                     this.error = 'Product not found';
                 }

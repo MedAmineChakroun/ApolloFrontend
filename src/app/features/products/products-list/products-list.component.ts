@@ -24,6 +24,9 @@ import { SliderModule } from 'primeng/slider';
 import { CheckboxModule } from 'primeng/checkbox';
 import { DialogModule } from 'primeng/dialog';
 import { PromoBannerComponent } from '../promo-banner/promo-banner.component';
+import { StockService } from '../../../core/services/stock.service';
+import { Stock } from '../../../models/Stock';
+
 type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' | undefined;
 
 interface SortOption {
@@ -59,7 +62,7 @@ interface SortOption {
     ],
     templateUrl: './products-list.component.html',
     styleUrls: ['./products-list.component.css'],
-    providers: [ProductsService]
+    providers: [ProductsService, StockService]
 })
 export class products implements OnInit {
     // Default product image to use when product image is not available
@@ -71,7 +74,7 @@ export class products implements OnInit {
     searchQuery: string = '';
     isSearching: boolean = false;
     pageTitle: string = 'All Products';
-
+    stocks: Stock[] = [];
     // Price range slider
     priceRange: number[] = [0, 5000]; // Default price range values
     inStockOnly: boolean = false;
@@ -100,7 +103,8 @@ export class products implements OnInit {
         private route: ActivatedRoute,
         private router: Router,
         private toastr: ToastrService,
-        private cartService: CartService
+        private cartService: CartService,
+        private stockService: StockService
     ) {}
 
     // Method to handle image loading errors
@@ -168,8 +172,6 @@ export class products implements OnInit {
      * Load products from the service
      */
     loadProducts() {
-        // Show loading state if needed
-
         // Check if we have a category filter
         if (this.filters.category) {
             this.productService.getProductsByFamille(this.filters.category).subscribe({
@@ -188,7 +190,8 @@ export class products implements OnInit {
                         console.warn('Unexpected API response format:', response);
                     }
 
-                    this.applyFilters(); // Apply additional filters
+                    // After products are loaded, fetch stock data
+                    this.loadStockData();
                 },
                 error: (err) => {
                     console.error('Error loading products by category:', err);
@@ -213,7 +216,8 @@ export class products implements OnInit {
                         console.warn('Unexpected API response format:', response);
                     }
 
-                    this.applyFilters(); // Apply initial filters
+                    // After products are loaded, fetch stock data
+                    this.loadStockData();
                 },
                 error: (err) => {
                     console.error('Error loading products:', err);
@@ -222,6 +226,38 @@ export class products implements OnInit {
                 }
             });
         }
+    }
+
+    /**
+     * Load stock data and merge it with products
+     */
+    loadStockData() {
+        this.stockService.getAllStock().subscribe({
+            next: (stockData: Stock[]) => {
+                this.stocks = stockData;
+
+                // Attach stock information to products
+                this.products = this.products.map((product) => {
+                    const stock = stockData.find((s) => s.ArRef === product.artCode);
+
+                    // Update the product with stock quantity
+                    // Check if artEtat is already defined in the product, otherwise use stock quantity
+                    if (product.artEtat === undefined && stock) {
+                        product.artEtat = stock.AsQteSto > 0 ? 1 : 0;
+                    }
+
+                    return product;
+                });
+
+                // Apply filters after attaching stock data
+                this.applyFilters();
+            },
+            error: (err) => {
+                console.error('Error loading stock data:', err);
+                // Apply filters even if stock data failed to load
+                this.applyFilters();
+            }
+        });
     }
 
     /**
@@ -466,6 +502,7 @@ export class products implements OnInit {
     getSeverity(stockValue: number): TagSeverity {
         return stockValue > 0 ? 'success' : 'danger';
     }
+
     getSeverityValue(stockValue: number): string {
         return stockValue > 0 ? 'En Stock' : 'Sold out';
     }

@@ -9,7 +9,7 @@
                         <img src="http://localhost:91/Images/{{ product.artImageUrl }}" [alt]="product.artIntitule" (error)="handleProductImageError($event)" class="mx-auto object-contain h-48 w-full" />
                     </div>
                     <div class="absolute top-2 left-2">
-                        <p-tag [value]="getSeverityValue(product.artEtat)" [severity]="getSeverity(product.artEtat)"></p-tag>
+                        <p-tag [value]="getSeverityValue(product.stockQuantity)" [severity]="getSeverity(product.stockQuantity)"></p-tag>
                     </div>
                 </div>
                 <div class="h-16 mb-2 font-medium text-sm overflow-hidden">{{ product.artIntitule }}</div>

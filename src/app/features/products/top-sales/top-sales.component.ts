@@ -7,7 +7,9 @@ import { ImageModule } from 'primeng/image';
 import { TagModule } from 'primeng/tag';
 import { Product } from '../../../models/Product';
 import { ProductsService } from '../../../core/services/products.service';
+import { StockService } from '../../../core/services/stock.service';
 import { Router } from '@angular/router';
+import { Stock } from '../../../models/Stock';
 type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' | undefined;
 
 @Component({
@@ -15,23 +17,31 @@ type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contr
     imports: [ButtonModule, CommonModule, CarouselModule, GalleriaModule, ImageModule, TagModule],
     templateUrl: './top-sales.component.html',
     styleUrl: './top-sales.component.css',
-    providers: [ProductsService, Router]
+    providers: [ProductsService, Router, StockService]
 })
 export class TopSalesComponent implements OnInit {
     products!: Product[];
-
+    stocks: Stock[] = [];
     images!: any[];
     private readonly DEFAULT_PRODUCT_IMAGE = 'assets/general/product-default.png';
 
     constructor(
         private productService: ProductsService,
-        private router: Router
+        private router: Router,
+        private stockService: StockService
     ) {}
 
     ngOnInit() {
         this.productService.getTopSalesProducts().subscribe((products) => {
-            console.log('Top Sales Products:', products);
             this.products = products;
+
+            this.stockService.getAllStock().subscribe((stockData) => {
+                this.products = this.products.map((product) => {
+                    const stock = stockData.find((s) => s.ArRef === product.artCode);
+
+                    return { ...product, stockQuantity: stock?.AsQteSto ?? 0 };
+                });
+            });
         });
     }
     handleProductImageError(event: any): void {

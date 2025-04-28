@@ -8,6 +8,8 @@ import { TagModule } from 'primeng/tag';
 import { ProductsService } from '../../../../core/services/products.service';
 import { Product } from '../../../../models/Product';
 import { Router } from '@angular/router';
+import { StockService } from '../../../../core/services/stock.service';
+import { Stock } from '../../../../models/Stock';
 
 type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' | undefined;
 
@@ -22,20 +24,26 @@ export class SimilarComponent {
     @Input() productFamille: string = '';
     @Input() productId: number = 0;
     products!: Product[];
-
+    stocks: Stock[] = [];
     images!: any[];
     private readonly DEFAULT_PRODUCT_IMAGE = 'assets/general/product-default.png';
 
     constructor(
         private productService: ProductsService,
-        private router: Router
+        private router: Router,
+        private stockService: StockService
     ) {}
 
     ngOnInit() {
         this.productService.getSimilarProductsByFamille(this.productFamille).subscribe((products) => {
-            console.log('similar:', products);
-            // Filter out the current product
             this.products = products.filter((product) => product.artId !== this.productId);
+            this.stockService.getAllStock().subscribe((stockData) => {
+                this.products = this.products.map((product) => {
+                    const stock = stockData.find((s) => s.ArRef === product.artCode);
+
+                    return { ...product, stockQuantity: stock?.AsQteSto ?? 0 };
+                });
+            });
         });
     }
     handleProductImageError(event: any): void {

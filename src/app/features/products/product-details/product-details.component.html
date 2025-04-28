@@ -6,8 +6,8 @@
                 <!-- Stock status badge -->
                 <div class="absolute top-4 left-4 z-10">
                     <p-tag
-                        [value]="getStockStatus(product.artEtat)"
-                        [severity]="getStockSeverity(product.artEtat)"
+                        [value]="getStockStatus(this.stockQuantity)"
+                        [severity]="getStockSeverity(this.stockQuantity)"
                         [style]="{
                             'font-size': '0.9rem',
                             'font-weight': '600',
@@ -68,8 +68,8 @@
                     </div>
                     <div class="product-detail-item">
                         <div class="text-sm text-gray-500 mb-1">Stock Status</div>
-                        <div class="font-medium" [ngClass]="{ 'text-green-600': !isOutOfStock(product.artEtat), 'text-red-600': isOutOfStock(product.artEtat) }">
-                            {{ getStockStatus(product.artEtat) }}
+                        <div class="font-medium" [ngClass]="{ 'text-green-600': !isOutOfStock(this.stockQuantity), 'text-red-600': isOutOfStock(this.stockQuantity) }">
+                            {{ getStockStatus(this.stockQuantity) }}
                         </div>
                     </div>
                 </div>
@@ -81,11 +81,11 @@
                     <div class="quantity-control">
                         <label for="quantity" class="block text-gray-600 text-sm mb-1">Quantity</label>
                         <div class="flex items-center border border-gray-300 rounded-lg overflow-hidden">
-                            <button class="w-10 h-10 bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors" [disabled]="quantity <= 1 || isOutOfStock(product.artEtat)" (click)="decrementQuantity()">
+                            <button class="w-10 h-10 bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors" [disabled]="quantity <= 1 || isOutOfStock(this.stockQuantity)" (click)="decrementQuantity()">
                                 <i class="pi pi-minus text-gray-600"></i>
                             </button>
-                            <input type="number" id="quantity" class="w-12 h-10 text-center border-none focus:outline-none" [(ngModel)]="quantity" min="1" [disabled]="isOutOfStock(product.artEtat)" />
-                            <button class="w-10 h-10 bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors" [disabled]="isOutOfStock(product.artEtat)" (click)="incrementQuantity()">
+                            <input type="number" id="quantity" class="w-12 h-10 text-center border-none focus:outline-none" [(ngModel)]="quantity" min="1" [disabled]="isOutOfStock(this.stockQuantity)" />
+                            <button class="w-10 h-10 bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors" [disabled]="isOutOfStock(this.stockQuantity)" (click)="incrementQuantity()">
                                 <i class="pi pi-plus text-gray-600"></i>
                             </button>
                         </div>
@@ -94,10 +94,10 @@
                         <p-button
                             label="Add to Cart"
                             icon="pi pi-shopping-cart"
-                            [disabled]="isOutOfStock(product.artEtat)"
+                            [disabled]="isOutOfStock(this.stockQuantity)"
                             (onClick)="addToCart(product)"
                             styleClass="w-full p-button-lg p-button-raised shadow-md"
-                            [pTooltip]="isOutOfStock(product.artEtat) ? 'This product is currently out of stock' : ''"
+                            [pTooltip]="isOutOfStock(this.stockQuantity) ? 'This product is currently out of stock' : ''"
                             tooltipPosition="top"
                             pRipple
                         ></p-button>
