@@ -44,13 +44,10 @@
                                 <div class="text-gray-500 text-xs">JOINED</div>
                                 <div class="font-semibold">{{ clientData?.tiersDateCreate | date: 'dd/MM/yyyy' }}</div>
                             </div>
-                            <div class="text-center">
-                                <div class="text-gray-500 text-xs">STATUS</div>
-                                <div class="font-semibold text-green-600">Active</div>
-                            </div>
+
                             <div class="text-center">
                                 <div class="text-gray-500 text-xs">ROLE</div>
-                                <div class="font-semibold">Client</div>
+                                <div class="font-semibold">{{ this.role }}</div>
                             </div>
                         </div>
 

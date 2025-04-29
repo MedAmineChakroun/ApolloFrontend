@@ -10,4 +10,6 @@ export interface Product {
     artUnite: string;
     artImageUrl: string;
     artTvaTaux: number;
+    artFlag: number;
+    artDateCreate: Date;
 }

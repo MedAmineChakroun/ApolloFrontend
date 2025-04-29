@@ -12,7 +12,7 @@ import { AuthenticationService } from '../../core/services/authentication.servic
     template: `
         <div class="layout-sidebar">
             <app-admin-menu *ngIf="isAdmin"></app-admin-menu>
-            <app-menu></app-menu>
+            <app-menu *ngIf="!isAdmin"></app-menu>
         </div>
     `
 })

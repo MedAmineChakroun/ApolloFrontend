@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Product } from '../../models/Product';
 import { map, catchError } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
+import { ProductDto } from '../../models/Dtos/ProductDto';
 
 @Injectable({
     providedIn: 'root'
@@ -33,6 +34,15 @@ export class ProductsService {
     }
     getSimilarProductsByFamille(famille: string): Observable<Product[]> {
         return this.http.get<Product[]>(`https://localhost:7257/api/Produits/similar/${famille}/${10}`);
+    }
+    createProduct(productDto: ProductDto): Observable<ProductDto> {
+        return this.http.post<ProductDto>('https://localhost:7257/api/Produits', productDto);
+    }
+    editProduct(product: Product): Observable<Product> {
+        return this.http.put<Product>(`https://localhost:7257/api/Produits/${product.artId}`, product);
+    }
+    deleteProduct(id: number): Observable<boolean> {
+        return this.http.delete<boolean>(`https://localhost:7257/api/Produits/${id}`);
     }
     /**
      * Extract products from API response, handling different response formats

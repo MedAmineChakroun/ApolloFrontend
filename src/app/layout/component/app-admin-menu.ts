@@ -88,7 +88,7 @@ import { filter } from 'rxjs/operators';
                     <i class="pi pi-chevron-right arrow" [ngClass]="{ 'arrow-expanded': expandedMenus['products'] }"></i>
                 </div>
                 <div class="submenu" *ngIf="expandedMenus['products']">
-                    <a routerLink="/store/admin/products/list" class="submenu-item" [ngClass]="{ 'active-item': activeMenu === '/store/admin/products/list' }">
+                    <a routerLink="/store/admin/products" class="submenu-item" [ngClass]="{ 'active-item': activeMenu === '/store/admin/products' }">
                         <i class="pi pi-list"></i>
                         <span>Liste</span>
                     </a>

@@ -40,6 +40,7 @@ export class UserProfileComponent implements OnInit {
     clientData: Client | null = null;
     userEmail: string = '';
     routeUrl: boolean = false;
+    role: string = ''; // Default role
     constructor(
         private fb: FormBuilder,
         private userService: UserService,
@@ -68,6 +69,8 @@ export class UserProfileComponent implements OnInit {
             this.userService.getUserByCode(id).subscribe({
                 next: (data) => {
                     this.clientData = data;
+                    console.log(data);
+                    this.getRole(this.clientData.tiersId);
                 },
                 error: () => {
                     this.toastr.error('Erreur lors du chargement des données utilisateur.');
@@ -215,7 +218,12 @@ export class UserProfileComponent implements OnInit {
     getRole(id: number) {
         this.userService.getUserRole(id).subscribe({
             next: (response) => {
-                return response.role;
+                console.log(response);
+                this.role = response.role;
+            },
+            error: (error) => {
+                console.error('Error fetching user role:', error);
+                this.toastr.error('Failed to fetch user role');
             }
         });
     }

@@ -66,7 +66,7 @@ export class PromoBannerComponent implements OnInit {
             title: 'SOLDES PRINTEMPS',
             subtitle: "JUSQU'À",
             highlighedValue: '50% OFF',
-            imageUrl: 'assets/general/promo5.png',
+            imageUrl: 'assets/general/promo8.png',
             buttonText: 'Découvrir'
         },
         {
