@@ -35,7 +35,7 @@ export interface Famille {
     standalone: true,
     imports: [MenuModule, RouterModule, CommonModule, StyleClassModule, ConfirmDialogModule, ButtonModule, BadgeModule, SidebarModule, OverlayPanelModule],
     providers: [ConfirmationService, CartService, NotificationService, ToastrService, ProductsService],
-    styleUrls: ['./app.topbar.css'],
+    styleUrls: ['./app.topbar.scss'],
     templateUrl: './app.topbar.html'
 })
 export class AppTopbar implements OnInit, OnDestroy {

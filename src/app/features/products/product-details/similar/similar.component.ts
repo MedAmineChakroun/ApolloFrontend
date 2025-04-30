@@ -18,7 +18,7 @@ type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contr
     imports: [ButtonModule, CommonModule, CarouselModule, GalleriaModule, ImageModule, TagModule],
     templateUrl: './similar.component.html',
     styleUrl: './similar.component.css',
-    providers: [ProductsService, Router]
+    providers: [ProductsService]
 })
 export class SimilarComponent {
     @Input() productFamille: string = '';

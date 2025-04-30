@@ -17,7 +17,7 @@ type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contr
     imports: [ButtonModule, CommonModule, CarouselModule, GalleriaModule, ImageModule, TagModule],
     templateUrl: './top-sales.component.html',
     styleUrl: './top-sales.component.css',
-    providers: [ProductsService, Router, StockService]
+    providers: [ProductsService, StockService]
 })
 export class TopSalesComponent implements OnInit {
     products!: Product[];

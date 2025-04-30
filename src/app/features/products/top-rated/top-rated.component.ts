@@ -19,7 +19,7 @@ type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contr
     imports: [FormsModule, ButtonModule, CommonModule, CarouselModule, GalleriaModule, ImageModule, TagModule, RatingModule],
     templateUrl: './top-rated.component.html',
     styleUrl: './top-rated.component.css',
-    providers: [ProductsService, Router, StockService]
+    providers: [ProductsService, StockService]
 })
 export class TopRatedComponent {
     products!: Product[];

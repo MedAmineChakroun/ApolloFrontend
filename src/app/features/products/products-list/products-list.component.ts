@@ -61,10 +61,10 @@ interface SortOption {
         DialogModule
     ],
     templateUrl: './products-list.component.html',
-    styleUrls: ['./products-list.component.css'],
+    styleUrls: ['./products-list.component.scss'],
     providers: [ProductsService, StockService]
 })
-export class products implements OnInit {
+export class ProductsListComponent implements OnInit {
     // Default product image to use when product image is not available
     private readonly DEFAULT_PRODUCT_IMAGE = 'assets/general/product-default.png';
 
@@ -532,9 +532,6 @@ export class products implements OnInit {
         }
     }
 
-    /**
-     * Navigate to product details page
-     */
     navigateToProductDetails(productId: string) {
         this.router.navigate(['/store/products', productId]);
     }

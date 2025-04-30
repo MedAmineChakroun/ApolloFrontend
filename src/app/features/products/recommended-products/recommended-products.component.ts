@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
     imports: [ButtonModule, CommonModule, CarouselModule, GalleriaModule, ImageModule, TagModule],
     templateUrl: './recommended-products.component.html',
     styleUrl: './recommended-products.component.css',
-    providers: [ProductService, PhotoService, Router]
+    providers: [ProductService, PhotoService]
 })
 export class RecommendedProductsComponent {
     products!: Product[];
