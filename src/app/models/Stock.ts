@@ -1,4 +1,4 @@
 export interface Stock {
-    ArRef: string;
-    AsQteSto: number;
+    arRef: string;
+    asQteSto: number;
 }

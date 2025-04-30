@@ -12,7 +12,16 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Stock } from '../../../models/Stock';
 import { StockService } from '../../../core/services/stock.service';
+
 type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' | undefined;
+
+// Define an interface for the rated product with stock
+interface RatedProductWithStock {
+    article: Product;
+    averageRating: number;
+    ratingCount: number;
+    stockQuantity?: number;
+}
 
 @Component({
     selector: 'app-top-rated',
@@ -21,12 +30,12 @@ type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contr
     styleUrl: './top-rated.component.css',
     providers: [ProductsService, StockService]
 })
-export class TopRatedComponent {
-    products!: Product[];
-    ratedProducts: { article: Product; averageRating: number; ratingCount: number }[] = [];
+export class TopRatedComponent implements OnInit {
+    ratedProducts: RatedProductWithStock[] = [];
     stocks: Stock[] = [];
     images!: any[];
     private readonly DEFAULT_PRODUCT_IMAGE = 'assets/general/product-default.png';
+
     constructor(
         private productServices: ProductsService,
         private router: Router,
@@ -36,18 +45,16 @@ export class TopRatedComponent {
     ngOnInit() {
         this.productServices.getTopRatedProducts().subscribe((response) => {
             this.ratedProducts = response.products;
-            this.products = response.products.map((item) => item.article);
-        });
-        this.stockService.getAllStock().subscribe((data) => {
-            this.stocks = data;
-        });
-        this.stockService.getAllStock().subscribe((stockData) => {
-            this.products = this.products.map((product) => {
-                const stock = stockData.find((s) => s.ArRef === product.artCode);
-                return { ...product, stockQuantity: stock?.AsQteSto ?? 0 };
+            this.stockService.getAllStock().subscribe((stockData) => {
+                this.ratedProducts = this.ratedProducts.map((product) => {
+                    const stock = stockData.find((s) => s.arRef === product.article.artCode);
+
+                    return { ...product, stockQuantity: stock?.asQteSto ?? 0 };
+                });
             });
         });
     }
+
     handleProductImageError(event: any): void {
         event.target.src = this.DEFAULT_PRODUCT_IMAGE;
     }
@@ -55,9 +62,11 @@ export class TopRatedComponent {
     getSeverity(stockValue: number): TagSeverity {
         return stockValue > 0 ? 'success' : 'danger';
     }
+
     getSeverityValue(stockValue: number): string {
         return stockValue > 0 ? 'En Stock' : 'Sold out';
     }
+
     carouselResponsiveOptions: any[] = [
         {
             breakpoint: '1024px',
@@ -75,6 +84,7 @@ export class TopRatedComponent {
             numScroll: 1
         }
     ];
+
     navigateToProductDetails(productId: string) {
         this.router.navigate(['/store/products', productId]);
     }

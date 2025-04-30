@@ -98,7 +98,8 @@
                                     <img src="http://localhost:91/Images/{{ product.artImageUrl }}" [alt]="product.artIntitule" (error)="handleProductImageError($event)" class="mx-auto object-contain h-48 w-full" />
                                 </div>
                                 <div class="absolute top-2 left-2">
-                                    <p-tag [value]="getSeverityValue(product.stockQuantity)" [severity]="getSeverity(product.stockQuantity)"></p-tag>
+                                    <!-- Update: Pass the entire product object instead of just stockQuantity -->
+                                    <p-tag [value]="getSeverityValue(product)" [severity]="getSeverity(product)"></p-tag>
                                 </div>
                             </div>
 
@@ -115,7 +116,8 @@
                                         <span class="text-xl font-semibold">{{ product.artPrixVente | currency: 'TND' : 'symbol' : '1.2-2' }}</span>
                                     </div>
                                     <div class="block">
-                                        <p-button (onClick)="$event.stopPropagation(); addToCart(product)" icon="pi pi-shopping-cart" label="Ajouter au panier" [disabled]="isOutOfStock(product.stockQuantity)" styleClass="w-full" raised></p-button>
+                                        <!-- Update: Pass product to isOutOfStock instead of just stockQuantity -->
+                                        <p-button (onClick)="$event.stopPropagation(); addToCart(product)" icon="pi pi-shopping-cart" label="Ajouter au panier" [disabled]="isOutOfStock(product)" styleClass="w-full" raised></p-button>
                                     </div>
                                 </div>
                             </div>

@@ -61,13 +61,11 @@ export class ProductDetailsComponent implements OnInit {
 
         this.productsService.getProductById(id).subscribe({
             next: (response: any) => {
-                if (response?.data) {
-                    this.product = response.data;
-                } else if (response) {
+                if (response) {
                     this.product = response;
                     this.stockService.getStockByCode(response.artCode).subscribe({
                         next: (stockData) => {
-                            this.stockQuantity = stockData.AsQteSto;
+                            this.stockQuantity = stockData.asQteSto;
                         },
                         error: (err) => {
                             console.error('Error loading stock data:', err);

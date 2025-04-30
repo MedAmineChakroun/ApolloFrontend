@@ -39,9 +39,9 @@ export class SimilarComponent {
             this.products = products.filter((product) => product.artId !== this.productId);
             this.stockService.getAllStock().subscribe((stockData) => {
                 this.products = this.products.map((product) => {
-                    const stock = stockData.find((s) => s.ArRef === product.artCode);
+                    const stock = stockData.find((s) => s.arRef === product.artCode);
 
-                    return { ...product, stockQuantity: stock?.AsQteSto ?? 0 };
+                    return { ...product, stockQuantity: stock?.asQteSto ?? 0 };
                 });
             });
         });

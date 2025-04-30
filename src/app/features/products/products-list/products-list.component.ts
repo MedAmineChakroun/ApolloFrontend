@@ -236,17 +236,12 @@ export class ProductsListComponent implements OnInit {
             next: (stockData: Stock[]) => {
                 this.stocks = stockData;
 
-                // Attach stock information to products
+                // Attach stock information to products using the same approach as TopSalesComponent
                 this.products = this.products.map((product) => {
-                    const stock = stockData.find((s) => s.ArRef === product.artCode);
+                    const stock = stockData.find((s) => s.arRef === product.artCode);
 
-                    // Update the product with stock quantity
-                    // Check if artEtat is already defined in the product, otherwise use stock quantity
-                    if (product.artEtat === undefined && stock) {
-                        product.artEtat = stock.AsQteSto > 0 ? 1 : 0;
-                    }
-
-                    return product;
+                    // Add stockQuantity property to the product
+                    return { ...product, stockQuantity: stock?.asQteSto ?? 0 };
                 });
 
                 // Apply filters after attaching stock data
@@ -458,7 +453,8 @@ export class ProductsListComponent implements OnInit {
 
             const matchesCategory = !category || product.artFamille.toLowerCase() === category.toLowerCase();
 
-            const matchesInStock = !inStock || product.artEtat > 0;
+            // Use stockQuantity instead of artEtat for in-stock filter
+            const matchesInStock = !inStock || (product as any).stockQuantity > 0;
 
             const searchTerm = search.toLowerCase();
             const matchesSearch = !searchTerm || product.artIntitule.toLowerCase().includes(searchTerm) || product.artCode.toLowerCase().includes(searchTerm) || product.artFamille.toLowerCase().includes(searchTerm);
@@ -497,18 +493,17 @@ export class ProductsListComponent implements OnInit {
         }, 50); // Wait 50ms before trying to scroll
     }
 
-    // artEtat is 1 for in stock, 0 for out of stock
-
-    getSeverity(stockValue: number): TagSeverity {
-        return stockValue > 0 ? 'success' : 'danger';
+    // Update stock methods to use stockQuantity property instead of artEtat
+    getSeverity(product: any): TagSeverity {
+        return product.stockQuantity > 0 ? 'success' : 'danger';
     }
 
-    getSeverityValue(stockValue: number): string {
-        return stockValue > 0 ? 'En Stock' : 'Sold out';
+    getSeverityValue(product: any): string {
+        return product.stockQuantity > 0 ? 'En Stock' : 'Sold out';
     }
 
-    isOutOfStock(stockValue: number): boolean {
-        return stockValue === 0;
+    isOutOfStock(product: any): boolean {
+        return product.stockQuantity === 0;
     }
 
     addToCart(product: Product) {
