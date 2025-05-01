@@ -82,7 +82,7 @@ import { filter } from 'rxjs/operators';
             <div class="menu-category menu-item-container">
                 <div class="menu-item expandable" (click)="toggleSubmenu('products')">
                     <div class="item-content">
-                        <i class="pi pi-shopping-cart"></i>
+                        <i class="pi pi-box"></i>
                         <span>Gestion Articles</span>
                     </div>
                     <i class="pi pi-chevron-right arrow" [ngClass]="{ 'arrow-expanded': expandedMenus['products'] }"></i>

@@ -126,26 +126,45 @@ export class EditAddProductComponent implements OnInit {
             // Edit existing product
             const productData = {
                 ...formData,
-                artId: this.productId
+                artId: this.productId,
+                artEtat: this.product.artEtat,
+                artCode: this.product.artCode,
+                artFlag: this.product.artFlag,
+                artDateCreation: this.product.artDateCreation
             };
+            console.log('Editing product with data:', productData);
 
-            // Simulated update for now
-            setTimeout(() => {
-                this.submitting = false;
-                this.toastr.success('Produit mis à jour avec succès', 'Succès');
-                this.router.navigate(['store/admin/products']);
-            }, 1000);
+            // Pass the uploadedFile as the second parameter
+            this.productService.updateProductWithImage(productData, this.uploadedFile || undefined).subscribe({
+                next: () => {
+                    this.toastr.success('Produit modifié avec succès', 'Succès');
+                    this.router.navigate(['store/admin/products']);
+                },
+                error: (error) => {
+                    console.error('Error editing product:', error);
+                    this.toastr.error('Erreur lors de la modification du produit', 'Erreur');
+                },
+                complete: () => {
+                    this.submitting = false;
+                }
+            });
         } else {
-            // Create new product
-            // Simulated create for now
-            setTimeout(() => {
-                this.submitting = false;
-                this.toastr.success('Produit créé avec succès', 'Succès');
-                this.router.navigate(['store/admin/products']);
-            }, 1000);
+            // Pass the uploadedFile as the second parameter
+            this.productService.createProductWithImage(formData, this.uploadedFile || undefined).subscribe({
+                next: () => {
+                    this.toastr.success('Produit ajouté avec succès', 'Succès');
+                    this.router.navigate(['store/admin/products']);
+                },
+                error: (error) => {
+                    console.error('Error adding product:', error);
+                    this.toastr.error("Erreur lors de l'ajout du produit", 'Erreur');
+                },
+                complete: () => {
+                    this.submitting = false;
+                }
+            });
         }
     }
-
     // Helper to mark all controls as touched for validation
     markFormGroupTouched(formGroup: FormGroup) {
         Object.values(formGroup.controls).forEach((control) => {
