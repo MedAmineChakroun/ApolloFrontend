@@ -18,8 +18,16 @@ import { Product } from '../../../models/Product';
 import { ProductsService } from '../../../core/services/products.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
-// Define valid severity types for p-tag to match PrimeNG's expected types
+import { Stock } from '../../../models/Stock';
+import { StockService } from '../../../core/services/stock.service';
+
 type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' | undefined;
+
+// Enhanced interface for products with stock information
+interface ProductWithStock {
+    article: Product;
+    stockQuantity: number;
+}
 
 @Component({
     selector: 'app-product-management',
@@ -31,9 +39,9 @@ type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contr
 })
 export class ProductManagementComponent implements OnInit {
     @ViewChild('dt') table!: Table;
-
-    products: Product[] = [];
-    selectedProduct: Product | null = null;
+    stocks: Stock[] = [];
+    products: ProductWithStock[] = [];
+    selectedProduct: ProductWithStock | null = null;
     dialogVisible: boolean = false;
     loading: boolean = true;
     private readonly DEFAULT_PRODUCT_IMAGE = 'assets/general/product-default.png';
@@ -44,10 +52,10 @@ export class ProductManagementComponent implements OnInit {
 
     constructor(
         private confirmationService: ConfirmationService,
-        private messageService: MessageService,
         private productService: ProductsService,
         private toastr: ToastrService,
-        private router: Router
+        private router: Router,
+        private stockService: StockService
     ) {}
 
     ngOnInit() {
@@ -56,20 +64,43 @@ export class ProductManagementComponent implements OnInit {
 
     loadProducts() {
         this.loading = true;
-        // Simulating API call with static data
         this.productService.getProducts().subscribe({
             next: (response: any) => {
-                this.products = response?.data?.produits;
-                this.loading = false;
+                const productData = response?.data?.produits || [];
+
+                // First initialize products with zero stock
+                this.products = productData.map((product: any) => ({
+                    article: product,
+                    stockQuantity: 0
+                }));
+
+                // Then load stock data and update the products
+                this.stockService.getAllStock().subscribe({
+                    next: (stockData) => {
+                        this.products = this.products.map((product) => {
+                            const stock = stockData.find((s) => s.arRef === product.article.artCode);
+                            return {
+                                ...product,
+                                stockQuantity: stock?.asQteSto ?? 0
+                            };
+                        });
+                        this.loading = false;
+                    },
+                    error: (error) => {
+                        console.error('Error loading stock data:', error);
+                        this.loading = false;
+                    }
+                });
             },
             error: (error) => {
                 console.error('Error loading products:', error);
                 this.loading = false;
+                this.toastr.error('Failed to load products', 'Error');
             }
         });
     }
 
-    viewProductDetails(product: Product) {
+    viewProductDetails(product: ProductWithStock) {
         this.selectedProduct = product;
         this.dialogVisible = true;
     }
@@ -88,7 +119,6 @@ export class ProductManagementComponent implements OnInit {
             rejectLabel: 'Non',
             rejectButtonStyleClass: 'p-button-danger',
             accept: () => {
-                // In a real app, you would call an API to delete the product
                 this.productService.deleteProduct(product.artId).subscribe({
                     next: () => {
                         this.loadProducts();
@@ -98,6 +128,10 @@ export class ProductManagementComponent implements OnInit {
                             closeButton: true,
                             progressBar: true
                         });
+                    },
+                    error: (error) => {
+                        console.error('Error deleting product:', error);
+                        this.toastr.error('Failed to delete product', 'Error');
                     }
                 });
             }
@@ -105,11 +139,11 @@ export class ProductManagementComponent implements OnInit {
     }
 
     exportToCSV() {
-        // Correct CSV headers (no Stock Status now)
-        let csvContent = 'ID,Code,Name,Category,Sale Price,Cost Price,Unit,Image URL,VAT Rate,Flag,Created Date\n';
+        // Include stock quantity in the CSV
+        let csvContent = 'ID,Code,Name,Category,Sale Price,Cost Price,Stock Quantity,Unit,Status,Image URL,VAT Rate,Flag,Created Date\n';
 
         this.products.forEach((product) => {
-            csvContent += `${product.artId},${product.artCode},"${product.artIntitule}",${product.artFamille},${product.artPrixVente.toFixed(3)},${product.artPrixAchat.toFixed(3)},${product.artUnite},${product.artImageUrl},${product.artTvaTaux},${product.artFlag},"${new Date(product.artDateCreate).toLocaleDateString()}"\n`;
+            csvContent += `${product.article.artId},${product.article.artCode},"${product.article.artIntitule}",${product.article.artFamille},${product.article.artPrixVente.toFixed(3)},${product.article.artPrixAchat.toFixed(3)},${product.stockQuantity},${product.article.artUnite},${product.article.artEtat},${product.article.artImageUrl},${product.article.artTvaTaux},${product.article.artFlag},"${new Date(product.article.artDateCreate).toLocaleDateString()}"\n`;
         });
 
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -124,7 +158,6 @@ export class ProductManagementComponent implements OnInit {
         link.click();
         document.body.removeChild(link);
 
-        // Use toastr instead of messageService
         this.toastr.info('Produits exportés avec succès.', 'Succès', {
             positionClass: 'toast-top-right',
             timeOut: 3000,
@@ -133,20 +166,23 @@ export class ProductManagementComponent implements OnInit {
         });
     }
 
-    // Fixed method to return the specific TagSeverity type
-    getStockStatusSeverity(stock: number): TagSeverity {
+    // Stock status methods - now correctly using the stockQuantity parameter
+    getStockStatusSeverity(stockQty: number | undefined): TagSeverity {
+        const stock = stockQty || 0;
         if (stock <= 10) return 'danger';
         if (stock <= 30) return 'warn';
         return 'success';
     }
 
-    getStockStatusLabel(stock: number): string {
+    getStockStatusLabel(stockQty: number | undefined): string {
+        const stock = stockQty || 0;
         if (stock <= 10) return 'Low';
         if (stock <= 30) return 'Medium';
         return 'High';
     }
 
-    getStockIcon(stock: number): string {
+    getStockIcon(stockQty: number | undefined): string {
+        const stock = stockQty || 0;
         if (stock <= 10) return 'pi pi-exclamation-circle';
         if (stock <= 30) return 'pi pi-info-circle';
         return 'pi pi-check-circle';
@@ -160,27 +196,24 @@ export class ProductManagementComponent implements OnInit {
         if (product.artPrixAchat === 0) return 0;
         return ((product.artPrixVente - product.artPrixAchat) / product.artPrixAchat) * 100;
     }
-    // Fixed method to return the specific TagSeverity type
-    getSyncStatusSeverity(Sync: number): TagSeverity {
-        if (Sync == 0) return 'danger';
-        if (Sync == 1) return 'success';
-        return 'success';
+
+    // Sync status methods
+    getSyncStatusSeverity(sync: number): TagSeverity {
+        return sync === 0 ? 'danger' : 'success';
     }
 
-    getSyncStatusLabel(Sync: number): string {
-        if (Sync == 0) return 'non synchronisé';
-        if (Sync == 1) return 'synchronisé';
-        return 'synchronisé';
+    getSyncStatusLabel(sync: number): string {
+        return sync === 0 ? 'non synchronisé' : 'synchronisé';
     }
 
-    getSyncIcon(Sync: number): string {
-        if (Sync == 0) return 'pi pi-exclamation-circle';
-        if (Sync == 1) return 'pi pi-check-circle';
-        return 'pi pi-check-circle';
+    getSyncIcon(sync: number): string {
+        return sync === 0 ? 'pi pi-exclamation-circle' : 'pi pi-check-circle';
     }
+
     navigateToEdit(product: Product) {
         this.router.navigate(['store/admin/products/edit/', product.artId]);
     }
+
     navigateToCreate() {
         this.router.navigate(['store/admin/products/add']);
     }

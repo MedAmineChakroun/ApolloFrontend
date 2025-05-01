@@ -250,3 +250,8 @@
         }
     }
 }
+::ng-deep .p-dialog .p-dialog-header {
+    background-color: var(--primary-color); /* or any color you like */
+    color: white;
+    border-radius: 12px 12px 0 0;
+}

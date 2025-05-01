@@ -31,7 +31,7 @@
             [rowsPerPageOptions]="[5, 10, 25, 50]"
             [loading]="loading"
             styleClass="p-datatable-sm p-datatable-gridlines"
-            [globalFilterFields]="['artCode', 'artIntitule', 'artFamille']"
+            [globalFilterFields]="['article.artCode', 'article.artIntitule', 'article.artFamille']"
             responsiveLayout="scroll"
         >
             <ng-template pTemplate="caption">
@@ -39,7 +39,7 @@
                     <h5 class="m-0">Manage Products</h5>
                     <span class="p-input-icon-left">
                         <i class="pi pi-search"></i>
-                        <input pInputText type="text" placeholder="Search by code" #codeFilter (input)="dt.filter(codeFilter.value, 'artCode', 'contains')" />
+                        <input pInputText type="text" placeholder="Search by code" #codeFilter (input)="dt.filter(codeFilter.value, 'article.artCode', 'contains')" />
                     </span>
                 </div>
             </ng-template>
@@ -47,14 +47,14 @@
             <ng-template pTemplate="header">
                 <tr>
                     <th style="min-width: 5rem"></th>
-                    <th pSortableColumn="artCode" style="width: 6rem">Code <p-sortIcon field="artCode"></p-sortIcon></th>
-                    <th pSortableColumn="artIntitule" style="width: 12rem">intitule <p-sortIcon field="artIntitule"></p-sortIcon></th>
-                    <th pSortableColumn="artFamille" style="width: 8rem">Famille <p-sortIcon field="artFamille"></p-sortIcon></th>
-                    <th pSortableColumn="artPrixVente" style="width: 8rem">Prix vente <p-sortIcon field="artPrixVente"></p-sortIcon></th>
-                    <th pSortableColumn="artPrixAchat" style="width: 8rem">Prix achat <p-sortIcon field="artPrixAchat"></p-sortIcon></th>
-                    <th pSortableColumn="artTvaTaux" style="min-width: 6rem">Stock <p-sortIcon field="artTvaTaux"></p-sortIcon></th>
-                    <th pSortableColumn="artTvaTaux" style="min-width: 5rem">Tva <p-sortIcon field="artTvaTaux"></p-sortIcon></th>
-                    <th pSortableColumn="artFlag" style="min-width: 4rem">Sync <p-sortIcon field="artFlag"></p-sortIcon></th>
+                    <th pSortableColumn="article.artCode" style="width: 6rem">Code <p-sortIcon field="article.artCode"></p-sortIcon></th>
+                    <th pSortableColumn="article.artIntitule" style="width: 12rem">intitule <p-sortIcon field="article.artIntitule"></p-sortIcon></th>
+                    <th pSortableColumn="article.artFamille" style="width: 8rem">Famille <p-sortIcon field="article.artFamille"></p-sortIcon></th>
+                    <th pSortableColumn="article.artPrixVente" style="width: 8rem">Prix vente <p-sortIcon field="article.artPrixVente"></p-sortIcon></th>
+                    <th pSortableColumn="article.artPrixAchat" style="width: 8rem">Prix achat <p-sortIcon field="article.artPrixAchat"></p-sortIcon></th>
+                    <th pSortableColumn="stockQuantity" style="min-width: 6rem">Stock <p-sortIcon field="stockQuantity"></p-sortIcon></th>
+                    <th pSortableColumn="article.artTvaTaux" style="min-width: 5rem">Tva <p-sortIcon field="article.artTvaTaux"></p-sortIcon></th>
+                    <th pSortableColumn="article.artFlag" style="min-width: 4rem">Sync <p-sortIcon field="article.artFlag"></p-sortIcon></th>
                     <th style="min-width: 10rem">Actions</th>
                 </tr>
             </ng-template>
@@ -63,27 +63,27 @@
                 <tr>
                     <td class="mr-0" style="padding: 0 !important">
                         <div class="profile-image ml-4">
-                            <img src="http://localhost:91/Images/{{ product.artImageUrl }}" alt="Product Image" (error)="handleProductImageError($event)" style="width: 50px; height: 50px; border-radius: 4px; object-fit: cover" />
+                            <img src="http://localhost:91/Images/{{ product.article.artImageUrl }}" alt="Product Image" (error)="handleProductImageError($event)" style="width: 50px; height: 50px; border-radius: 4px; object-fit: cover" />
                         </div>
                     </td>
-                    <td>#{{ product.artCode }}</td>
-                    <td>{{ product.artIntitule }}</td>
-                    <td>{{ product.artFamille }}</td>
-                    <td>{{ product.artPrixVente | currency: 'TND' : 'symbol' : '1.3-3' }}</td>
-                    <td>{{ product.artPrixAchat | currency: 'TND' : 'symbol' : '1.3-3' }}</td>
+                    <td>#{{ product.article.artCode }}</td>
+                    <td>{{ product.article.artIntitule }}</td>
+                    <td>{{ product.article.artFamille }}</td>
+                    <td>{{ product.article.artPrixVente | currency: 'TND' : 'symbol' : '1.3-3' }}</td>
+                    <td>{{ product.article.artPrixAchat | currency: 'TND' : 'symbol' : '1.3-3' }}</td>
 
                     <td>
-                        <p-tag [value]="getStockStatusLabel(product.stock)" [severity]="getStockStatusSeverity(product.stock)" [icon]="getStockIcon(product.stock)"> </p-tag>
-                        <span class="ml-2">{{ product.artEtat }} {{ product.artUnite }}(s)</span>
+                        <p-tag [value]="getStockStatusLabel(product.stockQuantity)" [severity]="getStockStatusSeverity(product.stockQuantity)" [icon]="getStockIcon(product.stockQuantity)"> </p-tag>
+                        <span class="ml-2">{{ product.stockQuantity }} {{ product.article.artUnite }}(s)</span>
                     </td>
-                    <td>{{ product.artTvaTaux }}%</td>
+                    <td>{{ product.article.artTvaTaux }}%</td>
                     <td>
-                        <p-tag [value]="getSyncStatusLabel(product.artFlag)" [severity]="getSyncStatusSeverity(product.artFlag)" [icon]="getSyncIcon(product.artFlag)"> </p-tag>
+                        <p-tag [value]="getSyncStatusLabel(product.article.artFlag)" [severity]="getSyncStatusSeverity(product.article.artFlag)" [icon]="getSyncIcon(product.article.artFlag)"> </p-tag>
                     </td>
                     <td class="flex gap-2 justify-content-center">
                         <button pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-info" (click)="viewProductDetails(product)" pTooltip="View Details" tooltipPosition="top"></button>
-                        <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success" (click)="navigateToEdit(product)" pTooltip="Edit" tooltipPosition="top"></button>
-                        <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="confirmDelete(product)" pTooltip="Delete" tooltipPosition="top"></button>
+                        <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success" (click)="navigateToEdit(product.article)" pTooltip="Edit" tooltipPosition="top"></button>
+                        <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="confirmDelete(product.article)" pTooltip="Delete" tooltipPosition="top"></button>
                     </td>
                 </tr>
             </ng-template>
@@ -102,28 +102,28 @@
             <!-- View Mode -->
             <div class="product-container">
                 <!-- Header with close button -->
-                <div class="product-modal-header">
-                    <h2 class="modal-title">Product Details</h2>
+                <div class="product-modal-header bg-primary-500">
+                    <h2 class="modal-title text-white">Product Details</h2>
                 </div>
 
                 <!-- Product image and primary info section -->
                 <div class="product-hero">
                     <div class="product-image-container">
-                        <img src="http://localhost:91/Images/{{ selectedProduct.artImageUrl }}" alt="{{ selectedProduct.artIntitule }}" (error)="handleProductImageError($event)" />
+                        <img src="http://localhost:91/Images/{{ selectedProduct.article.artImageUrl }}" alt="{{ selectedProduct.article.artIntitule }}" (error)="handleProductImageError($event)" />
                     </div>
                     <div class="product-primary-info">
                         <div class="product-title-section">
-                            <h3 class="product-name">{{ selectedProduct.artIntitule }}</h3>
-                            <div class="product-code">#{{ selectedProduct.artCode }}</div>
+                            <h3 class="product-name">{{ selectedProduct.article.artIntitule }}</h3>
+                            <div class="product-code">#{{ selectedProduct.article.artCode }}</div>
                         </div>
 
                         <div class="stock-info">
-                            <p-tag [value]="getStockStatusLabel(selectedProduct.artEtat)" [severity]="getStockStatusSeverity(selectedProduct.artEtat)" [icon]="getStockIcon(selectedProduct.artEtat)"> </p-tag>
-                            <span class="stock-quantity">{{ selectedProduct.artEtat }} {{ selectedProduct.artUnite }}(s)</span>
+                            <p-tag [value]="getStockStatusLabel(selectedProduct.stockQuantity)" [severity]="getStockStatusSeverity(selectedProduct.stockQuantity)" [icon]="getStockIcon(selectedProduct.stockQuantity)"> </p-tag>
+                            <span class="stock-quantity">{{ selectedProduct.stockQuantity }} {{ selectedProduct.article.artUnite }}(s)</span>
                         </div>
 
                         <div class="sync-status">
-                            <p-tag [value]="getSyncStatusLabel(selectedProduct.artFlag)" [severity]="getSyncStatusSeverity(selectedProduct.artFlag)" [icon]="getSyncIcon(selectedProduct.artFlag)"> </p-tag>
+                            <p-tag [value]="getSyncStatusLabel(selectedProduct.article.artFlag)" [severity]="getSyncStatusSeverity(selectedProduct.article.artFlag)" [icon]="getSyncIcon(selectedProduct.article.artFlag)"> </p-tag>
                         </div>
                     </div>
                 </div>
@@ -132,18 +132,18 @@
                 <div class="price-cards">
                     <div class="price-card">
                         <div class="price-card-header">Sale Price</div>
-                        <div class="price-card-value sale-price">{{ selectedProduct.artPrixVente | currency: 'TND' }}</div>
+                        <div class="price-card-value sale-price">{{ selectedProduct.article.artPrixVente | currency: 'TND' }}</div>
                     </div>
                     <div class="price-card">
                         <div class="price-card-header">Cost Price</div>
-                        <div class="price-card-value cost-price">{{ selectedProduct.artPrixAchat | currency: 'TND' }}</div>
+                        <div class="price-card-value cost-price">{{ selectedProduct.article.artPrixAchat | currency: 'TND' }}</div>
                     </div>
                     <div class="price-card">
                         <div class="price-card-header">Profit</div>
-                        <div class="price-card-value" [ngClass]="calculateProfit(selectedProduct) > 0 ? 'profit-positive' : 'profit-negative'">
-                            {{ calculateProfit(selectedProduct) | currency: 'TND' }}
+                        <div class="price-card-value" [ngClass]="calculateProfit(selectedProduct.article) > 0 ? 'profit-positive' : 'profit-negative'">
+                            {{ calculateProfit(selectedProduct.article) | currency: 'TND' }}
                         </div>
-                        <div class="price-card-subtitle">{{ calculateProfitMargin(selectedProduct) | number: '1.0-2' }}% margin</div>
+                        <div class="price-card-subtitle">{{ calculateProfitMargin(selectedProduct.article) | number: '1.0-2' }}% margin</div>
                     </div>
                 </div>
 
@@ -153,26 +153,30 @@
                     <div class="details-grid">
                         <div class="detail-item">
                             <div class="detail-label">Category</div>
-                            <div class="detail-value">{{ selectedProduct.artFamille }}</div>
+                            <div class="detail-value">{{ selectedProduct.article.artFamille }}</div>
                         </div>
                         <div class="detail-item">
                             <div class="detail-label">Unit Type</div>
-                            <div class="detail-value">{{ selectedProduct.artUnite }}</div>
+                            <div class="detail-value">{{ selectedProduct.article.artUnite }}</div>
                         </div>
                         <div class="detail-item">
                             <div class="detail-label">VAT Rate</div>
-                            <div class="detail-value">{{ selectedProduct.artTvaTaux }}%</div>
+                            <div class="detail-value">{{ selectedProduct.article.artTvaTaux }}%</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Status</div>
+                            <div class="detail-value">{{ selectedProduct.article.artEtat === 1 ? 'Active' : 'Inactive' }}</div>
                         </div>
                         <div class="detail-item">
                             <div class="detail-label">Created On</div>
-                            <div class="detail-value">{{ selectedProduct.artDateCreate | date: 'medium' }}</div>
+                            <div class="detail-value">{{ selectedProduct.article.artDateCreate | date: 'medium' }}</div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Footer with action buttons -->
                 <div class="modal-footer">
-                    <button pButton pRipple icon="pi pi-pencil" label="Edit" class="p-button-outlined p-button-primary" (click)="navigateToEdit(selectedProduct)"></button>
+                    <button pButton pRipple icon="pi pi-pencil" label="Edit" class="p-button-outlined p-button-primary" (click)="navigateToEdit(selectedProduct.article)"></button>
                     <button pButton pRipple icon="pi pi-times" label="Close" class="p-button-text" (click)="closeDialog()"></button>
                 </div>
             </div>
