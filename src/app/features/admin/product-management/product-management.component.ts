@@ -17,6 +17,7 @@ import { Table } from 'primeng/table';
 import { Product } from '../../../models/Product';
 import { ProductsService } from '../../../core/services/products.service';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 // Define valid severity types for p-tag to match PrimeNG's expected types
 type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' | undefined;
 
@@ -35,7 +36,6 @@ export class ProductManagementComponent implements OnInit {
     selectedProduct: Product | null = null;
     dialogVisible: boolean = false;
     loading: boolean = true;
-    editMode: boolean = false;
     private readonly DEFAULT_PRODUCT_IMAGE = 'assets/general/product-default.png';
 
     handleProductImageError(event: any): void {
@@ -46,7 +46,8 @@ export class ProductManagementComponent implements OnInit {
         private confirmationService: ConfirmationService,
         private messageService: MessageService,
         private productService: ProductsService,
-        private toastr: ToastrService
+        private toastr: ToastrService,
+        private router: Router
     ) {}
 
     ngOnInit() {
@@ -71,13 +72,6 @@ export class ProductManagementComponent implements OnInit {
     viewProductDetails(product: Product) {
         this.selectedProduct = product;
         this.dialogVisible = true;
-        this.editMode = false;
-    }
-
-    editProduct(product: Product) {
-        this.selectedProduct = { ...product };
-        this.dialogVisible = true;
-        this.editMode = true;
     }
 
     closeDialog() {
@@ -184,17 +178,10 @@ export class ProductManagementComponent implements OnInit {
         if (Sync == 1) return 'pi pi-check-circle';
         return 'pi pi-check-circle';
     }
-    saveProduct() {}
-
-    // Method to cancel editing and return to view mode
-    cancelEdit() {
-        // Restore original product data
-        if (this.selectedProduct) {
-            const originalProduct = this.products.find((p) => p.artId === this.selectedProduct?.artId);
-            if (originalProduct) {
-                this.selectedProduct = { ...originalProduct };
-            }
-        }
-        this.editMode = false;
+    navigateToEdit(product: Product) {
+        this.router.navigate(['store/admin/products/edit/', product.artId]);
+    }
+    navigateToCreate() {
+        this.router.navigate(['store/admin/products/add']);
     }
 }

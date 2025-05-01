@@ -31,7 +31,7 @@ export class PromoBannerComponent implements OnInit {
         {
             title: 'DES OFFRES SPÉCIALES',
             buttonText: 'Découvrir',
-            imageUrl: 'assets/general/promo6.png'
+            imageUrl: 'assets/general/promo9.png'
         },
         {
             title: 'À NE PAS RATER',

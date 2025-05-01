@@ -1,0 +1,134 @@
+<div class="container p-0">
+    <div class="card-container">
+        <p-card styleClass="product-form-card">
+            <ng-template pTemplate="header">
+                <div class="card-header bg-teal-500 text-white d-flex align-items-center gap-2">
+                    <i class="pi pi-box"></i>
+                    <h2 class="mt-2 mb-2= text-white">{{ pageTitle }}</h2>
+                </div>
+            </ng-template>
+
+            <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+                <div class="p-fluid form-grid m-0">
+                    <!-- Product Name -->
+                    <div class="form-field">
+                        <label for="artIntitule" class="field-label">Nom du produit*</label>
+                        <span class="p-input-icon-right">
+                            <input pInputText id="artIntitule" type="text" formControlName="artIntitule" placeholder="Entrez le nom du produit" [ngClass]="{ 'ng-invalid ng-dirty': isInvalid('artIntitule') }" />
+                        </span>
+                        <small *ngIf="isInvalid('artIntitule')" class="p-error"> Le nom du produit est requis. </small>
+                    </div>
+
+                    <!-- Category -->
+                    <div class="form-field">
+                        <label for="artFamille" class="field-label">Catégorie*</label>
+                        <p-dropdown id="artFamille" formControlName="artFamille" [options]="categories" optionLabel="famIntitule" optionValue="famIntitule" placeholder="Sélectionnez une catégorie" [showClear]="true" styleClass="w-full"></p-dropdown>
+
+                        <small *ngIf="isInvalid('artFamille')" class="p-error"> La catégorie est requise. </small>
+                    </div>
+
+                    <!-- Sale Price -->
+                    <div class="form-field">
+                        <label for="artPrixVente" class="field-label">Prix de vente*</label>
+                        <p-inputNumber
+                            id="artPrixVente"
+                            formControlName="artPrixVente"
+                            mode="decimal"
+                            [minFractionDigits]="3"
+                            [maxFractionDigits]="3"
+                            placeholder="0.000"
+                            suffix=" TND"
+                            [ngClass]="{ 'ng-invalid ng-dirty': isInvalid('artPrixVente') }"
+                        ></p-inputNumber>
+                        <small *ngIf="isInvalid('artPrixVente')" class="p-error"> Le prix de vente est requis et doit être positif. </small>
+                    </div>
+
+                    <!-- Cost Price -->
+                    <div class="form-field">
+                        <label for="artPrixAchat" class="field-label">Prix d'achat*</label>
+                        <p-inputNumber
+                            id="artPrixAchat"
+                            formControlName="artPrixAchat"
+                            mode="decimal"
+                            [minFractionDigits]="3"
+                            [maxFractionDigits]="3"
+                            placeholder="0.000"
+                            suffix=" TND"
+                            [ngClass]="{ 'ng-invalid ng-dirty': isInvalid('artPrixAchat') }"
+                        ></p-inputNumber>
+                        <small *ngIf="isInvalid('artPrixAchat')" class="p-error"> Le prix d'achat est requis et doit être positif. </small>
+                    </div>
+
+                    <!-- Unit -->
+                    <div class="form-field">
+                        <label for="artUnite" class="field-label">Unité*</label>
+                        <input id="artUnite" formControlName="artUnite" class="p-inputtext" [ngClass]="{ 'ng-invalid ng-dirty': isInvalid('artUnite') }" />
+
+                        <small *ngIf="isInvalid('artUnite')" class="p-error"> L'unité est requise. </small>
+                    </div>
+                    <!-- VAT Rate -->
+                    <div class="form-field">
+                        <label for="artTvaTaux" class="field-label">Taux de TVA (%) *</label>
+                        <input id="artTvaTaux" type="number" formControlName="artTvaTaux" placeholder="Ex: 20" class="p-inputtext" [ngClass]="{ 'ng-invalid ng-dirty': isInvalid('artTvaTaux') }" min="0" max="100" step="0.01" />
+                        <small *ngIf="isInvalid('artTvaTaux')" class="p-error"> Le taux de TVA est requis et doit être entre 0 et 100. </small>
+                    </div>
+
+                    <!-- Simplified Image Upload Field -->
+                    <div class="form-field image-upload-field">
+                        <label class="field-label">Image du produit</label>
+
+                        <div class="flex align-items-start gap-4">
+                            <!-- Left side: Image preview area with border -->
+                            <div class="image-preview-area border-1 border-gray-300 border-round p-2 relative" style="width: 250px; height: 200px">
+                                <!-- Current Server Image Preview -->
+                                <div *ngIf="isEditMode && product?.artImageUrl && !productForm.get('artImageUrl')?.value" class="h-full flex flex-column align-items-center">
+                                    <img [src]="imageBaseUrl + product.artImageUrl" [alt]="'Image de ' + (product.artIntitule || 'produit')" class="max-w-full max-h-full object-fit-contain" />
+                                    <span class="text-sm text-gray-700 absolute top-0 right-0 p-1 bg-gray-100">{{ product.artImageUrl }}</span>
+                                </div>
+
+                                <!-- New Image Preview (from file upload) -->
+                                <div *ngIf="productForm.get('artImageUrl')?.value" class="h-full flex flex-column align-items-center">
+                                    <img [src]="productForm.get('artImageUrl')?.value" [alt]="'Image de ' + (productForm.get('artIntitule')?.value || 'produit')" class="max-w-full max-h-full object-fit-contain" />
+                                    <span class="text-sm text-gray-700 absolute top-0 right-0 p-1 bg-gray-100">{{ uploadedFile?.name || 'Nouvelle image' }}</span>
+                                </div>
+
+                                <!-- Empty state -->
+                                <div *ngIf="(!isEditMode || !product?.artImageUrl) && !productForm.get('artImageUrl')?.value" class="h-full flex flex-column align-items-center justify-content-center text-gray-500">
+                                    <i class="pi pi-image text-4xl mb-2"></i>
+                                    <span>Aucune image</span>
+                                </div>
+                            </div>
+
+                            <!-- Right side: Upload controls -->
+                            <div class="flex flex-column gap-2">
+                                <!-- Upload Button styled like the orange button in your example -->
+                                <p-fileUpload
+                                    #fileUpload
+                                    mode="basic"
+                                    name="product-image"
+                                    accept="image/*"
+                                    [maxFileSize]="3000000"
+                                    [auto]="true"
+                                    chooseIcon="pi pi-plus"
+                                    chooseLabel="{{ (isEditMode && product?.artImageUrl) || productForm.get('artImageUrl')?.value ? 'Changer l\'image' : 'Choisir une image' }}"
+                                    styleClass="p-button-rounded p-button-warning"
+                                    class="custom-upload-btn"
+                                    (onSelect)="onImageUpload($event)"
+                                ></p-fileUpload>
+
+                                <!-- Format hint -->
+                                <small class="image-hint text-gray-600 mt-2">Format recommandé: JPG ou PNG, 3MB max.</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="form-actions m-0">
+                    <button pButton type="button" label="Annuler" icon="pi pi-times" class="p-button-outlined p-button-secondary" (click)="onCancel()"></button>
+                    <button pButton type="submit" [label]="isEditMode ? 'Mettre à jour' : 'Enregistrer'" icon="pi pi-check" [loading]="submitting" styleClass="bg-teal-500"></button>
+                </div>
+            </form>
+        </p-card>
+    </div>
+</div>

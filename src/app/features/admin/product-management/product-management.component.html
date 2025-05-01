@@ -16,7 +16,7 @@
             </div>
 
             <div class="p-toolbar-group-end">
-                <p-button label="Ajouter" icon="pi pi-plus" styleClass="bg-primary-600 mr-2"></p-button>
+                <p-button label="Ajouter" icon="pi pi-plus" styleClass="bg-primary-600 mr-2" (click)="navigateToCreate()"></p-button>
                 <p-button label="Export to CSV" icon="pi pi-download" styleClass="p-button-success mr-2" (click)="exportToCSV()"></p-button>
                 <button pButton label="Refresh" icon="pi pi-refresh" class="p-button-outlined" (click)="loadProducts()"></button>
             </div>
@@ -82,7 +82,7 @@
                     </td>
                     <td class="flex gap-2 justify-content-center">
                         <button pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-info" (click)="viewProductDetails(product)" pTooltip="View Details" tooltipPosition="top"></button>
-                        <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success" (click)="editProduct(product)" pTooltip="Edit" tooltipPosition="top"></button>
+                        <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success" (click)="navigateToEdit(product)" pTooltip="Edit" tooltipPosition="top"></button>
                         <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="confirmDelete(product)" pTooltip="Delete" tooltipPosition="top"></button>
                     </td>
                 </tr>
@@ -98,7 +98,7 @@
 
     <!-- Enhanced Product Details Modal -->
     <p-dialog [visible]="dialogVisible" (visibleChange)="dialogVisible = $event" [style]="{ width: '650px', maxWidth: '95vw' }" [modal]="true" styleClass="p-fluid product-details-modal" [showHeader]="false">
-        <ng-container *ngIf="selectedProduct && !editMode">
+        <ng-container *ngIf="selectedProduct">
             <!-- View Mode -->
             <div class="product-container">
                 <!-- Header with close button -->
@@ -172,79 +172,8 @@
 
                 <!-- Footer with action buttons -->
                 <div class="modal-footer">
-                    <button pButton pRipple icon="pi pi-pencil" label="Edit" class="p-button-outlined p-button-primary" (click)="editProduct(selectedProduct)"></button>
+                    <button pButton pRipple icon="pi pi-pencil" label="Edit" class="p-button-outlined p-button-primary" (click)="navigateToEdit(selectedProduct)"></button>
                     <button pButton pRipple icon="pi pi-times" label="Close" class="p-button-text" (click)="closeDialog()"></button>
-                </div>
-            </div>
-        </ng-container>
-
-        <ng-container *ngIf="selectedProduct && editMode">
-            <!-- Edit Mode -->
-            <div class="product-container">
-                <!-- Header with close button -->
-                <div class="product-modal-header">
-                    <h2 class="modal-title">Edit Product</h2>
-                    <button pButton pRipple icon="pi pi-times" class="p-button-rounded p-button-text p-button-plain" aria-label="Close" (click)="cancelEdit()"></button>
-                </div>
-
-                <!-- Edit form -->
-                <div class="edit-form">
-                    <div class="p-grid">
-                        <div class="p-col-12 p-md-6">
-                            <div class="p-field">
-                                <label for="code">Product Code</label>
-                                <input type="text" pInputText id="code" [(ngModel)]="selectedProduct.artCode" />
-                            </div>
-                        </div>
-                        <div class="p-col-12 p-md-6">
-                            <div class="p-field">
-                                <label for="name">Product Name</label>
-                                <input type="text" pInputText id="name" [(ngModel)]="selectedProduct.artIntitule" />
-                            </div>
-                        </div>
-                        <div class="p-col-12 p-md-6">
-                            <div class="p-field">
-                                <label for="category">Category</label>
-                                <input type="text" pInputText id="category" [(ngModel)]="selectedProduct.artFamille" />
-                            </div>
-                        </div>
-                        <div class="p-col-12 p-md-6">
-                            <div class="p-field">
-                                <label for="price">Sale Price</label>
-                                <p-inputNumber id="price" [(ngModel)]="selectedProduct.artPrixVente" mode="decimal"></p-inputNumber>
-                            </div>
-                        </div>
-                        <div class="p-col-12 p-md-6">
-                            <div class="p-field">
-                                <label for="cost">Cost Price</label>
-                                <p-inputNumber id="cost" [(ngModel)]="selectedProduct.artPrixAchat" mode="decimal"></p-inputNumber>
-                            </div>
-                        </div>
-                        <div class="p-col-12 p-md-6">
-                            <div class="p-field">
-                                <label for="stock">Stock Quantity</label>
-                                <p-inputNumber id="stock" [(ngModel)]="selectedProduct.artEtat" mode="decimal"></p-inputNumber>
-                            </div>
-                        </div>
-                        <div class="p-col-12 p-md-6">
-                            <div class="p-field">
-                                <label for="unit">Unit</label>
-                                <input type="text" pInputText id="unit" [(ngModel)]="selectedProduct.artUnite" />
-                            </div>
-                        </div>
-                        <div class="p-col-12 p-md-6">
-                            <div class="p-field">
-                                <label for="vat">VAT Rate (%)</label>
-                                <p-inputNumber id="vat" [(ngModel)]="selectedProduct.artTvaTaux" mode="decimal"></p-inputNumber>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Footer with action buttons -->
-                <div class="modal-footer">
-                    <button pButton pRipple icon="pi pi-check" label="Save" class="p-button-success" (click)="saveProduct()"></button>
-                    <button pButton pRipple icon="pi pi-times" label="Cancel" class="p-button-text" (click)="cancelEdit()"></button>
                 </div>
             </div>
         </ng-container>
