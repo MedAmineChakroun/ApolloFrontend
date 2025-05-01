@@ -19,5 +19,6 @@ export default [
     { path: 'products/sync', component: ProductManagementComponent },
     { path: 'users/:id', component: UserProfileComponent },
     { path: 'synchronize/clients', component: ClientsManagementComponent },
-    { path: 'synchronize/commandes', component: CommandesManagementComponent }
+    { path: 'synchronize/commandes', component: CommandesManagementComponent },
+    { path: 'synchronize/products', component: ProductManagementComponent }
 ] as Routes;

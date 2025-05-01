@@ -44,6 +44,9 @@ export class ProductManagementComponent implements OnInit {
     selectedProduct: ProductWithStock | null = null;
     dialogVisible: boolean = false;
     loading: boolean = true;
+    isSyncRoute = false;
+    isNonSyncRoute = false;
+
     private readonly DEFAULT_PRODUCT_IMAGE = 'assets/general/product-default.png';
 
     handleProductImageError(event: any): void {
@@ -59,6 +62,8 @@ export class ProductManagementComponent implements OnInit {
     ) {}
 
     ngOnInit() {
+        this.isSyncRoute = this.router.url === '/store/admin/products/sync';
+        this.isNonSyncRoute = this.router.url === '/store/admin/synchronize/products';
         this.loadProducts();
     }
 
@@ -66,9 +71,19 @@ export class ProductManagementComponent implements OnInit {
         this.loading = true;
         this.productService.getProducts().subscribe({
             next: (response: any) => {
-                const productData = response?.data?.produits || [];
+                let productData = response?.data?.produits || [];
 
-                // First initialize products with zero stock
+                // Filter products based on route
+                if (this.isSyncRoute) {
+                    // Get only synchronized products (artFlag = 1)
+                    productData = productData.filter((product: any) => product.artFlag === 1);
+                } else if (this.isNonSyncRoute) {
+                    // Get only non-synchronized products (artFlag = 0)
+                    productData = productData.filter((product: any) => product.artFlag === 0);
+                }
+                // For other routes, keep all products (no filtering)
+
+                // Initialize products with zero stock
                 this.products = productData.map((product: any) => ({
                     article: product,
                     stockQuantity: 0

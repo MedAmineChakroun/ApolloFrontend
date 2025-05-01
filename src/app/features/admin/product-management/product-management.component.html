@@ -3,7 +3,24 @@
     <p-toast></p-toast>
 
     <p-card>
-        <ng-template pTemplate="header">
+        <!-- Header for synchronized products route -->
+        <ng-template pTemplate="header" *ngIf="isSyncRoute">
+            <div class="flex justify-content-between align-items-center p-3 bg-purple-500" style="border-radius: 12px 12px 0 0">
+                <h2 class="text-white m-0">Synchronized Products Management</h2>
+                <span class="text-white font-bold">Total Synchronized Products: {{ this.products.length }}</span>
+            </div>
+        </ng-template>
+
+        <!-- Header for non-synchronized products route -->
+        <ng-template pTemplate="header" *ngIf="isNonSyncRoute">
+            <div class="flex justify-content-between align-items-center p-3 bg-purple-500" style="border-radius: 12px 12px 0 0">
+                <h2 class="text-white m-0">Non-Synchronized Products Management</h2>
+                <span class="text-white font-bold">Total Non-Synchronized Products: {{ this.products.length }}</span>
+            </div>
+        </ng-template>
+
+        <!-- Default header for other routes -->
+        <ng-template pTemplate="header" *ngIf="!isSyncRoute && !isNonSyncRoute">
             <div class="flex justify-content-between align-items-center p-3 bg-primary-500" style="border-radius: 12px 12px 0 0">
                 <h2 class="text-white m-0">Products Management</h2>
                 <span class="text-white font-bold">Total Products: {{ this.products.length }}</span>
@@ -12,12 +29,22 @@
 
         <p-toolbar styleClass="mb-4">
             <div class="p-toolbar-group-start">
-                <h3>Products List</h3>
+                <h3>
+                    {{ isSyncRoute ? 'Synchronized Products List' : isNonSyncRoute ? 'Non-Synchronized Products List' : 'Products List' }}
+                </h3>
             </div>
 
             <div class="p-toolbar-group-end">
-                <p-button label="Ajouter" icon="pi pi-plus" styleClass="bg-primary-600 mr-2" (click)="navigateToCreate()"></p-button>
+                <!-- Add button only shown on regular products page -->
+                <p-button *ngIf="!isSyncRoute && !isNonSyncRoute" label="Ajouter" icon="pi pi-plus" styleClass="bg-primary-600 mr-2" (click)="navigateToCreate()"></p-button>
+
+                <!-- Sync button shown on non-sync route -->
+                <p-button *ngIf="isNonSyncRoute" label="Synchroniser" icon="pi pi-sync" severity="help" class="mr-2"></p-button>
+
+                <!-- Export CSV available on all pages -->
                 <p-button label="Export to CSV" icon="pi pi-download" styleClass="p-button-success mr-2" (click)="exportToCSV()"></p-button>
+
+                <!-- Refresh button available on all pages -->
                 <button pButton label="Refresh" icon="pi pi-refresh" class="p-button-outlined" (click)="loadProducts()"></button>
             </div>
         </p-toolbar>
@@ -36,7 +63,9 @@
         >
             <ng-template pTemplate="caption">
                 <div class="flex justify-content-between align-items-center">
-                    <h5 class="m-0">Manage Products</h5>
+                    <h5 class="m-0">
+                        {{ isSyncRoute ? 'Manage Synchronized Products' : isNonSyncRoute ? 'Manage Non-Synchronized Products' : 'Manage Products' }}
+                    </h5>
                     <span class="p-input-icon-left">
                         <i class="pi pi-search"></i>
                         <input pInputText type="text" placeholder="Search by code" #codeFilter (input)="dt.filter(codeFilter.value, 'article.artCode', 'contains')" />
@@ -102,7 +131,7 @@
             <!-- View Mode -->
             <div class="product-container">
                 <!-- Header with close button -->
-                <div class="product-modal-header bg-primary-500">
+                <div class="product-modal-header" [ngClass]="{ 'bg-primary-500': !isSyncRoute && !isNonSyncRoute, 'bg-purple-500': isSyncRoute, 'bg-orange-500': isNonSyncRoute }">
                     <h2 class="modal-title text-white">Product Details</h2>
                 </div>
 
