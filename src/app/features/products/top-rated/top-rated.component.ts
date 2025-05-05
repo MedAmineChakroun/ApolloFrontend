@@ -27,7 +27,7 @@ interface RatedProductWithStock {
     selector: 'app-top-rated',
     imports: [FormsModule, ButtonModule, CommonModule, CarouselModule, GalleriaModule, ImageModule, TagModule, RatingModule],
     templateUrl: './top-rated.component.html',
-    styleUrl: './top-rated.component.css',
+    styleUrl: './top-rated.component.scss',
     providers: [ProductsService, StockService]
 })
 export class TopRatedComponent implements OnInit {

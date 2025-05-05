@@ -1,0 +1,159 @@
+.rated-section {
+    margin-bottom: 2rem;
+}
+
+.rated-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.carousel-wrapper {
+    flex: 1;
+    min-width: 0; /* Empêche le débordement */
+    order: 1;
+}
+
+.rated-image {
+    flex: 0 0 auto;
+    width: 250px;
+    order: 2;
+}
+
+.rated-image img {
+    display: inline-block;
+    width: 250px;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* Style uniformisé pour les cartes de produits */
+.recommend {
+    display: flex;
+    flex-direction: column;
+    height: 380px; /* Hauteur fixe pour tous les éléments */
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+}
+
+.recommend:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+/* Container pour l'image du produit avec hauteur fixe */
+.product-image-container {
+    position: relative;
+    height: 200px; /* Hauteur fixe pour la zone d'image */
+    overflow: hidden;
+    margin-bottom: 12px;
+}
+
+.product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Garde l'aspect ratio de l'image */
+    transition: transform 0.3s ease;
+}
+
+.recommend:hover .product-image {
+    transform: scale(1.05);
+}
+
+/* Badge de stock */
+.p-tag {
+    font-size: 0.75rem;
+    padding: 4px 8px;
+    font-weight: 500;
+}
+
+/* Titre du produit avec hauteur contrôlée */
+.product-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+    height: 48px; /* Hauteur fixe pour le titre */
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    color: #333;
+}
+
+/* Prix et bouton d'ajout au panier */
+.flex.justify-between {
+    margin-bottom: 12px;
+    align-items: center;
+}
+
+.product-price {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #333;
+}
+
+/* Style pour le bouton du panier */
+.p-button.p-button-icon-only {
+    width: 2.5rem;
+    height: 2.5rem;
+    background-color: #4caf50;
+    border-color: #4caf50;
+}
+
+.p-button.p-button-icon-only:hover {
+    background-color: #3d8b40;
+    border-color: #3d8b40;
+}
+
+/* Évaluation et nombre d'avis */
+.product-rating {
+    display: flex;
+    align-items: center;
+    margin-top: auto; /* Pousse la notation vers le bas */
+    padding-top: 8px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.rating-count {
+    margin-left: 8px;
+    color: #666;
+    font-size: 0.85rem;
+}
+
+/* Adaptatif pour les écrans plus petits */
+@media (max-width: 992px) {
+    .recommend {
+        height: 360px;
+    }
+
+    .product-image-container {
+        height: 180px;
+    }
+}
+
+@media (max-width: 768px) {
+    .rated-container {
+        flex-direction: column-reverse;
+    }
+
+    .rated-image {
+        width: 100%;
+        max-width: 200px;
+        margin: 0 auto 24px;
+    }
+
+    .recommend {
+        height: 340px;
+    }
+
+    .product-image-container {
+        height: 160px;
+    }
+}
