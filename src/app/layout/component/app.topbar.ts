@@ -434,4 +434,10 @@ export class AppTopbar implements OnInit, OnDestroy {
             }, 50);
         });
     }
+    getStatusClass(title: string): string {
+        if (title.includes('acceptée')) return 'status-accepted';
+        if (title.includes('refusée')) return 'status-refused';
+        if (title.includes('en attente')) return 'status-pending';
+        return 'status-default';
+    }
 }

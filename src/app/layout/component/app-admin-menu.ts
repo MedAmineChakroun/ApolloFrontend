@@ -37,7 +37,7 @@ import { filter } from 'rxjs/operators';
                         <i class="pi pi-shopping-bag"></i>
                         <span>Gestion commandes</span>
                     </div>
-                    <i class="pi pi-chevron-right arrow"></i>
+                    <i class="pi pi-chevron-right arrow" [ngClass]="{ 'arrow-expanded': expandedMenus['orders'] }"></i>
                 </div>
                 <div class="submenu" *ngIf="expandedMenus['orders']">
                     <a routerLink="/store/admin/orders" class="submenu-item" [ngClass]="{ 'active-item': activeMenu === '/store/admin/orders' }">
@@ -90,7 +90,7 @@ import { filter } from 'rxjs/operators';
                 <div class="submenu" *ngIf="expandedMenus['products']">
                     <a routerLink="/store/admin/products" class="submenu-item" [ngClass]="{ 'active-item': activeMenu === '/store/admin/products' }">
                         <i class="pi pi-list"></i>
-                        <span>Liste</span>
+                        <span>Liste articles</span>
                     </a>
                     <a routerLink="/store/admin/products/add" class="submenu-item" [ngClass]="{ 'active-item': activeMenu === '/store/admin/products/add' }">
                         <i class="pi pi-plus"></i>
@@ -137,6 +137,16 @@ import { filter } from 'rxjs/operators';
                 <span class="category-title">Autres</span>
             </div>
 
+            <div class="menu-category menu-item-container">
+                <a
+                    href="http://localhost:3000/d/aspnetcore-metrics/asp-net-core-application-performance?orgId=1&from=now-30m&to=now&var-DS_PROMETHEUS=dekm8rqjnql1cd&var-server=DESKTOP-QD57IO2&var-app=ApolloBackend&var-env=development&refresh=5s"
+                    class="menu-item"
+                    target="_blank"
+                >
+                    <i class="pi pi-spin pi-cog"></i>
+                    <span>Monitoring</span>
+                </a>
+            </div>
             <!-- Logout -->
             <div class="menu-category menu-item-container">
                 <a (click)="logout()" class="menu-item">
@@ -287,4 +297,5 @@ export class AppAdminMenu implements OnInit {
         this.authService.logout();
         this.router.navigate(['/auth/login']);
     }
+    naviagteToMonitoring() {}
 }

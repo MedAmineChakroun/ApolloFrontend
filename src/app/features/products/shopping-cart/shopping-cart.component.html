@@ -98,7 +98,7 @@
                 <div class="cart-items">
                     <div *ngFor="let item of cartItems" class="cart-item">
                         <div class="item-image">
-                            <img [src]="item.product.artImageUrl || 'assets/general/product-default.png'" [alt]="item.product.artIntitule" (error)="handleImageError($event)" />
+                            <img src="http://localhost:91/Images/{{ item.product.artImageUrl }}" [alt]="item.product.artIntitule" (error)="handleImageError($event)" />
                         </div>
                         <div class="item-details">
                             <div class="item-header">

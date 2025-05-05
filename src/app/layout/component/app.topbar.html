@@ -180,12 +180,12 @@
         <div class="notification-list">
             <!-- Unread Notifications -->
             <div class="notification-section" *ngIf="unreadNotifications.length > 0">
-                <div class="section-header">
+                <div class="section-header mb-1">
                     <span class="section-title">New</span>
                     <span class="section-count">{{ unreadNotifications.length }}</span>
                 </div>
                 <div class="notification-items">
-                    <div class="notification-item unread" *ngFor="let notification of unreadNotifications" (click)="readNotification(notification)">
+                    <div class="notification-item unread" *ngFor="let notification of unreadNotifications" [ngClass]="['notification-status', getStatusClass(notification.title)]" (click)="readNotification(notification)">
                         <div class="notification-icon" [ngClass]="getIconClass(notification.type)">
                             <i class="pi" [ngClass]="getIconType(notification.type)"></i>
                         </div>

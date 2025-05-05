@@ -36,7 +36,7 @@ import { Router } from '@angular/router';
                             <img src="http://localhost:91/Images/{{ product.artImageUrl }}" class="shadow-lg" alt="{{ product.artIntitule }}" width="50" (error)="handleProductImageError($event)" />
                         </td>
                         <td style="width: 35%; min-width: 7rem;">{{ product.artIntitule }}</td>
-                        <td style="width: 35%; min-width: 8rem;">{{ product.artPrixAchat | currency: 'TND' }}</td>
+                        <td style="width: 35%; min-width: 8rem;">{{ product.artPrixVente | currency: 'TND' }}</td>
                         <td style="width: 15%;">
                             <button pButton pRipple type="button" icon="pi pi-search" class="p-button p-component p-button-text p-button-icon-only" (click)="viewProductDetails(product)"></button>
                         </td>
