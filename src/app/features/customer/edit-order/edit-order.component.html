@@ -1,0 +1,129 @@
+<div class="card p-4">
+    <!-- En-tête -->
+    <div class="flex flex-column md:flex-row justify-content-between align-items-center mb-5">
+        <h2 class="m-0 text-3xl font-semibold text-900 flex align-items-center">
+            <i class="pi pi-pencil text-primary mr-2 text-2xl"></i>
+            Modifier la Commande #{{ docPiece }}
+        </h2>
+        <div class="flex gap-2 mt-4 md:mt-0">
+            <button pButton pRipple label="Retour" icon="pi pi-arrow-left" class="p-button-outlined" (click)="cancelEdit()"></button>
+            <button pButton pRipple label="Enregistrer" icon="pi pi-save" class="p-button-success" (click)="saveChanges()"></button>
+        </div>
+    </div>
+
+    <!-- Chargement -->
+    <div *ngIf="loading" class="flex justify-content-center align-items-center" style="height: 400px;">
+        <i class="pi pi-spin pi-spinner" style="font-size: 3rem"></i>
+    </div>
+
+    <!-- Détails de la commande -->
+    <div *ngIf="!loading && commande" class="mb-5">
+        <div class="grid">
+            <div class="col-12 md:col-4">
+                <div class="p-4 surface-100 border-round shadow-1">
+                    <div class="text-500 mb-1">
+                        <i class="pi pi-hashtag text-primary mr-2"></i>Numéro de commande
+                    </div>
+                    <div class="text-lg font-semibold text-900">#{{ commande.docPiece }}</div>
+                </div>
+            </div>
+            <div class="col-12 md:col-4">
+                <div class="p-4 surface-100 border-round shadow-1">
+                    <div class="text-500 mb-1">
+                        <i class="pi pi-user text-primary mr-2"></i>Client
+                    </div>
+                    <div class="text-lg font-semibold text-900">{{ commande.docTiersIntitule }} ({{ commande.docTiersCode }})</div>
+                </div>
+            </div>
+            <div class="col-12 md:col-4">
+                <div class="p-4 surface-100 border-round shadow-1">
+                    <div class="text-500 mb-1">
+                        <i class="pi pi-calendar text-primary mr-2"></i>Date
+                    </div>
+                    <div class="text-lg font-semibold text-900">{{ commande.docDate | date: 'dd/MM/yyyy' }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tableau des lignes de commande -->
+    <p-table
+        *ngIf="!loading && lignes.length > 0"
+        [value]="lignes"
+        styleClass="p-datatable-sm p-datatable-gridlines"
+        [tableStyle]="{ 'min-width': '50rem' }"
+        [rowHover]="true"
+        responsiveLayout="scroll"
+        class="mb-5"
+    >
+        <ng-template pTemplate="header">
+            <tr>
+                <th>#</th>
+                <th>Produit</th>
+                <th>Référence</th>
+                <th class="text-center">Quantité</th>
+                <th class="text-right">Prix Unitaire</th>
+                <th class="text-right">Total HT</th>
+                <th class="text-right">Total TTC</th>
+                <th></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-ligne let-i="rowIndex">
+            <tr>
+                <td>{{ i + 1 }}</td>
+                <td>{{ ligne.ligneArtDesi }}</td>
+                <td>{{ ligne.ligneArtCode }}</td>
+                <td class="text-center">
+                    <p-inputNumber
+                        [showButtons]="true"
+                        buttonLayout="horizontal"
+                        [min]="1"
+                        [step]="1"
+                        [(ngModel)]="ligne.ligneQte"
+                        (onInput)="onQuantityChange(ligne)"
+                        styleClass="w-full"
+                        inputStyleClass="text-center"
+                        [size]="'small'"
+                    ></p-inputNumber>
+                </td>
+                <td class="text-right">{{ ligne.lignePu | currency: 'TND':'symbol':'1.2-2' }}</td>
+                <td class="text-right">{{ ligne.ligneHt | currency: 'TND':'symbol':'1.2-2' }}</td>
+                <td class="text-right">{{ ligne.ligneTtc | currency: 'TND':'symbol':'1.2-2' }}</td>
+                <td class="text-center">
+                    <button
+                        pButton
+                        icon="pi pi-trash"
+                        class="p-button-rounded p-button-danger p-button-text"
+                        pTooltip="Supprimer"
+                        tooltipPosition="top"
+                        (click)="supprimerLigne(ligne)">
+                    </button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="footer" *ngIf="commande">
+            <tr>
+                <td colspan="5" class="text-right font-bold">Total :</td>
+                <td class="text-right font-bold">{{ commande.docTht | currency: 'TND':'symbol':'1.2-2' }}</td>
+                <td class="text-right font-bold">{{ commande.docTtc | currency: 'TND':'symbol':'1.2-2' }}</td>
+                <td></td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="8" class="text-center p-4">Aucun article dans cette commande</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+
+<!-- Boîte de dialogue de confirmation -->
+<p-confirmDialog #cd>
+    <ng-template pTemplate="footer">
+        <button type="button" pButton icon="pi pi-times" label="Non" (click)="cd.onReject()"></button>
+        <button type="button" pButton icon="pi pi-check" label="Oui" (click)="cd.onAccept()" class="p-button-danger"></button>
+    </ng-template>
+</p-confirmDialog>
+
+<!-- Toast pour les messages -->
+<p-toast></p-toast>
