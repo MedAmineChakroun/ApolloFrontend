@@ -12,6 +12,10 @@ import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { MessageService, ConfirmationService } from 'primeng/api';
+import { ToolbarModule } from 'primeng/toolbar'; // Ajout du module Toolbar
+import { InputTextModule } from 'primeng/inputtext'; // Ajout du module InputText
+import { TagModule } from 'primeng/tag'; // Ajout du module Tag
+
 import { ToastrService } from 'ngx-toastr';
 import { CommandeService } from '../../../core/services/commande.service';
 import { DocumentVente } from '../../../models/DocumentVente';
@@ -33,7 +37,10 @@ import { DocLigneDto } from '../../../models/Dtos/DocLigneDto';
     InputNumberModule,
     DialogModule,
     ConfirmDialogModule,
-    ToastModule
+    ToastModule,
+    ToolbarModule, // Ajout du module Toolbar dans les imports
+    InputTextModule, // Ajout du module InputText
+    TagModule // Ajout du module Tag
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './edit-order.component.html',
@@ -45,13 +52,15 @@ export class EditOrderComponent implements OnInit {
   commande: DocumentVente | null = null;
   lignes: DocumentVenteLigne[] = [];
   modifiedLignes: Map<number, boolean> = new Map(); // Pour suivre les lignes modifiées
+  filteredLignes: DocumentVenteLigne[] = []; // Pour stocker les lignes filtrées
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private toast: ToastrService,
     private commandeService: CommandeService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService
   ) { }
 
   ngOnInit() {
@@ -111,6 +120,7 @@ export class EditOrderComponent implements OnInit {
   onQuantityChange(ligne: DocumentVenteLigne) {
     this.modifiedLignes.set(ligne.ligneId, true);
     this.updateLineTotals(ligne);
+    this.updateOrderTotals(); // Mettre à jour les totaux de la commande après changement
   }
 
   // Mettre à jour les totaux de la ligne
@@ -155,18 +165,23 @@ export class EditOrderComponent implements OnInit {
             next: () => {
               // Retirer la ligne du tableau
               this.lignes = this.lignes.filter(l => l.ligneId !== ligne.ligneId);
+              this.filteredLignes = [...this.lignes]; // Mettre à jour les lignes filtrées
               this.updateOrderTotals();
+              this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Article supprimé de la commande' });
               this.toast.success('Article supprimé de la commande');
             },
             error: (err) => {
               console.error('Erreur lors de la suppression de la ligne:', err);
+              this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Échec de la suppression de l\'article' });
               this.toast.error('Échec de la suppression de l\'article');
             }
           });
         } else {
           // Si c'est une nouvelle ligne pas encore sauvegardée
           this.lignes = this.lignes.filter(l => l !== ligne);
+          this.filteredLignes = [...this.lignes]; // Mettre à jour les lignes filtrées
           this.updateOrderTotals();
+          this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Article supprimé de la commande' });
           this.toast.success('Article supprimé de la commande');
         }
       }
@@ -200,11 +215,13 @@ export class EditOrderComponent implements OnInit {
     // Exécuter toutes les opérations
     Promise.all(updateOperations)
       .then(() => {
+        this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Commande mise à jour avec succès' });
         this.toast.success('Commande mise à jour avec succès');
         this.router.navigate(['/store/customer/orders']);
       })
       .catch((error: Error) => {
         console.error('Erreur lors de la mise à jour de la commande:', error);
+        this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Échec de la mise à jour de la commande' });
         this.toast.error('Échec de la mise à jour de la commande');
       });
   }

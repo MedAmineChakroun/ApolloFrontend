@@ -107,15 +107,7 @@
     border-radius: 50%;
   }
   
-  .p-button-danger {
-    background-color: #dc3545;
-    border-color: #dc3545;
-  }
-  
-  .p-button-danger:hover {
-    background-color: #c82333;
-    border-color: #bd2130;
-  }
+
   
   /* Style du footer de la table */
   .p-datatable-footer td {

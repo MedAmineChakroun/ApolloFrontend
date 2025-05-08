@@ -62,9 +62,9 @@
                 <td class="text-center"><p-tag [value]="getStatus(order.docEtat).label" [severity]="getStatus(order.docEtat).severity" [rounded]="true"></p-tag></td>
                 <td>
                     <div class="flex gap-2 justify-content-center">
-                        <button pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-text p-button-info" pTooltip="View Details" tooltipPosition="top" (click)="viewOrderDetails(order.docPiece)"></button>
-                        <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-text p-button-warning" pTooltip="Modifier" tooltipPosition="top" [disabled]="!canEditOrDelete(order.docEtat)" (click)="updateOrderDetails(order.docPiece)"></button>
-                        <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger" pTooltip="Supprimer" tooltipPosition="top" [disabled]="!canEditOrDelete(order.docEtat)" (click)="supprimerCommande(order.docId, order.docEtat)"></button>
+                        <button pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-info" pTooltip="View Details" tooltipPosition="top" (click)="viewOrderDetails(order.docPiece)"></button>
+                        <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-warning" pTooltip="Modifier" tooltipPosition="top" [disabled]="!canEditOrDelete(order.docEtat)" (click)="updateOrderDetails(order.docPiece)"></button>
+                        <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" pTooltip="Supprimer" tooltipPosition="top" [disabled]="!canEditOrDelete(order.docEtat)" (click)="supprimerCommande(order.docId, order.docEtat)"></button>
                     </div>
                 </td>
             </tr>
