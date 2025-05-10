@@ -10,12 +10,6 @@
     <div class="carousel-wrapper" *ngIf="isLoading">
         <div class="flex gap-3 overflow-hidden">
             <div *ngFor="let item of skeletonItems" class="border border-surface-200 rounded-lg m-2 p-3 recommend transition-all duration-300" style="min-width: 250px">
-                <div class="mb-3">
-                    <p-skeleton height="12rem" styleClass="mb-2"></p-skeleton>
-                    <div class="absolute top-2 left-2">
-                        <p-skeleton width="4rem" height="1.5rem"></p-skeleton>
-                    </div>
-                </div>
                 <div class="mb-2">
                     <p-skeleton width="100%" height="1rem" styleClass="mb-2"></p-skeleton>
                     <p-skeleton width="75%" height="1rem"></p-skeleton>

@@ -14,7 +14,7 @@ import { AuthenticationService } from '../../../core/services/authentication.ser
         <header class="fixed top-0 left-0 w-full bg-transparent backdrop-blur-md z-50 p-0 m-0">
             <div class="flex items-center justify-between px-4 py-2 lg:px-8 max-w-7xl mx-auto">
                 <a class="flex items-center cursor-pointer" routerLink="/landing">
-                    <img src="assets/general/ApolloLogo.PNG" alt="logo" style="width: 35px" class="mr-3" />
+                    <img src="assets/general/apolo2.png" alt="logo" style="width: 35px" class="mr-3" />
                     <span class="font-medium text-xl leading-normal whitespace-nowrap">Authentication Section</span>
                 </a>
 

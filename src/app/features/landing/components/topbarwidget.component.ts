@@ -10,10 +10,10 @@ import { AuthenticationService } from '../../../core/services/authentication.ser
     selector: 'topbar-widget',
     imports: [RouterModule, StyleClassModule, ButtonModule, RippleModule, CommonModule],
     template: /*html*/ `
-        <header [ngClass]="{ 'bg-transparent': !scrolled, 'bg-white/80 shadow-lg backdrop-blur-md': scrolled }" class="fixed top-0 left-0 w-full transition-all duration-300 z-50 p-0 m-0">
+        <header [ngClass]="{ 'bg-transparent': !scrolled, 'bg-white/80 shadow-lg backdrop-blur-md': scrolled }" class="fixed top-0 left-0 w-full transition-all duration-300 z-50 p-0 m-0 ">
             <div class="flex items-center justify-between px-6 py-4 lg:px-12">
                 <a class="flex items-center cursor-pointer" href="#">
-                    <img src="assets/general/ApolloLogo.PNG" alt="logo" style="width: 45px" class="mr-4" />
+                    <img src="assets/general/apolo2.png" alt="logo" style="width: 55px" class="mr-4" />
                     <span [ngClass]="{ 'text-white': !scrolled, 'text-black': scrolled }" class="font-medium text-2xl leading-normal whitespace-nowrap transition">Apollo Store</span>
                 </a>
 
