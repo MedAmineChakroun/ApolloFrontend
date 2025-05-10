@@ -50,7 +50,7 @@ export class PromoBannerComponent implements OnInit {
         {
             title: 'NOUVEAUTÉ DU JOUR',
             buttonText: 'Découvrir',
-            imageUrl: 'assets/general/promo.png'
+            imageUrl: 'assets/general/salon.webp'
         }
     ];
 

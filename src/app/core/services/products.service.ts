@@ -103,7 +103,9 @@ export class ProductsService {
             return this.editProduct(product);
         }
     }
-
+    getRecommendedProducts(userID: string, limit: number): Observable<Product[]> {
+        return this.http.get<Product[]>(`${this.apiUrl}/recommendations/${userID}/${limit}`);
+    }
     private extractProducts(response: any): Product[] {
         // Handle different response formats
         if (response?.data?.produits) {
