@@ -5,8 +5,8 @@ import { ToastrService } from 'ngx-toastr';
 import { Store } from '@ngrx/store';
 import { CartState } from '../../../store/cart/cart.reducers';
 import { selectCartItems, selectCartItemCount, selectCartTotal } from '../../../store/cart/cart.selectors';
-import { Observable } from 'rxjs';
-import { map, take } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { map, take, switchMap } from 'rxjs/operators';
 import * as CartActions from '../../../store/cart/cart.actions';
 import { CartItem } from '../../../models/cart-item';
 import { CartService } from '../../../core/services/cart.service';
@@ -20,10 +20,14 @@ import { StepperModule } from 'primeng/stepper';
 import { DialogModule } from 'primeng/dialog';
 import { CheckboxModule } from 'primeng/checkbox';
 import { FormsModule } from '@angular/forms';
+import { ProductsService } from '../../../core/services/products.service';
+import { Product } from '../../../models/Product';
+import { CardModule } from 'primeng/card';
+import { CarouselModule } from 'primeng/carousel';
 @Component({
     selector: 'app-shopping-cart',
     standalone: true,
-    imports: [CommonModule, ButtonModule, StepperModule, DialogModule, FormsModule, CheckboxModule],
+    imports: [CommonModule, ButtonModule, StepperModule, DialogModule, FormsModule, CheckboxModule, CardModule, CarouselModule],
     providers: [],
     templateUrl: './shopping-cart.component.html',
     styleUrls: ['./shopping-cart.component.css']
@@ -41,6 +45,25 @@ export class ShoppingCartComponent implements OnInit {
     currentStep = 1;
     display = false;
     accepted = false;
+    recommendedProducts: Product[] = [];
+    isLoadingRecommendations = false;
+    responsiveOptions = [
+        {
+            breakpoint: '1024px',
+            numVisible: 3,
+            numScroll: 1
+        },
+        {
+            breakpoint: '768px',
+            numVisible: 2,
+            numScroll: 1
+        },
+        {
+            breakpoint: '560px',
+            numVisible: 1,
+            numScroll: 1
+        }
+    ];
 
     constructor(
         private toastr: ToastrService,
@@ -48,7 +71,8 @@ export class ShoppingCartComponent implements OnInit {
         private cartService: CartService,
         private commandeService: CommandeService,
         private router: Router,
-        private authService: AuthenticationService
+        private authService: AuthenticationService,
+        private productsService: ProductsService
     ) {
         this.cartItems$ = this.store.select(selectCartItems);
         this.cartItemCount$ = this.store.select(selectCartItemCount);
@@ -81,6 +105,13 @@ export class ShoppingCartComponent implements OnInit {
         if (this.authService.isAuthenticated()) {
             this.getClientFromStore();
         }
+        
+        // Fetch recommendations only once when component initializes
+        this.cartItems$.pipe(take(1)).subscribe(items => {
+            if (items.length > 0) {
+                this.getRecommendedProducts(items);
+            }
+        });
     }
 
     isAuthenticated(): boolean {
@@ -205,5 +236,36 @@ export class ShoppingCartComponent implements OnInit {
     getProgressWidth(): string {
         const progress = (this.currentTotal / this.FREE_SHIPPING_THRESHOLD) * 100;
         return `${Math.min(progress, 100)}%`;
+    }
+
+    getRecommendedProducts(items: CartItem[]): void {
+        this.isLoadingRecommendations = true;
+        this.recommendedProducts = []; // Clear previous recommendations
+        const itemIds = items.map(item => item.product.artCode);
+        
+        if (itemIds.length === 0) {
+            this.isLoadingRecommendations = false;
+            return;
+        }
+        
+        this.productsService.getRecommendedProductsForCart(itemIds, 5)
+            .subscribe({
+                next: (products) => {
+                    setTimeout(() => {
+                        this.recommendedProducts = products;
+                        this.isLoadingRecommendations = false;
+                    }, 800); // Add a slight delay for better UX
+                },
+                error: (error) => {
+                    console.error('Error fetching recommended products:', error);
+                    this.isLoadingRecommendations = false;
+                    this.recommendedProducts = [];
+                }
+            });
+    }
+
+
+    navigateToProduct(productId: number): void {
+        this.router.navigate([`/store/products/${productId}`]);
     }
 }

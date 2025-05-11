@@ -106,6 +106,14 @@ export class ProductsService {
     getRecommendedProducts(userID: string, limit: number): Observable<Product[]> {
         return this.http.get<Product[]>(`${this.apiUrl}/recommendations/${userID}/${limit}`);
     }
+    getRecommendedProductsForCart(itemIds: string[], count: number = 5): Observable<Product[]> {
+        const requestBody = {
+          item_ids: itemIds,
+          count: count
+        };
+        
+        return this.http.post<Product[]>(`${this.apiUrl}/recommendations/cart`, requestBody);
+      }
     private extractProducts(response: any): Product[] {
         // Handle different response formats
         if (response?.data?.produits) {

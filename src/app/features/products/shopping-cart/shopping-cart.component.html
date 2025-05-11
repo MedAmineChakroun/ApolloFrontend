@@ -15,7 +15,7 @@
         </div>
 
         <p-dialog
-            header="Conditions Générales d’Utilisation"
+            header="Conditions Générales d'Utilisation"
             [(visible)]="display"
             [breakpoints]="{ '960px': '75vw' }"
             [style]="{ width: '50vw', maxWidth: '90vw', maxHeight: '60vh' }"
@@ -31,20 +31,20 @@
                     <li><strong>Acceptation :</strong> En poursuivant, vous acceptez les présentes conditions générales d'utilisation.</li>
                     <li><strong>Exactitude des informations :</strong> Vous confirmez que toutes les informations fournies sont exactes, complètes et à jour.</li>
                     <li><strong>Utilisation :</strong> Le service est soumis à des règles strictes dans le respect des lois et des bonnes pratiques.</li>
-                    <li><strong>Responsabilités :</strong> L'utilisateur est responsable de l’usage du service. Aucune responsabilité ne saurait être engagée en cas de mauvaise utilisation.</li>
+                    <li><strong>Responsabilités :</strong> L'utilisateur est responsable de l'usage du service. Aucune responsabilité ne saurait être engagée en cas de mauvaise utilisation.</li>
                     <li><strong>Modifications :</strong> Les conditions peuvent être modifiées à tout moment. Il est de votre responsabilité de les consulter régulièrement.</li>
                 </ul>
 
                 <div class="flex items-center gap-2 mt-4">
                     <p-checkbox [(ngModel)]="accepted" binary="true" inputId="acceptTerms" (click)="set()"></p-checkbox>
-                    <label for="acceptTerms" class="text-gray-800 cursor-pointer">J’ai lu et j’accepte les conditions générales</label>
+                    <label for="acceptTerms" class="text-gray-800 cursor-pointer">J'ai lu et j'accepte les conditions générales</label>
                 </div>
             </div>
 
             <ng-template pTemplate="footer">
                 <div class="flex justify-end gap-3 px-3 py-2 border-t border-gray-200">
                     <button pButton label="Annuler" class="p-button-outlined p-button-sm" (click)="close()"></button>
-                    <button pButton label="Accepter" class="p-button-sm" [disabled]="!accepted" (click)="PasserCommande()"></button>
+                    <button pButton label="Accepter" severty="contrast" class="p-button-sm" [disabled]="!accepted" (click)="PasserCommande()"></button>
                 </div>
             </ng-template>
         </p-dialog>
@@ -163,6 +163,65 @@
                         <i class="pi pi-truck"></i>
                         <span>Add {{ FREE_SHIPPING_THRESHOLD - currentTotal | currency: 'TND' : 'symbol' }} more to get free shipping!</span>
                     </div>
+                    
+                    <!-- Recommendations with loading & empty states -->
+                    <ng-container *ngIf="((cartItems$ | async) ?? []).length > 0">
+                        <!-- Loading state -->
+                        <div class="side-recommendations" *ngIf="isLoadingRecommendations">
+                            <div class="side-recommendations-header">
+                                <h4>Finding items for you...</h4>
+                            </div>
+                            <div class="recommendation-skeleton">
+                                <div class="skeleton-img"></div>
+                                <div class="skeleton-content">
+                                    <div class="skeleton-title"></div>
+                                    <div class="skeleton-price"></div>
+                                    <div class="skeleton-button"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Recommendation items -->
+                        <div class="side-recommendations" *ngIf="!isLoadingRecommendations && recommendedProducts.length > 0">
+                            <div class="side-recommendations-header">
+                                <h4>You might also like</h4>
+                            </div>
+                            <p-carousel [value]="recommendedProducts" [numVisible]="1" [numScroll]="1" [circular]="true" 
+                                [autoplayInterval]="4000" [showNavigators]="true" [showIndicators]="false">
+                                <ng-template let-product pTemplate="item">
+                                    <div class="side-recommendation-item">
+                                        <div class="side-recommendation-img">
+                                            <img src="http://localhost:91/Images/{{ product.artImageUrl }}" 
+                                                [alt]="product.artIntitule" 
+                                                (error)="handleImageError($event)" />
+                                            <div class="price-tag" >{{ product.artPrixVente * (1 + product.artTvaTaux / 100) | currency: 'TND' : 'symbol' }}</div>
+                                        </div>
+                                        <div class="side-recommendation-content">
+                                            <h5 class="side-product-title">{{ product.artIntitule }}</h5>
+                                            <button pButton icon="pi pi-shopping-cart" severity="warn" Raised
+                                                label="voir plus" 
+                                                class="p-button-sm p-button-rounded add-btn" 
+                                                (click)="navigateToProduct(product.artId)"></button>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                            </p-carousel>
+                        </div>
+                        
+                        <!-- No recommendations found -->
+                        <div class="side-recommendations empty-recommendations" *ngIf="!isLoadingRecommendations && recommendedProducts.length === 0">
+                            <div class="side-recommendations-header">
+                                <h4>Looking for more?</h4>
+                            </div>
+                            <div class="empty-recommendations-content">
+                                <i class="pi pi-search"></i>
+                                <p >Looks like these items are a bit unique! Browse other categories to find more suggestions.</p>
+                                <button pButton label="Browse Store" icon="pi pi-shopping-bag" 
+                                    class="p-button-outlined p-button-sm" 
+                                    (click)="continueShopping()"></button>
+                            </div>
+                        </div>
+                    </ng-container>
                 </div>
             </div>
         </ng-container>

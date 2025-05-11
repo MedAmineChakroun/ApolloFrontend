@@ -118,15 +118,26 @@
 
 .empty-cart {
     flex: 1;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 2rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 2rem;
+    width: 100%;
+    max-width: 600px;
 }
 
 .empty-cart-content {
     text-align: center;
-    animation: fadeIn 0.3s ease-out;
+    background: var(--surface-card);
+    padding: 2.5rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.4s ease-out;
+    width: 100%;
 }
 
 .empty-cart i {
@@ -159,31 +170,36 @@
     padding: 1rem;
     background: var(--surface-card);
     border-radius: 0.5rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
     animation: slideIn 0.3s ease-out;
     transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+    margin-bottom: 1rem;
 }
 
 .cart-item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
 }
 
 .item-image {
-    width: 100px;
-    height: 100px;
-    flex-shrink: 0;
-    border-radius: 0.5rem;
+    position: relative;
+    margin-top: 1rem;
+    width: 160px;
+    height: 140px;
+    border-radius: 0.3rem;
     overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .item-image img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    transition: transform 0.2s ease;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+    display: block;
+    background-color: #fff;
 }
 
 .item-image img:hover {
@@ -194,7 +210,8 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
 }
 
 .item-header {
@@ -205,9 +222,14 @@
 
 .item-header h3 {
     margin: 0;
-    font-size: 1rem;
+    font-size: 1.1rem;
     font-weight: 600;
     color: var(--text-color);
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    max-height: 2.8rem;
 }
 
 .remove-button {
@@ -229,6 +251,14 @@
     margin: 0;
     font-size: 0.875rem;
     color: var(--text-color-secondary);
+    opacity: 0.8;
+}
+
+.item-prix-vente {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin: 0.25rem 0;
 }
 
 .item-actions {
@@ -236,6 +266,8 @@
     justify-content: space-between;
     align-items: center;
     margin-top: auto;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--surface-border);
 }
 
 .quantity-selector {
@@ -243,8 +275,9 @@
     align-items: center;
     gap: 0.5rem;
     background: var(--surface-ground);
-    border-radius: 0.5rem;
-    padding: 0.25rem;
+    border-radius: 2rem;
+    padding: 0.25rem 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .quantity-selector button {
@@ -253,28 +286,37 @@
     color: var(--text-color);
     cursor: pointer;
     padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
+    border-radius: 50%;
     transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
 }
 
 .quantity-selector button:hover:not(:disabled) {
     background: var(--surface-hover);
+    color: var(--primary-color);
 }
 
 .quantity-selector button:disabled {
     color: var(--text-color-secondary);
     cursor: not-allowed;
+    opacity: 0.6;
 }
 
 .quantity-selector span {
     min-width: 2rem;
     text-align: center;
-    font-weight: 500;
+    font-weight: 600;
+    font-size: 1rem;
 }
 
 .item-price {
-    font-weight: 600;
-    color: var(--text-color);
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: var(--primary-color);
 }
 
 .cart-summary {
@@ -290,7 +332,7 @@
     padding: 1.5rem;
     animation: slideIn 0.3s ease-out;
     z-index: 1000;
-    height: calc(100vh - 9rem);
+    height: calc(100vh - 5rem);
     overflow-y: auto;
 }
 
@@ -479,3 +521,243 @@
 .cart-summary::-webkit-scrollbar-thumb:hover {
     background: var(--surface-hover);
 }
+/* Side Recommendations Styles */
+.side-recommendations {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px dashed var(--surface-border);
+    animation: fadeIn 0.5s ease-out;
+}
+
+.side-recommendations-header {
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.side-recommendations-header h4 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.side-recommendation-item {
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.side-recommendation-img {
+    width: 180px;
+    height: 180px;
+    overflow: hidden;
+    border-radius: 0.3rem;
+    margin-bottom: 0.75rem;
+    position: relative;
+
+    background-color: #fff;
+}
+
+.side-recommendation-img:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(0,0,0,0.2) 100%);
+    border-radius: 0.8rem;
+    z-index: 1;
+}
+
+.side-recommendation-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.side-recommendation-img:hover img {
+    transform: scale(1.05);
+}
+
+.price-tag {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: black;
+    color: white;
+    padding: 5px 8px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.8rem;
+    z-index: 2;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.side-recommendation-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0 0.5rem;
+    width: 100%;
+}
+
+.side-product-title {
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-color);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    max-height: 2.7rem;
+    line-height: 1.3;
+    text-align: center;
+    width: 100%;
+}
+
+.add-btn {
+    width: 100%;
+    justify-content: center;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.add-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Custom styling for PrimeNG carousel in recommendations */
+:host ::ng-deep .side-recommendations .p-carousel .p-carousel-indicators {
+    margin-top: 0.75rem;
+}
+
+:host ::ng-deep .side-recommendations .p-carousel .p-carousel-indicators .p-carousel-indicator button {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--surface-300);
+    transition: all 0.2s ease;
+    margin: 0 3px;
+}
+
+:host ::ng-deep .side-recommendations .p-carousel .p-carousel-indicators .p-carousel-indicator.p-highlight button {
+    background-color: var(--primary-color);
+    transform: scale(1.2);
+}
+
+:host ::ng-deep .side-recommendations .p-carousel .p-carousel-content {
+    padding: 0 0.5rem;
+}
+
+/* Animations for carousel items */
+:host ::ng-deep .side-recommendations .p-carousel-item {
+    animation: fadeSlide 0.6s ease-in-out;
+}
+
+@keyframes fadeSlide {
+    0% {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Skeleton Loader Styles */
+.recommendation-skeleton {
+    padding: 0.5rem;
+    width: 100%;
+}
+
+.skeleton-img {
+    width: 180px;
+    height: 180px;
+    background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
+    border-radius: 0.3rem;
+    margin: 0 auto 0.75rem;
+    background-size: 200% 100%;
+    animation: shine 1.5s linear infinite;
+}
+
+.skeleton-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+}
+
+.skeleton-title {
+    height: 16px;
+    width: 85%;
+    background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
+    border-radius: 4px;
+    background-size: 200% 100%;
+    animation: shine 1.5s linear infinite;
+}
+
+.skeleton-price {
+    height: 20px;
+    width: 40%;
+    background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
+    border-radius: 4px;
+    background-size: 200% 100%;
+    animation: shine 1.5s linear infinite;
+}
+
+.skeleton-button {
+    height: 36px;
+    width: 80%;
+    background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
+    border-radius: 20px;
+    background-size: 200% 100%;
+    animation: shine 1.5s linear infinite;
+}
+
+@keyframes shine {
+    to {
+        background-position-x: -200%;
+    }
+}
+
+/* Empty Recommendations Styles */
+.empty-recommendations {
+    padding-bottom: 1rem;
+}
+
+.empty-recommendations-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    text-align: center;
+}
+
+.empty-recommendations-content i {
+    font-size: 2rem;
+    color: var(--text-color-secondary);
+    opacity: 0.7;
+}
+
+.empty-recommendations-content p {
+    margin: 0;
+    color: var(--text-color-secondary);
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.empty-recommendations-content button {
+    margin-top: 0.5rem;
+}
+
