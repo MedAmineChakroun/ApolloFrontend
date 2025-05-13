@@ -1,35 +1,148 @@
 /* Print styles */
 @media print {
+    /* Hide everything by default */
     body * {
         visibility: hidden;
     }
-
-    .card,
-    .card * {
+    
+    /* Only the invoice content will be visible */
+    #pdfContent,
+    #pdfContent * {
         visibility: visible;
     }
-
-    .card {
+    
+    /* Position the invoice at the top of the page */
+    #pdfContent {
         position: absolute;
         left: 0;
         top: 0;
         width: 100%;
+        background-color: white;
+        padding: 20px;
+        margin: 0;
     }
-
+    
+    /* Hide all buttons and navigation elements */
     button,
     .p-paginator,
     .p-button,
+    nav,
+    header,
+    footer,
+    aside,
+    .sidebar,
+    .header,
+    .footer,
+    .topbar,
     .no-print {
         display: none !important;
     }
+    
+    /* Apply appropriate page breaks */
+    .p-card {
+        break-inside: avoid;
+        margin-bottom: 15px;
+    }
+    
+    /* Ensure full width and good spacing */
+    .container-fluid {
+        width: 100%;
+        padding: 0;
+        margin: 0;
+    }
+    
+    /* Make text darker for better printing */
+    .text-600, .text-700 {
+        color: #000 !important;
+    }
+    
+    /* Remove shadows and backgrounds for cleaner print */
+    .shadow-1, .shadow-2, .shadow-3, .shadow-4, .shadow-8 {
+        box-shadow: none !important;
+    }
+    
+    /* Set proper margins for printing */
+    @page {
+        size: A4;
+        margin: 10mm;
+    }
 }
 
-/* Additional styling */
+/* Color palette */
+:root {
+    --apollo-primary: #02c39a;
+    --apollo-secondary: #ff5400; /* Updated to match your new color scheme */
+    --apollo-light: #f5f8ff;
+    --apollo-bg: #ffffff;
+    --apollo-text: #495057;
+    --apollo-border: #e0e0e0;
+}
+
+/* Card and shadow enhancements */
 .shadow-2 {
     box-shadow:
         0 4px 10px rgba(0, 0, 0, 0.03),
         0 0 2px rgba(0, 0, 0, 0.06),
         0 2px 6px rgba(0, 0, 0, 0.12) !important;
+}
+
+.p-card {
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.p-card:hover {
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Table styling */
+.p-datatable .p-datatable-thead > tr > th {
+    background-color: var(--apollo-primary);
+    color: white;
+    font-weight: 600;
+}
+
+.p-datatable .p-datatable-tbody > tr:nth-child(even) {
+    background-color: var(--apollo-light);
+}
+
+.p-datatable .p-datatable-tbody > tr:hover {
+    background-color: rgba(2, 195, 154, 0.05);
+}
+
+/* Tag styling */
+.p-tag.p-tag-success {
+    background-color: var(--apollo-primary);
+}
+
+.p-tag.p-tag-danger {
+    background-color: #ff6b6b;
+}
+
+.p-tag.p-tag-secondary {
+    background-color: var(--apollo-secondary);
+    color: #ffffff;
+}
+
+/* Button styling */
+.p-button.p-button-primary {
+    background-color: var(--apollo-primary);
+    border-color: var(--apollo-primary);
+}
+
+.p-button.p-button-primary:hover {
+    background-color: #00a682;
+    border-color: #00a682;
+}
+
+.p-button.p-button-outlined {
+    color: var(--apollo-secondary);
+    border-color: var(--apollo-secondary);
+}
+
+.p-button.p-button-outlined:hover {
+    background-color: rgba(255, 84, 0, 0.1);
 }
 
 /* Responsive adjustments */
@@ -55,8 +168,47 @@
         background-color: rgba(190, 190, 190, 0.2);
     }
 }
+
 .entete {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+}
+
+/* Heading styles */
+h3 {
+    color: var(--apollo-primary);
+    border-bottom: 2px solid var(--apollo-border);
+    padding-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+/* List item enhancements */
+.list-none li {
+    transition: transform 0.2s, background-color 0.2s;
+    border-radius: 6px;
+    padding: 0.5rem;
+}
+
+.list-none li:hover {
+    background-color: var(--apollo-light);
+    transform: translateX(5px);
+}
+
+.list-none li i {
+    color: var(--apollo-secondary);
+}
+
+/* Add gradient effects */
+.gradient-header {
+    background: linear-gradient(to right, var(--apollo-primary), #04e3b5);
+    color: white;
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+/* Custom borders */
+.custom-border-left {
+    border-left: 4px solid var(--apollo-primary);
+    padding-left: 1rem;
 }
