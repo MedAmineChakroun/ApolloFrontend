@@ -9,18 +9,25 @@
     <!-- Loading state -->
     <div class="carousel-wrapper" *ngIf="isLoading">
         <div class="flex gap-3 overflow-hidden">
-            <div *ngFor="let item of skeletonItems" class="border border-surface-200 rounded-lg m-2 p-3 recommend transition-all duration-300" style="min-width: 250px">
-                <div class="mb-2">
-                    <p-skeleton width="100%" height="1rem" styleClass="mb-2"></p-skeleton>
-                    <p-skeleton width="75%" height="1rem"></p-skeleton>
+            <div *ngFor="let item of skeletonItems" class="border border-surface-200 rounded-lg m-2 p-3 transition-all duration-300" style="min-width: 280px; height: 400px">
+                <div class="mb-3">
+                    <!-- Image area -->
+                    <p-skeleton width="100%" height="180px" styleClass="mb-3"></p-skeleton>
+
+                    <!-- Title (2 lines) -->
+                    <p-skeleton width="90%" height="1rem" styleClass="mb-2"></p-skeleton>
+                    <p-skeleton width="70%" height="1rem" styleClass="mb-3"></p-skeleton>
                 </div>
-                <div class="flex justify-between items-center">
-                    <p-skeleton width="4rem" height="1.5rem"></p-skeleton>
-                    <p-skeleton shape="circle" size="2rem"></p-skeleton>
+
+                <!-- Price and Cart button -->
+                <div class="flex justify-between items-center mt-auto">
+                    <p-skeleton width="5rem" height="1.2rem"></p-skeleton>
+                    <p-skeleton shape="circle" size="2.5rem"></p-skeleton>
                 </div>
             </div>
         </div>
     </div>
+
     <div class="carousel-wrapper" *ngIf="!isLoading">
         <p-carousel [value]="products" [numVisible]="5" [numScroll]="2" [circular]="true" [autoplayInterval]="5000" [responsiveOptions]="carouselResponsiveOptions">
             <ng-template let-product pTemplate="item">

@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { DocumentVenteLigne } from '../../models/DocumentVenteLigne';
 import { DocLigneDto } from '../../models/Dtos/DocLigneDto';
-import { Observable } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 import { DocumentVente } from '../../models/DocumentVente';
 import { DocVenteDto } from '../../models/Dtos/DocVenteDto';
 
@@ -59,5 +59,28 @@ export class CommandeService {
     }
     getLignesCommande(): Observable<DocumentVenteLigne[]> {
         return this.http.get<DocumentVenteLigne[]>(`${this.apiUrlLigneCommande}`);
+    }
+    getDocumentVenteLignesByDocPiece(docPiece: string): Observable<DocumentVenteLigne[]> {
+        return this.http.get<DocumentVenteLigne[]>(`${this.apiUrlLigneCommande}/piece/${docPiece}`);
+    }
+
+    // Mettre à jour une commande
+    updateDocumentVente(commande: DocumentVente): Observable<DocumentVente> {
+        return this.http.put<DocumentVente>(`${this.apiUrl}/${commande.docId}`, commande);
+    }
+
+    // Mettre à jour une ligne de commande
+    updateDocumentVenteLigne(ligne: DocumentVenteLigne): Observable<DocumentVenteLigne> {
+        return this.http.put<DocumentVenteLigne>(`${this.apiUrlLigneCommande}/${ligne.ligneId}`, ligne);
+    }
+
+    // Supprimer une ligne de commande
+    deleteDocumentVenteLigne(ligneId: number): Observable<any> {
+        return this.http.delete(`${this.apiUrlLigneCommande}/${ligneId}`);
+    }
+
+    // Pour supporter toPromise() dans Angular moderne
+    toPromise<T>(observable: Observable<T>): Promise<T> {
+        return firstValueFrom(observable);
     }
 }

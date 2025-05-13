@@ -1,0 +1,147 @@
+.card {
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Styles pour l'en-tête */
+.card .flex {
+    margin-bottom: 20px;
+}
+
+.card h2 {
+    font-size: 24px;
+    color: #1a202c;
+}
+
+.card .text-primary {
+    color: #007bff;
+}
+
+.card .p-button-outlined {
+    border: 1px solid #007bff;
+    color: #007bff;
+}
+
+.card .p-button-success {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.card .p-button-success:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+}
+
+/* Style pour les boutons */
+.p-button {
+    margin: 0 5px;
+}
+
+/* Style pour les sections de détails */
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+}
+
+.grid .col-12 {
+    display: flex;
+    justify-content: center;
+}
+
+.p-4 {
+    padding: 20px;
+}
+
+.surface-100 {
+    background-color: #f7f7f7;
+}
+
+.border-round {
+    border-radius: 8px;
+}
+
+.shadow-1 {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.text-500 {
+    color: #6c757d;
+}
+
+.text-lg {
+    font-size: 1.125rem;
+}
+
+.font-semibold {
+    font-weight: 600;
+}
+
+.text-900 {
+    color: #212529;
+}
+
+/* Table des lignes de commande */
+.p-datatable-sm {
+    font-size: 0.875rem;
+}
+
+.p-datatable-gridlines .p-datatable-thead th {
+    background-color: #f8f9fa;
+}
+
+.p-datatable-gridlines .p-datatable-tbody td {
+    background-color: #ffffff;
+}
+
+.p-datatable-gridlines .p-datatable-tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.p-inputNumber {
+    max-width: 100px;
+}
+
+.p-button-rounded {
+    border-radius: 50%;
+}
+
+/* Style du footer de la table */
+.p-datatable-footer td {
+    font-weight: bold;
+}
+
+/* Style du tableau vide */
+.p-datatable-emptymessage {
+    text-align: center;
+    padding: 20px;
+    color: #888;
+}
+
+/* Boîte de dialogue */
+.p-dialog .p-dialog-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.p-dialog .p-button-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+.p-dialog .p-button-danger:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+}
+
+/* Toast */
+.p-toast {
+    max-width: 400px;
+    top: 50px;
+}
+
+.p-toast .p-toast-message {
+    background-color: #28a745;
+    color: white;
+}

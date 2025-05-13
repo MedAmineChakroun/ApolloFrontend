@@ -1,0 +1,156 @@
+<div class="card p-0">
+    <p-card>
+        <ng-template pTemplate="header">
+            <div class="flex justify-content-between align-items-center p-3 bg-primary-500" style="border-radius: 12px 12px 0 0">
+                <h2 class="text-white m-0">Modifier la Commande #{{ docPiece }}</h2>
+                <span class="text-white font-bold" *ngIf="commande">Total: {{ commande.docTtc | currency: 'TND ' }}</span>
+            </div>
+        </ng-template>
+
+        <p-toolbar styleClass="mb-4">
+            <div class="p-toolbar-group-start">
+                <h3>Détails de la Commande</h3>
+            </div>
+
+            <div class="p-toolbar-group-end">
+                <button pButton pRipple label="Retour" icon="pi pi-arrow-left" class="p-button-outlined mr-2" (click)="cancelEdit()"></button>
+                <button pButton pRipple label="Enregistrer" icon="pi pi-save" class="p-button-success" (click)="saveChanges()"></button>
+            </div>
+        </p-toolbar>
+
+        <!-- Chargement -->
+        <div *ngIf="loading" class="flex justify-content-center align-items-center" style="height: 400px">
+            <i class="pi pi-spin pi-spinner" style="font-size: 3rem"></i>
+        </div>
+
+        <!-- Détails de la commande -->
+        <div *ngIf="!loading && commande" class="mb-5">
+            <div class="grid">
+                <div class="col-12 md:col-4">
+                    <div class="p-4 surface-100 border-round shadow-1">
+                        <div class="text-500 mb-1"><i class="pi pi-hashtag text-primary-500 mr-2"></i>Numéro de commande</div>
+                        <div class="text-lg font-semibold text-900">#{{ commande.docPiece }}</div>
+                    </div>
+                </div>
+                <div class="col-12 md:col-4">
+                    <div class="p-4 surface-100 border-round shadow-1">
+                        <div class="text-500 mb-1"><i class="pi pi-user text-primary-500 mr-2"></i>Client</div>
+                        <div class="text-lg font-semibold text-900">
+                            {{ commande.docTiersIntitule }}
+                            <span class="text-sm text-500">({{ commande.docTiersCode }})</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 md:col-4">
+                    <div class="p-4 surface-100 border-round shadow-1">
+                        <div class="text-500 mb-1"><i class="pi pi-calendar text-primary-500 mr-2"></i>Date</div>
+                        <div class="text-lg font-semibold text-900">{{ commande.docDate | date: 'dd/MM/yyyy' }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tableau des lignes de commande -->
+        <p-table
+            *ngIf="!loading"
+            #dt
+            [value]="lignes"
+            styleClass="p-datatable-sm p-datatable-gridlines"
+            [tableStyle]="{ 'min-width': '50rem' }"
+            [rowHover]="true"
+            [paginator]="true"
+            [rows]="10"
+            [rowsPerPageOptions]="[5, 10, 25]"
+            [globalFilterFields]="['ligneArtDesi', 'ligneArtCode']"
+            responsiveLayout="scroll"
+            dataKey="ligneId"
+            [loading]="loading"
+            class="mb-5"
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} items"
+        >
+            <ng-template pTemplate="caption">
+                <div class="flex justify-content-between align-items-center">
+                    <div>
+                        <span class="p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" placeholder="Rechercher..." (input)="dt.filterGlobal($any($event.target).value, 'contains')" />
+                        </span>
+                    </div>
+                </div>
+            </ng-template>
+
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 3rem">#</th>
+                    <th pSortableColumn="ligneArtDesi" style="min-width: 14rem">Produit <p-sortIcon field="ligneArtDesi"></p-sortIcon></th>
+                    <th pSortableColumn="ligneArtCode" style="min-width: 10rem">Référence <p-sortIcon field="ligneArtCode"></p-sortIcon></th>
+                    <th pSortableColumn="ligneQte" class="text-center" style="min-width: 8rem">Quantité <p-sortIcon field="ligneQte"></p-sortIcon></th>
+                    <th pSortableColumn="lignePu" class="text-right" style="min-width: 8rem">Prix Unitaire <p-sortIcon field="lignePu"></p-sortIcon></th>
+                    <th pSortableColumn="ligneHt" class="text-right" style="min-width: 8rem">Total HT <p-sortIcon field="ligneHt"></p-sortIcon></th>
+                    <th pSortableColumn="ligneTtc" class="text-right" style="min-width: 8rem">Total TTC <p-sortIcon field="ligneTtc"></p-sortIcon></th>
+                    <th style="width: 5rem"></th>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-ligne let-i="rowIndex">
+                <tr>
+                    <td>{{ i + 1 }}</td>
+                    <td>
+                        <div class="flex flex-column">
+                            <p-tag [value]="ligne.ligneArtDesi" severity="info" [rounded]="true"></p-tag>
+                        </div>
+                    </td>
+                    <td>{{ ligne.ligneArtCode }}</td>
+                    <td class="text-center">
+                        <p-inputNumber
+                            [showButtons]="true"
+                            buttonLayout="horizontal"
+                            [min]="1"
+                            [step]="1"
+                            [(ngModel)]="ligne.ligneQte"
+                            (onInput)="onQuantityChange(ligne)"
+                            styleClass="w-full"
+                            inputStyleClass="text-center"
+                            [size]="'small'"
+                        ></p-inputNumber>
+                    </td>
+                    <td class="text-right font-medium">{{ ligne.lignePu | currency: 'TND ' }}</td>
+                    <td class="text-right font-medium">{{ ligne.ligneHt | currency: 'TND ' }}</td>
+                    <td class="text-right font-bold text-primary-500">{{ ligne.ligneTtc | currency: 'TND ' }}</td>
+                    <td>
+                        <div class="flex justify-content-center">
+                            <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" pTooltip="Supprimer" tooltipPosition="top" (click)="supprimerLigne(ligne)"></button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="footer" *ngIf="commande">
+                <tr>
+                    <td colspan="5" class="text-right font-bold">Total :</td>
+                    <td class="text-right font-bold">{{ commande.docTht | currency: 'TND ' }}</td>
+                    <td class="text-right font-bold text-primary-500">{{ commande.docTtc | currency: 'TND ' }}</td>
+                    <td></td>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="8" class="text-center p-5">
+                        <div class="flex flex-column align-items-center">
+                            <i class="pi pi-inbox text-6xl text-color-secondary mb-3"></i>
+                            <span class="font-medium text-xl">Aucun article dans cette commande</span>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </p-card>
+</div>
+
+<!-- Boîte de dialogue de confirmation -->
+<p-confirmDialog> </p-confirmDialog>
+
+<!-- Toast pour les messages -->
+<p-toast></p-toast>

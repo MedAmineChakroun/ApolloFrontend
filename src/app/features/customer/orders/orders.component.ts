@@ -40,6 +40,11 @@ export class OrdersComponent implements OnInit {
     Filtre: string = '';
     statusFilter: string | null = null;
 
+    // Constantes pour les états de commande
+    readonly STATUS_EN_ATTENTE: number = 0;
+    readonly STATUS_ACCEPTE: number = 1;
+    readonly STATUS_REFUSE: number = 2;
+
     constructor(
         private router: Router,
         private route: ActivatedRoute,
@@ -103,11 +108,11 @@ export class OrdersComponent implements OnInit {
 
         // Make sure the case matches exactly what's in the URL
         if (this.statusFilter.toLowerCase() === 'accepte') {
-            etatValue = 1;
+            etatValue = this.STATUS_ACCEPTE;
         } else if (this.statusFilter.toLowerCase() === 'refuse') {
-            etatValue = 2;
+            etatValue = this.STATUS_REFUSE;
         } else if (this.statusFilter.toLowerCase() === 'attente') {
-            etatValue = 0;
+            etatValue = this.STATUS_EN_ATTENTE;
         }
 
         // Filter orders by Etat value if specified
@@ -122,6 +127,7 @@ export class OrdersComponent implements OnInit {
             this.filteredOrders = [...this.orders];
         }
     }
+
     loadNbLigne() {
         this.orders.forEach((order) => {
             this.commandeService.getNbLigneCommandeParDocPiece(order.docPiece).subscribe({
@@ -141,6 +147,21 @@ export class OrdersComponent implements OnInit {
 
     viewOrderDetails(orderId: string) {
         this.router.navigate(['/store/customer/orderDetails', orderId]);
+    }
+
+    updateOrderDetails(orderId: string) {
+        this.router.navigate(['/store/customer/orders/edit', orderId]);
+    }
+
+    editOrder(order: DocumentVente) {
+        // Vérification si la commande est en attente
+        if (order.docEtat !== this.STATUS_EN_ATTENTE) {
+            this.toast.warning('Seules les commandes en attente peuvent être modifiées');
+            return;
+        }
+
+        // Navigation vers le composant d'édition de commande avec l'ID de la commande
+        this.router.navigate(['/store/customer/edit-order', order.docPiece]);
     }
 
     customSort(event: any) {
@@ -171,9 +192,9 @@ export class OrdersComponent implements OnInit {
     }
 
     exportCSV() {
-        const headers = ['Order #', 'Customer Code', 'Date', 'Article Count', 'Total HT', 'Total TTC'];
+        const headers = ['Order #', 'Customer Code', 'Date', 'Article Count', 'Total HT', 'Total TTC', 'Status'];
         // Use filteredOrders instead of orders for export
-        const rows = this.filteredOrders.map((order) => [order.docPiece, order.docTiersCode, new Date(order.docDate).toLocaleDateString(), this.articleCounts[order.docPiece] || 0, order.docTht, order.docTtc]);
+        const rows = this.filteredOrders.map((order) => [order.docPiece, order.docTiersCode, new Date(order.docDate).toLocaleDateString(), this.articleCounts[order.docPiece] || 0, order.docTht, order.docTtc, this.getStatus(order.docEtat).label]);
 
         const csvContent = [headers, ...rows].map((row) => row.map((cell) => `"${cell}"`).join(',')).join('\n');
 
@@ -192,19 +213,24 @@ export class OrdersComponent implements OnInit {
 
     getStatus(etat: number): { label: string; severity: 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' | undefined } {
         switch (etat) {
-            case 0:
+            case this.STATUS_EN_ATTENTE:
                 return { label: 'En attente', severity: 'secondary' };
-            case 1:
+            case this.STATUS_ACCEPTE:
                 return { label: 'Accepté', severity: 'success' };
-            case 2:
+            case this.STATUS_REFUSE:
                 return { label: 'Refusé', severity: 'danger' };
             default:
                 return { label: 'Inconnu', severity: 'info' };
         }
     }
 
-    supprimerCommande(docId: number) {
-        console.log(docId);
+    supprimerCommande(docId: number, docEtat: number) {
+        // Vérification si la commande est en attente
+        if (docEtat !== this.STATUS_EN_ATTENTE) {
+            this.toast.warning('Seules les commandes en attente peuvent être supprimées');
+            return;
+        }
+
         this.confirmationService.confirm({
             message: 'Voulez-vous vraiment supprimer cette commande ?',
             header: 'Confirmation',
@@ -213,12 +239,22 @@ export class OrdersComponent implements OnInit {
             rejectLabel: 'Non',
             rejectButtonStyleClass: 'p-button-danger',
             accept: () => {
-                this.commandeService.deleteDocumentVente(docId).subscribe(() => {
-                    this.toast.success('Commande supprimée');
-                    this.loadData();
+                this.commandeService.deleteDocumentVente(docId).subscribe({
+                    next: () => {
+                        this.toast.success('Commande supprimée avec succès');
+                        this.loadData(); // Recharger les données après suppression
+                    },
+                    error: (err) => {
+                        console.error('Erreur lors de la suppression de la commande:', err);
+                        this.toast.error('Échec de la suppression de la commande');
+                    }
                 });
-            },
-            reject: () => {}
+            }
         });
+    }
+
+    // Vérifier si une commande peut être modifiée ou supprimée
+    canEditOrDelete(docEtat: number): boolean {
+        return docEtat === this.STATUS_EN_ATTENTE;
     }
 }
