@@ -22,6 +22,7 @@ import { SignalRService } from '../../core/services/signalr.service';
 import { ToastrService } from 'ngx-toastr';
 import { MenuModule } from 'primeng/menu';
 import { ProductsService } from '../../core/services/products.service';
+import { TooltipModule } from 'primeng/tooltip';
 
 // Define the Famille interface
 export interface Famille {
@@ -33,7 +34,7 @@ export interface Famille {
 @Component({
     selector: 'app-topbar',
     standalone: true,
-    imports: [MenuModule, RouterModule, CommonModule, StyleClassModule, ConfirmDialogModule, ButtonModule, BadgeModule, SidebarModule, OverlayPanelModule],
+    imports: [MenuModule, RouterModule, CommonModule, StyleClassModule, ConfirmDialogModule, ButtonModule, BadgeModule, SidebarModule, OverlayPanelModule, TooltipModule],
     providers: [ConfirmationService, CartService, NotificationService, ToastrService, ProductsService],
     styleUrls: ['./app.topbar.scss'],
     templateUrl: './app.topbar.html'
@@ -230,6 +231,13 @@ export class AppTopbar implements OnInit, OnDestroy {
         this.readNotifications = this.notifications.filter((notification) => notification.isRead);
     }
 
+    // Method to extract order ID from notification title or message
+    extractOrderId(text: string): string | null {
+        // Match exactly 7 characters after the # symbol
+        const orderIdMatch = text.match(/#(\d{7})/);
+        return orderIdMatch ? orderIdMatch[1] : null;
+    }
+
     readNotification(notification: Notification) {
         if (!notification.isRead) {
             this.notificationService.markAsRead(notification.id).subscribe(() => {
@@ -239,7 +247,15 @@ export class AppTopbar implements OnInit, OnDestroy {
         }
 
         if (notification.type === 'commande') {
-            this.router.navigate(['/store/customer/orders']);
+            // Try to extract order ID from the title first, then from the message
+            let orderId = this.extractOrderId(notification.message);
+            
+            if (orderId) {
+                this.router.navigate(['/store/customer/orderDetails', orderId]);
+            } else {
+                // Fallback to orders list if no order ID is found
+                this.router.navigate(['/store/customer/orders']);
+            }
         }
     }
 

@@ -42,6 +42,10 @@ export class CommandesManagementComponent implements OnInit {
     isSyncRoute = false;
     isNonSyncRoute = false;
     totalCommandes = 0;
+    // Constantes pour les états de commande
+    readonly STATUS_EN_ATTENTE: number = 0;
+    readonly STATUS_ACCEPTE: number = 1;
+    readonly STATUS_REFUSE: number = 2;
     // New properties for rejection dialog
     rejectionDialogVisible: boolean = false;
     currentOrder: DocumentVente | null = null;
@@ -52,6 +56,36 @@ export class CommandesManagementComponent implements OnInit {
         { label: 'Accepté', value: 1, severity: 'success' },
         { label: 'Refusé', value: 2, severity: 'danger' }
     ];
+
+    // Color map for initials based on first character
+    colorMap: { [key: string]: string } = {
+        'A': '#4CAF50', // Green
+        'B': '#FFC107', // Yellow
+        'C': '#2196F3', // Blue
+        'D': '#9C27B0', // Purple
+        'E': '#FF5722', // Deep Orange
+        'F': '#795548', // Brown
+        'G': '#607D8B', // Blue Grey
+        'H': '#F44336', // Red
+        'I': '#00BCD4', // Cyan
+        'J': '#3F51B5', // Indigo
+        'K': '#8BC34A', // Light Green
+        'L': '#FF9800', // Orange
+        'M': '#E91E63', // Pink
+        'N': '#009688', // Teal
+        'O': '#673AB7', // Deep Purple
+        'P': '#FFEB3B', // Yellow
+        'Q': '#CDDC39', // Lime
+        'R': '#03A9F4', // Light Blue
+        'S': '#FF5252', // Red Accent
+        'T': '#69F0AE', // Green Accent
+        'U': '#40C4FF', // Blue Accent
+        'V': '#B388FF', // Purple Accent
+        'W': '#FFD740', // Amber Accent
+        'X': '#64FFDA', // Teal Accent
+        'Y': '#FF80AB', // Pink Accent
+        'Z': '#B2FF59'  // Light Green Accent
+    };
 
     constructor(
         private commandeService: CommandeService,
@@ -117,6 +151,13 @@ export class CommandesManagementComponent implements OnInit {
             .map((word) => word.charAt(0).toUpperCase())
             .join('')
             .substring(0, 2); // Limit to 2 characters
+    }
+
+    getInitialColor(name: string): string {
+        if (!name) return '#3B82F6'; // Default to primary color
+        
+        const firstChar = name.charAt(0).toUpperCase();
+        return this.colorMap[firstChar] || '#3B82F6'; // Return mapped color or default
     }
 
     applyStatusFilter(statusValue: number | null) {
@@ -347,5 +388,11 @@ export class CommandesManagementComponent implements OnInit {
             summary: 'Info',
             detail: 'Synchronisation en cours...'
         });
+    }
+    canEditOrDelete(docEtat: number): boolean {
+        return docEtat === this.STATUS_EN_ATTENTE;
+    }
+    updateOrderDetails(orderId: string) {
+        this.router.navigate(['/store/customer/orders/edit', orderId]);
     }
 }

@@ -22,7 +22,7 @@
                     Pour Vous
                 </span>
             </div>
-            <div *ngIf="!IsAdmin()" class="categories-menu categories-container" (click)="navigateToMeilleurVentes()">
+            <div *ngIf="!IsAdmin()" class="categories-menu categories-container" (click)="navigateToMeilleurVentes()" >
                 <span class="categories-button">
                     <i class="pi pi-thumbs-up mr-2"></i>
                     Meilleurs ventes
@@ -35,7 +35,7 @@
                 </span>
             </div>
             <div *ngIf="!IsAdmin()" class="categories-container hidden lg:block">
-                <div class="categories-menu" (mouseenter)="showCategoriesMenu = true" (mouseleave)="showCategoriesMenu = false">
+                <div class="categories-menu" (mouseenter)="showCategoriesMenu = true" (mouseleave)="showCategoriesMenu = false" >
                     <span class="categories-button">
                         <i class="pi pi-th-large mr-2"></i>
                         Categories
@@ -59,14 +59,14 @@
                 </span>
             </div>
 
-            <div class="justify-items-center align-items-center flex">
+            <div *ngIf="!IsAdmin()" class="justify-items-center align-items-center flex">
                 <!-- Notification Icon with Badge for Desktop -->
-                <div class="notification-icon" (click)="op.toggle($event)">
+                <div class="notification-icon" (click)="op.toggle($event)" pTooltip="Notifications" tooltipPosition="bottom">
                     <i class="pi pi-bell"></i>
                     <span *ngIf="unreadNotificationsCount > 0" class="notification-badge">{{ unreadNotificationsCount }}</span>
                 </div>
                 <!-- Cart Icon with Badge for Desktop -->
-                <div class="cart-icon" (click)="navigateToCart()" *ngIf="!IsAdmin()">
+                <div class="cart-icon" (click)="navigateToCart()" pTooltip="Panier" tooltipPosition="bottom">
                     <i class="pi pi-shopping-cart"></i>
                     <span *ngIf="cartItems.length > 0" class="cart-badge">{{ cartTotal }}</span>
                 </div>
@@ -75,19 +75,19 @@
         <!-- Desktop Menu -->
         <div *ngIf="isConnected" class="layout-topbar-menu hidden lg:block">
             <div class="layout-topbar-menu-content">
-                <button (click)="navigateToOrders()" class="layout-topbar-action" type="button" *ngIf="!IsAdmin()">
+                <button *ngIf="!IsAdmin()" (click)="navigateToOrders()" class="layout-topbar-action" type="button" pTooltip="Vos Commandes" tooltipPosition="bottom">
                     <i class="pi pi-shopping-bag"></i>
                     <span>Orders</span>
                 </button>
-                <button (click)="navigateToContact()" type="button" class="layout-topbar-action">
+                <button  *ngIf="!IsAdmin()" (click)="navigateToContact()" type="button" class="layout-topbar-action" pTooltip="Contacter Support" tooltipPosition="bottom">
                     <i class="pi pi-envelope"></i>
                     <span>Contact</span>
                 </button>
-                <button (click)="navigateToProfile()" type="button" class="layout-topbar-action">
+                <button *ngIf="!IsAdmin()" (click)="navigateToProfile()" type="button" class="layout-topbar-action" pTooltip="Votre Profil" tooltipPosition="bottom">
                     <i class="pi pi-user"></i>
                     <span>Profile</span>
                 </button>
-                <button (click)="confirmLogout()" type="button" class="layout-topbar-action">
+                <button (click)="confirmLogout()" type="button" class="layout-topbar-action" pTooltip="se Déconnecter" tooltipPosition="bottom">
                     <i class="pi pi-sign-out"></i>
                     <span>Exit</span>
                 </button>
@@ -95,11 +95,11 @@
         </div>
         <div *ngIf="!isConnected" class="layout-topbar-menu hidden lg:block">
             <div class="layout-topbar-menu-content">
-                <button (click)="navigateToContact()" type="button" class="layout-topbar-action">
+                <button  (click)="navigateToContact()" type="button" class="layout-topbar-action" pTooltip="Contacter Support" tooltipPosition="bottom">
                     <i class="pi pi-envelope"></i>
                     <span>Contact</span>
                 </button>
-                <button (click)="loginMenu.toggle($event)" type="button" class="layout-topbar-action">
+                <button (click)="loginMenu.toggle($event)" type="button" class="layout-topbar-action" pTooltip="Connexion" tooltipPosition="bottom">
                     <i class="pi pi-user"></i>
                     <span>Account</span>
                 </button>
@@ -171,7 +171,7 @@
 
 <!-- Notification Panel -->
 <p-overlayPanel #op [dismissable]="true" [showCloseIcon]="true" [style]="{ width: '350px' }" class="fixed">
-    <ng-template pTemplate>
+    <ng-template pTemplate >
         <div class="notification-header">
             <h3 class="m-0 text-lg font-medium">Notifications</h3>
             <button pButton class="p-button-text p-button-sm" label="Marker comme lu" (click)="markAllAsRead()" *ngIf="unreadNotificationsCount > 0"></button>
@@ -185,7 +185,11 @@
                     <span class="section-count">{{ unreadNotifications.length }}</span>
                 </div>
                 <div class="notification-items">
-                    <div class="notification-item unread" *ngFor="let notification of unreadNotifications" [ngClass]="['notification-status', getStatusClass(notification.title)]" (click)="readNotification(notification)">
+                    <div class="notification-item unread" *ngFor="let notification of unreadNotifications" 
+                        [ngClass]="['notification-status', getStatusClass(notification.title)]" 
+                        (click)="readNotification(notification)"
+                        style="cursor: pointer; transition: background-color 0.2s;"
+                        pTooltip="Cliquez pour voir les détails" tooltipPosition="left">
                         <div class="notification-icon" [ngClass]="getIconClass(notification.type)">
                             <i class="pi" [ngClass]="getIconType(notification.type)"></i>
                         </div>
@@ -208,7 +212,10 @@
                     <span class="section-count">{{ readNotifications.length }}</span>
                 </div>
                 <div class="notification-items">
-                    <div class="notification-item" *ngFor="let notification of readNotifications" (click)="readNotification(notification)">
+                    <div class="notification-item" *ngFor="let notification of readNotifications" 
+                        (click)="readNotification(notification)"
+                        style="cursor: pointer; transition: background-color 0.2s;"
+                        pTooltip="Cliquez pour voir les détails" tooltipPosition="left">
                         <div class="notification-icon faded" [ngClass]="getIconClass(notification.type)">
                             <i class="pi" [ngClass]="getIconType(notification.type)"></i>
                         </div>

@@ -153,17 +153,6 @@ export class OrdersComponent implements OnInit {
         this.router.navigate(['/store/customer/orders/edit', orderId]);
     }
 
-    editOrder(order: DocumentVente) {
-        // Vérification si la commande est en attente
-        if (order.docEtat !== this.STATUS_EN_ATTENTE) {
-            this.toast.warning('Seules les commandes en attente peuvent être modifiées');
-            return;
-        }
-
-        // Navigation vers le composant d'édition de commande avec l'ID de la commande
-        this.router.navigate(['/store/customer/edit-order', order.docPiece]);
-    }
-
     customSort(event: any) {
         const field = event.field as keyof DocumentVente | 'articleCount';
 

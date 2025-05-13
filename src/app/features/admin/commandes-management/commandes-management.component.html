@@ -91,7 +91,7 @@
                     </td>
                     <td>
                         <div class="flex align-items-center justify-content-center">
-                            <span class="badge bg-primary-500 text-white p-2 text-center" style="border-radius: 50%; width: 2.5rem; height: 2.5rem; display: flex; align-items: center; justify-content: center">
+                            <span class="badge text-white p-2 text-center" [ngStyle]="{'background-color': getInitialColor(order.docTiersIntitule)}" style="border-radius: 50%; width: 2.5rem; height: 2.5rem; display: flex; align-items: center; justify-content: center">
                                 {{ getInitials(order.docTiersIntitule) }}
                             </span>
                         </div>
@@ -119,6 +119,17 @@
                     <td>
                         <div class="flex gap-2 justify-content-center">
                             <button pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-info" pTooltip="Voir Details" tooltipPosition="top" (click)="viewOrderDetails(order.docPiece)"></button>
+                            <button
+                                pButton
+                                pRipple
+                                icon="pi pi-pencil"
+                                class="p-button-rounded"
+                                severity="primary"
+                                pTooltip="Modifier"
+                                tooltipPosition="top"
+                                [disabled]="!canEditOrDelete(order.docEtat)"
+                                (click)="updateOrderDetails(order.docPiece)"
+                            ></button>
                             <button pButton pRipple icon="pi pi-user" class="p-button-rounded p-button-help" pTooltip="Voir client" tooltipPosition="top" (click)="viewCustomerDetails(order)"></button>
                             <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" pTooltip="Supprimer" tooltipPosition="top" (click)="supprimerCommande(order.docId)"></button>
                         </div>
