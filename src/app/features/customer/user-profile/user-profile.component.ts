@@ -15,6 +15,11 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { InputTextModule } from 'primeng/inputtext';
 import { ActivatedRoute } from '@angular/router';
 import { TagModule } from 'primeng/tag';
+import { DialogModule } from 'primeng/dialog';
+import { QRCodeComponent } from 'angularx-qrcode';
+import { TooltipModule } from 'primeng/tooltip';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+
 interface DecodedToken {
     Id: string;
     ClientId: string;
@@ -29,7 +34,18 @@ interface DecodedToken {
 @Component({
     selector: 'app-user-profile',
     standalone: true,
-    imports: [ReactiveFormsModule, CommonModule, ButtonModule, InputMaskModule, ProgressSpinnerModule, InputTextModule, TagModule],
+    imports: [
+        ReactiveFormsModule, 
+        CommonModule, 
+        ButtonModule, 
+        InputMaskModule, 
+        ProgressSpinnerModule, 
+        InputTextModule, 
+        TagModule,
+        DialogModule,
+        QRCodeComponent,
+        TooltipModule
+    ],
     templateUrl: './user-profile.component.html',
     styleUrls: ['./user-profile.component.scss']
 })
@@ -41,12 +57,20 @@ export class UserProfileComponent implements OnInit {
     userEmail: string = '';
     routeUrl: boolean = false;
     role: string = ''; // Default role
+    
+    // QR Code related properties
+    showQrCodeDialog: boolean = false;
+    qrCodeData: string = '';
+    qrCodeSize: number = 300;
+    qrCodeDownloadLink: SafeUrl = '';
+    
     constructor(
         private fb: FormBuilder,
         private userService: UserService,
         private toastr: ToastrService,
         private store: Store,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+        private domSanitizer: DomSanitizer
     ) {
         this.profileForm = this.fb.group({
             id: [''],
@@ -71,6 +95,7 @@ export class UserProfileComponent implements OnInit {
                     this.clientData = data;
                     console.log(data);
                     this.getRole(this.clientData.tiersId);
+                    this.generateQrCodeData();
                 },
                 error: () => {
                     this.toastr.error('Erreur lors du chargement des données utilisateur.');
@@ -96,6 +121,8 @@ export class UserProfileComponent implements OnInit {
                             country: client.tiersPays,
                             phone: client.tiersTel1
                         });
+                        
+                        this.generateQrCodeData();
                     }
                 },
                 (error) => {
@@ -104,6 +131,47 @@ export class UserProfileComponent implements OnInit {
                 }
             );
         }
+    }
+
+    // Generate QR code data from client information
+    generateQrCodeData(): void {
+        if (!this.clientData) return;
+        
+        // Format with line breaks for better readability when scanned
+        const formattedText = 
+`Client: ${this.clientData.tiersIntitule}
+ID: ${this.clientData.tiersCode}
+Email: ${this.userEmail || this.clientData.tiersEmail || 'N/A'}
+Phone: ${this.clientData.tiersTel1 || 'N/A'}
+Address: ${this.clientData.tiersAdresse1 || 'N/A'}
+City: ${this.clientData.tiersVille || 'N/A'}, ${this.clientData.tiersCodePostal || 'N/A'}
+Country: ${this.clientData.tiersPays || 'N/A'}
+Role: ${this.role || 'Customer'}`;
+        
+        this.qrCodeData = formattedText;
+    }
+    
+    // Open QR code dialog
+    openQrCodeDialog(): void {
+        this.generateQrCodeData();
+        this.showQrCodeDialog = true;
+    }
+    
+    // Download QR code as image
+    downloadQrCode(): void {
+        const canvas = document.querySelector('canvas') as HTMLCanvasElement;
+        if (!canvas) {
+            this.toastr.error('Cannot find QR code canvas to download');
+            return;
+        }
+        
+        const link = document.createElement('a');
+        const clientName = this.clientData?.tiersIntitule?.replace(/\s+/g, '_') || 'user';
+        const timestamp = new Date().toISOString().slice(0, 10);
+        link.download = `${clientName}_profile_qrcode_${timestamp}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        this.toastr.success('QR code downloaded successfully');
     }
 
     private getUserEmailFromToken(): void {

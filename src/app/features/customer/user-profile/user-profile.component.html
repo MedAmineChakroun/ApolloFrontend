@@ -9,7 +9,7 @@
             <div class="flex items-center justify-between">
                 <h1 class="text-3xl font-bold mb-2 text-white">{{ clientData?.tiersIntitule || 'User Profile' }}</h1>
                 <div class="hidden md:flex items-center space-x-3">
-                    <p-button icon="pi pi-qrcode" styleClass="p-button-rounded "></p-button>
+                    <p-button icon="pi pi-qrcode" styleClass="p-button-rounded" (click)="openQrCodeDialog()" pTooltip="Generate QR Code" tooltipPosition="left" severity="contrast"></p-button>
                 </div>
             </div>
             <p class="text-blue-100 text-sm flex items-center"><i class="pi pi-id-card mr-2"></i>Client #{{ clientData?.tiersCode || 'N/A' }}</p>
@@ -43,11 +43,6 @@
                             <div class="text-center">
                                 <div class="text-gray-500 text-xs">JOINED</div>
                                 <div class="font-semibold">{{ clientData?.tiersDateCreate | date: 'dd/MM/yyyy' }}</div>
-                            </div>
-
-                            <div class="text-center">
-                                <div class="text-gray-500 text-xs">ROLE</div>
-                                <div class="font-semibold">{{ this.role }}</div>
                             </div>
                         </div>
 
@@ -221,3 +216,45 @@
         </div>
     </div>
 </div>
+
+<!-- QR Code Dialog -->
+<p-dialog 
+    [(visible)]="showQrCodeDialog" 
+    [modal]="true" 
+    [draggable]="false" 
+    [resizable]="false"
+    [style]="{width: '450px'}"
+    [styleClass]="'rounded-lg'"
+    header="Your Profile QR Code"
+    [closeOnEscape]="true"
+    [closable]="true">
+    
+    <div class="flex flex-column align-items-center justify-content-center p-4">
+        <div class="qr-code-container bg-white p-4 border border-gray-200 rounded-lg shadow-sm mb-4">
+            <qrcode 
+                *ngIf="qrCodeData"
+                [qrdata]="qrCodeData" 
+                [width]="qrCodeSize"
+                [errorCorrectionLevel]="'M'"
+                (qrCodeURL)="qrCodeDownloadLink = $event"
+                cssClass="shadow-sm"></qrcode>
+        </div>
+            
+        <div class="mt-2 text-center w-full">
+            <p class="text-sm text-gray-600 mb-3">
+                This QR code contains your profile information.
+                <br>When scanned, all data will appear as text with line breaks.
+            </p>
+            
+            <div class="flex justify-content-center gap-2">
+                <p-button 
+                    label="Download" 
+                    icon="pi pi-download" 
+                    styleClass="p-button-sm" 
+                    (onClick)="downloadQrCode()">
+                </p-button>
+              
+            </div>
+        </div>
+    </div>
+</p-dialog>
