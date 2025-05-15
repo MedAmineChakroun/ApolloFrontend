@@ -24,10 +24,12 @@ import { ProductsService } from '../../../core/services/products.service';
 import { Product } from '../../../models/Product';
 import { CardModule } from 'primeng/card';
 import { CarouselModule } from 'primeng/carousel';
+import { TooltipModule } from 'primeng/tooltip';
+
 @Component({
     selector: 'app-shopping-cart',
     standalone: true,
-    imports: [CommonModule, ButtonModule, StepperModule, DialogModule, FormsModule, CheckboxModule, CardModule, CarouselModule],
+    imports: [TooltipModule, CommonModule, ButtonModule, StepperModule, DialogModule, FormsModule, CheckboxModule, CardModule, CarouselModule],
     providers: [],
     templateUrl: './shopping-cart.component.html',
     styleUrls: ['./shopping-cart.component.css']
@@ -105,9 +107,9 @@ export class ShoppingCartComponent implements OnInit {
         if (this.authService.isAuthenticated()) {
             this.getClientFromStore();
         }
-        
+
         // Fetch recommendations only once when component initializes
-        this.cartItems$.pipe(take(1)).subscribe(items => {
+        this.cartItems$.pipe(take(1)).subscribe((items) => {
             if (items.length > 0) {
                 this.getRecommendedProducts(items);
             }
@@ -241,29 +243,28 @@ export class ShoppingCartComponent implements OnInit {
     getRecommendedProducts(items: CartItem[]): void {
         this.isLoadingRecommendations = true;
         this.recommendedProducts = []; // Clear previous recommendations
-        const itemIds = items.map(item => item.product.artCode);
-        
+        const itemIds = items.map((item) => item.product.artCode);
+
         if (itemIds.length === 0) {
             this.isLoadingRecommendations = false;
             return;
         }
-        
-        this.productsService.getRecommendedProductsForCart(itemIds, 5)
-            .subscribe({
-                next: (products) => {
-                    setTimeout(() => {
-                        this.recommendedProducts = products;
-                        this.isLoadingRecommendations = false;
-                    }, 800); // Add a slight delay for better UX
-                },
-                error: (error) => {
-                    console.error('Error fetching recommended products:', error);
-                    this.isLoadingRecommendations = false;
-                    this.recommendedProducts = [];
-                }
-            });
-    }
 
+        this.productsService.getRecommendedProductsForCart(itemIds, 5).subscribe({
+            next: (products) => {
+                setTimeout(() => {
+                    console.log('Recommended products:', products);
+                    this.recommendedProducts = products;
+                    this.isLoadingRecommendations = false;
+                }, 800); // Add a slight delay for better UX
+            },
+            error: (error) => {
+                console.error('Error fetching recommended products:', error);
+                this.isLoadingRecommendations = false;
+                this.recommendedProducts = [];
+            }
+        });
+    }
 
     navigateToProduct(productId: number): void {
         this.router.navigate([`/store/products/${productId}`]);

@@ -523,8 +523,7 @@
 }
 /* Side Recommendations Styles */
 .side-recommendations {
-    margin-top: 1.5rem;
-    padding-top: 1.5rem;
+    margin-top: 0.5rem;
     border-top: 1px dashed var(--surface-border);
     animation: fadeIn 0.5s ease-out;
 }
@@ -556,7 +555,7 @@
     border-radius: 0.3rem;
     margin-bottom: 0.75rem;
     position: relative;
-
+    transition: 0.3s;
     background-color: #fff;
 }
 
@@ -567,7 +566,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(0,0,0,0.2) 100%);
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0.2) 100%);
     border-radius: 0.8rem;
     z-index: 1;
 }
@@ -579,7 +578,7 @@
     transition: transform 0.3s ease;
 }
 
-.side-recommendation-img:hover img {
+.side-recommendation-img:hover {
     transform: scale(1.05);
 }
 
@@ -623,20 +622,17 @@
 }
 
 .add-btn {
-    width: 100%;
+    width: 60%;
     justify-content: center;
     box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
 .add-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
-
-/* Custom styling for PrimeNG carousel in recommendations */
-:host ::ng-deep .side-recommendations .p-carousel .p-carousel-indicators {
-    margin-top: 0.75rem;
 }
 
 :host ::ng-deep .side-recommendations .p-carousel .p-carousel-indicators .p-carousel-indicator button {
@@ -756,8 +752,128 @@
     font-size: 0.9rem;
     line-height: 1.4;
 }
-
-.empty-recommendations-content button {
-    margin-top: 0.5rem;
+/* Dialog Styles */
+:host ::ng-deep .terms-dialog .p-dialog-header {
+    border-bottom: 1px solid var(--surface-border);
+    padding: 1.5rem;
+    background: var(--surface-card);
 }
 
+:host ::ng-deep .terms-dialog .p-dialog-content {
+    padding: 0;
+    background: var(--surface-card);
+}
+
+.terms-content {
+    padding: 1.5rem;
+}
+
+.terms-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.terms-header i {
+    font-size: 2rem;
+    color: var(--primary-color);
+}
+
+.terms-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.terms-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.terms-item {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    padding: 1rem;
+    background: var(--surface-ground);
+    border-radius: 8px;
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.terms-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.terms-item i {
+    font-size: 1.25rem;
+    margin-top: 0.25rem;
+}
+
+.terms-item div {
+    flex: 1;
+}
+
+.terms-item strong {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+}
+
+.terms-item p {
+    margin: 0;
+    color: var(--text-color-secondary);
+    line-height: 1.4;
+}
+
+.terms-acceptance {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    background: var(--surface-hover);
+    border-radius: 8px;
+    margin-top: 1rem;
+}
+
+.dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: var(--surface-ground);
+    border-top: 1px solid var(--surface-border);
+}
+
+/* Button hover effects */
+:host ::ng-deep .dialog-footer .p-button {
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+:host ::ng-deep .dialog-footer .p-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+    .terms-item {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .terms-item i {
+        font-size: 1.5rem;
+    }
+}

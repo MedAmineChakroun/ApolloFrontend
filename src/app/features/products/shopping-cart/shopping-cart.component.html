@@ -44,7 +44,7 @@
             <ng-template pTemplate="footer">
                 <div class="flex justify-end gap-3 px-3 py-2 border-t border-gray-200">
                     <button pButton label="Annuler" class="p-button-outlined p-button-sm" (click)="close()"></button>
-                    <button pButton label="Accepter" severty="contrast" class="p-button-sm" [disabled]="!accepted" (click)="PasserCommande()"></button>
+                    <button pButton label="Accepter" class="p-button-sm" [disabled]="!accepted" (click)="PasserCommande()"></button>
                 </div>
             </ng-template>
         </p-dialog>
@@ -155,15 +155,26 @@
                     </div>
 
                     <div class="cart-actions">
-                        <button pButton label="Continue Shopping" (click)="continueShopping()" class="p-button-outlined"></button>
-                        <button pButton label="Passer Commande" (click)="open()" class="p-button-primary" [disabled]="(cartItemCount$ | async) === 0 || !isAuthenticated()"></button>
+                        <button pButton severity="contrast" label="Continue Shopping" (click)="continueShopping()" class="p-button-outlined"></button>
+                        <button
+                            pButton
+                            label="Passer Commande"
+                            (click)="open()"
+                            class="p-button-primary"
+                            [disabled]="(cartItemCount$ | async) === 0 || !isAuthenticated()"
+                            pTooltip="Veuillez vous connecter d'abord"
+                            tooltipPosition="top"
+                            [showDelay]="100"
+                            [tooltipDisabled]="isAuthenticated()"
+                            severity="contrast"
+                        ></button>
                     </div>
 
                     <div class="shipping-info" *ngIf="!isEligibleForFreeShipping()">
                         <i class="pi pi-truck"></i>
                         <span>Add {{ FREE_SHIPPING_THRESHOLD - currentTotal | currency: 'TND' : 'symbol' }} more to get free shipping!</span>
                     </div>
-                    
+
                     <!-- Recommendations with loading & empty states -->
                     <ng-container *ngIf="((cartItems$ | async) ?? []).length > 0">
                         <!-- Loading state -->
@@ -180,34 +191,30 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <!-- Recommendation items -->
                         <div class="side-recommendations" *ngIf="!isLoadingRecommendations && recommendedProducts.length > 0">
                             <div class="side-recommendations-header">
                                 <h4>You might also like</h4>
                             </div>
-                            <p-carousel [value]="recommendedProducts" [numVisible]="1" [numScroll]="1" [circular]="true" 
-                                [autoplayInterval]="4000" [showNavigators]="true" [showIndicators]="false">
+                            <p-carousel [value]="recommendedProducts" [numVisible]="1" [numScroll]="1" [circular]="false" [showNavigators]="false" [showIndicators]="false" styleClass="custom-carousel">
                                 <ng-template let-product pTemplate="item">
                                     <div class="side-recommendation-item">
                                         <div class="side-recommendation-img">
-                                            <img src="http://localhost:91/Images/{{ product.artImageUrl }}" 
-                                                [alt]="product.artIntitule" 
-                                                (error)="handleImageError($event)" />
-                                            <div class="price-tag" >{{ product.artPrixVente * (1 + product.artTvaTaux / 100) | currency: 'TND' : 'symbol' }}</div>
+                                            <img src="http://localhost:91/Images/{{ product.artImageUrl }}" [alt]="product.artIntitule" (error)="handleImageError($event)" />
+                                            <div class="price-tag">
+                                                {{ product.artPrixVente | currency: 'TND' : 'symbol' }}
+                                            </div>
                                         </div>
                                         <div class="side-recommendation-content">
                                             <h5 class="side-product-title">{{ product.artIntitule }}</h5>
-                                            <button pButton icon="pi pi-shopping-cart" severity="warn" Raised
-                                                label="voir plus" 
-                                                class="p-button-sm p-button-rounded add-btn" 
-                                                (click)="navigateToProduct(product.artId)"></button>
+                                            <button pButton icon="pi pi-shopping-cart" severity="warn" label="voir plus" class="p-button-sm p-button-rounded add-btn" (click)="navigateToProduct(product.artId)"></button>
                                         </div>
                                     </div>
                                 </ng-template>
                             </p-carousel>
                         </div>
-                        
+
                         <!-- No recommendations found -->
                         <div class="side-recommendations empty-recommendations" *ngIf="!isLoadingRecommendations && recommendedProducts.length === 0">
                             <div class="side-recommendations-header">
@@ -215,10 +222,8 @@
                             </div>
                             <div class="empty-recommendations-content">
                                 <i class="pi pi-search"></i>
-                                <p >Looks like these items are a bit unique! Browse other categories to find more suggestions.</p>
-                                <button pButton label="Browse Store" icon="pi pi-shopping-bag" 
-                                    class="p-button-outlined p-button-sm" 
-                                    (click)="continueShopping()"></button>
+                                <p>Looks like these items are a bit unique! Browse other categories to find more suggestions.</p>
+                                <button pButton label="Browse Store" icon="pi pi-shopping-bag" class="p-button-outlined p-button-sm" (click)="continueShopping()"></button>
                             </div>
                         </div>
                     </ng-container>

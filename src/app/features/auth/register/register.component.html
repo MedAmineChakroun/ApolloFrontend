@@ -52,7 +52,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="field">
                             <label for="name" class="block text-surface-900 dark:text-surface-0 text-sm font-medium mb-2">Username*</label>
-                            <input pInputText id="name" type="text" placeholder="Choose a username" class="w-full" [(ngModel)]="registerDto.name" required />
+                            <input pInputText id="name" type="text" placeholder="Choose a username" class="w-full" [(ngModel)]="registerDto.name" minlength="6" maxlength="69" required />
                             <small *ngIf="usernameError" class="p-error block mt-1"> <i class="pi pi-exclamation-circle mr-1"></i>Name should not contain special characters </small>
                             <small *ngIf="nameRequired" class="p-error block mt-1"> <i class="pi pi-exclamation-circle mr-1"></i>Name is required </small>
                         </div>
