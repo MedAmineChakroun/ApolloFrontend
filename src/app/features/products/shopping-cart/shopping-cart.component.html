@@ -98,7 +98,7 @@
                 <div class="cart-items">
                     <div *ngFor="let item of cartItems" class="cart-item">
                         <div class="item-image">
-                            <img src="http://localhost:91/Images/{{ item.product.artImageUrl }}" [alt]="item.product.artIntitule" (error)="handleImageError($event)" />
+                            <img src="http://localhost:91/Images/{{ item.product.artImageUrl }}" (click)="navigateToProduct(item.product.artId)" [alt]="item.product.artIntitule" (error)="handleImageError($event)" />
                         </div>
                         <div class="item-details">
                             <div class="item-header">
@@ -194,20 +194,20 @@
 
                         <!-- Recommendation items -->
                         <div class="side-recommendations" *ngIf="!isLoadingRecommendations && recommendedProducts.length > 0">
-                            <div class="side-recommendations-header">
-                                <h4>You might also like</h4>
+                            <div class="side-recommendations-header mt-3">
+                                <h4>Tu peut aussi aimer</h4>
                             </div>
                             <p-carousel [value]="recommendedProducts" [numVisible]="1" [numScroll]="1" [circular]="false" [showNavigators]="false" [showIndicators]="false" styleClass="custom-carousel">
                                 <ng-template let-product pTemplate="item">
                                     <div class="side-recommendation-item">
-                                        <div class="side-recommendation-img">
+                                        <div class="side-recommendation-img mb-3">
                                             <img src="http://localhost:91/Images/{{ product.artImageUrl }}" [alt]="product.artIntitule" (error)="handleImageError($event)" />
                                             <div class="price-tag">
                                                 {{ product.artPrixVente | currency: 'TND' : 'symbol' }}
                                             </div>
                                         </div>
                                         <div class="side-recommendation-content">
-                                            <h5 class="side-product-title">{{ product.artIntitule }}</h5>
+                                            <h5 class="side-product-title mb-2">{{ product.artIntitule }}</h5>
                                             <button pButton icon="pi pi-shopping-cart" severity="warn" label="voir plus" class="p-button-sm p-button-rounded add-btn" (click)="navigateToProduct(product.artId)"></button>
                                         </div>
                                     </div>

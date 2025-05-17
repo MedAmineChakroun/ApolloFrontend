@@ -37,7 +37,7 @@
             <ng-template #header>
                 <div class="flex flex-col md:flex-row justify-between items-center gap-4">
                     <!-- Search Bar -->
-                    <div class="w-full md:w-auto">
+                    <div class="flex-1 w-full md:w-auto">
                         <form (ngSubmit)="searchProducts()" class="flex">
                             <p-inputGroup>
                                 <input pInputText [(ngModel)]="searchQuery" name="searchQuery" placeholder="Search products..." [disabled]="isSearching" />
@@ -48,17 +48,16 @@
                     </div>
 
                     <!-- In Stock Filter -->
-                    <div class="flex-1 border-left-1 p-3 flex flex-col justify-center">
-                        <div class="flex items-center justify-between">
+                    <div class="flex-2 border-left-1 p-3 flex flex-col justify-center">
+                        <div class="flex items-center justify-between gap-2">
                             <div class="flex items-center">
-                                <i class="pi pi-check-circle mr-2"></i>
                                 <span class="font-medium">Show only In Stock items</span>
                             </div>
                             <p-checkbox [binary]="true" [(ngModel)]="inStockOnly" (onChange)="toggleInStock()"></p-checkbox>
                         </div>
                     </div>
                     <!-- Sort and View Controls -->
-                    <div class="flex items-center gap-3 w-full md:w-auto justify-between md:justify-end">
+                    <div class="flex-2 items-center gap-3 w-full md:w-auto justify-between md:justify-end">
                         <div class="flex align-items-center">
                             <p-dropdown [options]="sortOptions" [(ngModel)]="selectedSortOption" placeholder="Sort By" (onChange)="onSortChange($event)" optionLabel="label" [showClear]="true">
                                 <ng-template pTemplate="selectedItem">

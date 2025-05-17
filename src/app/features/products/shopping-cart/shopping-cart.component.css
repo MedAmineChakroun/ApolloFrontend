@@ -201,6 +201,7 @@
 
 .item-image img:hover {
     transform: scale(1.05);
+    cursor: pointer;
 }
 
 .item-details {
@@ -528,7 +529,6 @@
 }
 
 .side-recommendations-header {
-    margin-bottom: 1rem;
     text-align: center;
 }
 
@@ -578,7 +578,8 @@
 }
 
 .side-recommendation-img:hover {
-    transform: scale(1.05);
+    transform: scale(1.03);
+    cursor: pointer;
 }
 
 .price-tag {
