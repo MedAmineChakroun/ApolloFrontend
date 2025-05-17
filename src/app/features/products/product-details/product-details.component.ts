@@ -53,6 +53,12 @@ export class ProductDetailsComponent implements OnInit {
     }
 
     private loadProduct(productId: string) {
+        // Reset product and stock data first
+        this.product = null;
+        this.stockQuantity = 0;
+        this.quantity = 1;
+        this.error = null;
+
         const id = parseInt(productId, 10);
         if (isNaN(id)) {
             this.error = 'Invalid product ID';
@@ -69,6 +75,7 @@ export class ProductDetailsComponent implements OnInit {
                         },
                         error: (err) => {
                             console.error('Error loading stock data:', err);
+                            this.stockQuantity = 0; // Set to 0 if there's an error loading stock
                         }
                     });
                 } else {

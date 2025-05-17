@@ -115,7 +115,7 @@
                                     <button (click)="updateQuantity(item.product.artId, item.quantity - 1)" [disabled]="item.quantity <= 1">
                                         <i class="pi pi-minus"></i>
                                     </button>
-                                    <span>{{ item.quantity }}</span>
+                                    <input #quantityInput type="number" [value]="item.quantity" (keyup.enter)="updateQuantity(item.product.artId, +quantityInput.value)" min="1" />
                                     <button (click)="updateQuantity(item.product.artId, item.quantity + 1)">
                                         <i class="pi pi-plus"></i>
                                     </button>
