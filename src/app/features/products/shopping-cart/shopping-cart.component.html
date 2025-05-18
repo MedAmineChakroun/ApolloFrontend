@@ -197,10 +197,10 @@
                             <div class="side-recommendations-header mt-3">
                                 <h4>Tu peut aussi aimer</h4>
                             </div>
-                            <p-carousel [value]="recommendedProducts" [numVisible]="1" [numScroll]="1" [circular]="false" [showNavigators]="false" [showIndicators]="false" styleClass="custom-carousel">
+                            <p-carousel [value]="recommendedProducts" [numVisible]="1" [numScroll]="1" [autoplayInterval]="4200" [circular]="true" [showNavigators]="true" [showIndicators]="true" styleClass="custom-carousel">
                                 <ng-template let-product pTemplate="item">
                                     <div class="side-recommendation-item">
-                                        <div class="side-recommendation-img mb-3">
+                                        <div class="side-recommendation-img mb-3" (click)="navigateToProduct(product.artId)">
                                             <img src="http://localhost:91/Images/{{ product.artImageUrl }}" [alt]="product.artIntitule" (error)="handleImageError($event)" />
                                             <div class="price-tag">
                                                 {{ product.artPrixVente | currency: 'TND' : 'symbol' }}
