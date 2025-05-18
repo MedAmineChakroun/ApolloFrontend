@@ -249,7 +249,7 @@ export class AppTopbar implements OnInit, OnDestroy {
         if (notification.type === 'commande') {
             // Try to extract order ID from the title first, then from the message
             let orderId = this.extractOrderId(notification.message);
-            
+
             if (orderId) {
                 this.router.navigate(['/store/customer/orderDetails', orderId]);
             } else {
