@@ -1,53 +1,98 @@
 <div class="contact-container">
-    <p-card styleClass="shadow-3 p-4">
+    <div class="contact-background-decoration"></div>
+
+    <p-card styleClass="shadow-lg p-4 contact-card">
         <ng-template pTemplate="header">
-            <div class="text-center my-3">
-                <h2 class="text-3xl font-bold text-primary-400">Contact Us</h2>
-                <p class="text-gray-600 mt-2">We'd love to hear from you</p>
+            <div class="text-center">
+                <div class="contact-icon-container">
+                    <i class="pi pi-comments text-3xl"></i>
+                </div>
+                <h2 class="text-3xl font-bold gradient-text">Prendre contact avec nous!</h2>
             </div>
         </ng-template>
 
         <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
-            <div class="field mb-4">
-                <label for="email" class="block text-900 font-medium mb-2">Email</label>
+            <!-- Email Field -->
+            <div class="field mb-4 input-group">
+                <label for="email" class="block text-900 font-medium mb-2"> <i class="pi pi-envelope input-icon"></i> Email </label>
                 <span class="p-input-icon-left w-full">
-                    <i class="pi pi-envelope"></i>
-                    <input id="email" type="email" pInputText formControlName="email" class="w-full" placeholder="Your email address" />
+                    <input id="email" type="email" pInputText formControlName="email" class="w-full" placeholder="your.email@example.com" [ngClass]="{ 'ng-invalid ng-dirty': contactForm.get('email')?.invalid && contactForm.get('email')?.touched }" />
                 </span>
-                <small *ngIf="contactForm.get('email')?.invalid && contactForm.get('email')?.touched" class="p-error text-danger font-bold"> Please enter a valid email address </small>
+                <small *ngIf="contactForm.get('email')?.invalid && contactForm.get('email')?.touched" class="p-error"> <i class="pi pi-exclamation-circle"></i> Please enter a valid email address </small>
             </div>
 
-            <div class="field mb-4">
-                <label for="subject" class="block text-900 font-medium mb-2">Subject</label>
+            <!-- Subject Field -->
+            <div class="field mb-4 input-group">
+                <label for="subject" class="block text-900 font-medium mb-2"> <i class="pi pi-tag input-icon"></i> Subject </label>
                 <span class="p-input-icon-left w-full">
-                    <i class="pi pi-tag"></i>
-                    <input id="subject" type="text" pInputText formControlName="subject" class="w-full" placeholder="Message subject" />
+                    <input
+                        id="subject"
+                        type="text"
+                        pInputText
+                        formControlName="subject"
+                        class="w-full"
+                        placeholder="How can we help you?"
+                        [ngClass]="{ 'ng-invalid ng-dirty': contactForm.get('subject')?.invalid && contactForm.get('subject')?.touched }"
+                    />
                 </span>
-                <small *ngIf="contactForm.get('subject')?.invalid && contactForm.get('subject')?.touched" class="p-error text-danger font-bold"> Subject is required </small>
+                <small *ngIf="contactForm.get('subject')?.invalid && contactForm.get('subject')?.touched" class="p-error"> <i class="pi pi-exclamation-circle"></i> Subject is required </small>
             </div>
 
-            <div class="field mb-4">
-                <label for="message" class="block text-900 font-medium mb-2">Message</label>
-                <textarea id="message" pInputTextarea formControlName="message" [rows]="5" class="w-full" placeholder="Your message"></textarea>
-                <small *ngIf="contactForm.get('message')?.invalid && contactForm.get('message')?.touched" class="p-error text-danger font-bold"> Message is required </small>
+            <!-- Message Field -->
+            <div class="field mb-4 input-group">
+                <label for="message" class="block text-900 font-medium mb-2"> <i class="pi pi-comment input-icon"></i> Message </label>
+
+                <textarea
+                    id="message"
+                    formControlName="message"
+                    pTextarea
+                    placeholder="Your Message"
+                    [autoResize]="true"
+                    rows="5"
+                    cols="30"
+                    class="w-full"
+                    placeholder="Tell us what you need help with..."
+                    [ngClass]="{ 'ng-invalid ng-dirty': contactForm.get('message')?.invalid && contactForm.get('message')?.touched }"
+                ></textarea>
+                <small *ngIf="contactForm.get('message')?.invalid && contactForm.get('message')?.touched" class="p-error"> <i class="pi pi-exclamation-circle"></i> Message is required </small>
             </div>
 
-            <div class="flex justify-between items-center mt-4">
-                <!-- Submit button on the right -->
-                <p-button type="submit" label="Send Message" icon="pi pi-send" [disabled]="contactForm.invalid || loading" styleClass="w-auto"></p-button>
-                <!-- Loading spinner on the left -->
-                <div *ngIf="loading" class="flex items-center text-primary">
-                    <i class="pi pi-spinner pi-spin mr-2 text-xl text-purple-500"></i>
-                    <span class="text-purple-500">Sending message...</span>
+            <!-- Submit Section -->
+            <div class="form-footer mt-5">
+                <div class="send-button-container">
+                    <p-button severity="success" type="submit" [label]="loading ? 'Sending...' : 'Send Message'" icon="pi pi-send" [disabled]="contactForm.invalid || loading" styleClass="w-full send-button"></p-button>
+
+                    <div *ngIf="loading" class="loading-spinner">
+                        <i class="pi pi-spinner pi-spin"></i>
+                    </div>
+                </div>
+
+                <!-- Social Media Links -->
+                <div class="social-links mt-4">
+                    <a href="#" class="social-icon"><i class="pi pi-twitter"></i></a>
+                    <a href="#" class="social-icon"><i class="pi pi-facebook"></i></a>
+                    <a href="#" class="social-icon"><i class="pi pi-linkedin"></i></a>
+                    <a href="#" class="social-icon"><i class="pi pi-instagram"></i></a>
                 </div>
             </div>
         </form>
 
         <ng-template pTemplate="footer">
-            <div class="text-center text-gray-600 text-sm">
-                <p>
-                    You can also reach us at: <a class="text-purple-500" href="mailto:{{ recipientEmail }}">{{ recipientEmail }} </a>
-                </p>
+            <div class="contact-footer">
+                <div class="contact-methods">
+                    <div class="contact-method">
+                        <i class="pi pi-envelope-open text-xl"></i>
+                        <a class="text-link" href="mailto:{{ recipientEmail }}">{{ recipientEmail }}</a>
+                    </div>
+                    <div class="contact-method">
+                        <i class="pi pi-phone text-xl"></i>
+                        <span>+216 99 039 892</span>
+                    </div>
+                </div>
+                <div class="response-time">
+                    <i class="pi pi-clock text-sm"></i>
+                    <span>We typically respond within 24 hours</span>
+                </div>
             </div>
         </ng-template>
     </p-card>
