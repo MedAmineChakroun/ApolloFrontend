@@ -98,7 +98,7 @@
                 <div class="cart-items">
                     <div *ngFor="let item of cartItems" class="cart-item">
                         <div class="item-image">
-                            <img src="http://localhost:91/Images/{{ item.product.artImageUrl }}" (click)="navigateToProduct(item.product.artId)" [alt]="item.product.artIntitule" (error)="handleImageError($event)" />
+                            <img src="http://localhost:91/Images/{{ item.product.artImageUrl }}" (click)="navigateToProduct(item.product)" [alt]="item.product.artIntitule" (error)="handleImageError($event)" />
                         </div>
                         <div class="item-details">
                             <div class="item-header">
@@ -200,7 +200,7 @@
                             <p-carousel [value]="recommendedProducts" [numVisible]="1" [numScroll]="1" [autoplayInterval]="4200" [circular]="true" [showNavigators]="true" [showIndicators]="true" styleClass="custom-carousel">
                                 <ng-template let-product pTemplate="item">
                                     <div class="side-recommendation-item">
-                                        <div class="side-recommendation-img mb-3" (click)="navigateToProduct(product.artId)">
+                                        <div class="side-recommendation-img mb-3" (click)="navigateToproductFromRecommendation(product)">
                                             <img src="http://localhost:91/Images/{{ product.artImageUrl }}" [alt]="product.artIntitule" (error)="handleImageError($event)" />
                                             <div class="price-tag">
                                                 {{ product.artPrixVente | currency: 'TND' : 'symbol' }}
@@ -208,7 +208,7 @@
                                         </div>
                                         <div class="side-recommendation-content">
                                             <h5 class="side-product-title mb-2">{{ product.artIntitule }}</h5>
-                                            <button pButton icon="pi pi-shopping-cart" severity="warn" label="voir plus" class="p-button-sm p-button-rounded add-btn" (click)="navigateToProduct(product.artId)"></button>
+                                            <button pButton icon="pi pi-shopping-cart" severity="warn" label="voir plus" class="p-button-sm p-button-rounded add-btn" (click)="navigateToproductFromRecommendation(product)"></button>
                                         </div>
                                     </div>
                                 </ng-template>

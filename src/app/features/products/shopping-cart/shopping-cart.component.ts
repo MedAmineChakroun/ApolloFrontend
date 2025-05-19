@@ -25,6 +25,7 @@ import { Product } from '../../../models/Product';
 import { CardModule } from 'primeng/card';
 import { CarouselModule } from 'primeng/carousel';
 import { TooltipModule } from 'primeng/tooltip';
+import posthog from 'posthog-js';
 
 @Component({
     selector: 'app-shopping-cart',
@@ -49,6 +50,11 @@ export class ShoppingCartComponent implements OnInit {
     accepted = false;
     recommendedProducts: Product[] = [];
     isLoadingRecommendations = false;
+
+    //to not double fetching and web traicking
+    private lastRecommendedItemIds: string[] = [];
+    private trackedRecommendationIds = new Set<string>(); // ✅ track what's already sent
+
     responsiveOptions = [
         {
             breakpoint: '1024px',
@@ -241,9 +247,14 @@ export class ShoppingCartComponent implements OnInit {
     }
 
     getRecommendedProducts(items: CartItem[]): void {
+        //caching cart for no re fetch
         this.isLoadingRecommendations = true;
-        this.recommendedProducts = []; // Clear previous recommendations
+        this.recommendedProducts = [];
         const itemIds = items.map((item) => item.product.artCode);
+        if (JSON.stringify(itemIds) === JSON.stringify(this.lastRecommendedItemIds)) {
+            return; // Same cart items as before, skip API call
+        }
+        this.lastRecommendedItemIds = itemIds;
 
         if (itemIds.length === 0) {
             this.isLoadingRecommendations = false;
@@ -256,7 +267,17 @@ export class ShoppingCartComponent implements OnInit {
                     console.log('Recommended products:', products);
                     this.recommendedProducts = products;
                     this.isLoadingRecommendations = false;
-                }, 800); // Add a slight delay for better UX
+
+                    products.forEach((product) => {
+                        if (!this.trackedRecommendationIds.has(product.artCode)) {
+                            posthog.capture('recommendation_impression', {
+                                productId: product.artCode,
+                                userId: this.TiersCode
+                            });
+                            this.trackedRecommendationIds.add(product.artCode);
+                        }
+                    });
+                }, 800);
             },
             error: (error) => {
                 console.error('Error fetching recommended products:', error);
@@ -265,8 +286,14 @@ export class ShoppingCartComponent implements OnInit {
             }
         });
     }
-
-    navigateToProduct(productId: number): void {
-        this.router.navigate([`/store/products/${productId}`]);
+    navigateToproductFromRecommendation(product: Product): void {
+        posthog.capture('recommendation_click', {
+            productId: product.artCode,
+            userId: this.TiersCode
+        });
+        this.router.navigate([`/store/products/${product.artId}`]);
+    }
+    navigateToProduct(product: Product): void {
+        this.router.navigate([`/store/products/${product.artId}`]);
     }
 }
