@@ -479,12 +479,12 @@
 
 .connected-indicator {
     position: absolute !important;
-    width: 5px !important;
-    height: 5px !important;
+    width: 10px !important;
+    height: 10px !important;
     background-color: #22c55e !important;
     border-radius: 50% !important;
-    top: -5px !important;
-    right: -9px !important;
+    top: 0px !important;
+    right: 0px !important;
     border: 2px solid var(--surface-card) !important;
     animation: pulse 2s infinite !important;
     z-index: 999 !important;

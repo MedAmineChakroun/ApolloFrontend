@@ -83,12 +83,12 @@
                     <i class="pi pi-envelope"></i>
                     <span>Contact</span>
                 </button>
-                <button (click)="navigateToProfile()" type="button" class="layout-topbar-action">
+                <button *ngIf="!IsAdmin()" (click)="navigateToProfile()" type="button" class="layout-topbar-action">
                     <div class="position-relative">
                         <i class="pi pi-user"></i>
-                        <div class="connected-indicator"></div>
                     </div>
                     <span>Profile</span>
+                    <div class="connected-indicator"></div>
                 </button>
                 <button (click)="confirmLogout()" type="button" class="layout-topbar-action" pTooltip="se Déconnecter" tooltipPosition="bottom">
                     <i class="pi pi-sign-out"></i>
