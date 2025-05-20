@@ -32,7 +32,7 @@
         <p-carousel [value]="products" [numVisible]="5" [numScroll]="2" [circular]="true" [autoplayInterval]="5000" [responsiveOptions]="carouselResponsiveOptions">
             <ng-template let-product pTemplate="item">
                 <div class="border border-surface-200 rounded-lg m-2 p-3 recommend transition-all duration-300">
-                    <div class="relative mb-3" (click)="navigateToProductDetails(product.artId)">
+                    <div class="relative mb-3" (click)="navigateToProductDetails(product)">
                         <div class="product-image-container">
                             <img src="http://localhost:91/Images/{{ product.artImageUrl }}" [alt]="product.artIntitule" (error)="handleProductImageError($event)" class="mx-auto object-contain h-48 w-full" />
                         </div>
@@ -45,7 +45,7 @@
                     </div>
                     <div class="flex justify-between items-center">
                         <div class="font-semibold text-lg">{{ product.artPrixVente | currency: 'TND ' : 'symbol' : '1.0-0' }}</div>
-                        <p-button icon="pi pi-shopping-cart" styleClass=" p-button-sm" (click)="navigateToProductDetails(product.artId)"></p-button>
+                        <p-button icon="pi pi-shopping-cart" styleClass=" p-button-sm" (click)="navigateToProductDetails(product)"></p-button>
                     </div>
                 </div>
             </ng-template>

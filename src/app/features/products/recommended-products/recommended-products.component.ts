@@ -14,6 +14,7 @@ import { selectUserCode } from '../../../store/user/user.selectors';
 import { Store } from '@ngrx/store';
 import { SkeletonModule } from 'primeng/skeleton';
 import { finalize } from 'rxjs';
+import posthog from 'posthog-js';
 
 type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' | undefined;
 
@@ -31,6 +32,11 @@ export class RecommendedProductsComponent {
     userCode: string = '0';
     isLoading: boolean = true;
     skeletonItems: number[] = Array(5).fill(0);
+
+    //to not double fetching and web traicking
+    private lastRecommendedItemIds: string[] = [];
+    private trackedRecommendationIds = new Set<string>(); // ✅ track what's already sent
+
     private readonly DEFAULT_PRODUCT_IMAGE = 'assets/general/product-default.png';
     constructor(
         private productService: ProductsService,
@@ -55,7 +61,15 @@ export class RecommendedProductsComponent {
                 )
                 .subscribe((products) => {
                     this.products = products;
-
+                    products.forEach((product) => {
+                        if (!this.trackedRecommendationIds.has(product.artCode)) {
+                            posthog.capture('Product CF Impression', {
+                                productId: product.artCode,
+                                userId: this.userCode
+                            });
+                            this.trackedRecommendationIds.add(product.artCode);
+                        }
+                    });
                     this.stockService.getAllStock().subscribe((stockData) => {
                         this.products = this.products.map((product) => {
                             const stock = stockData.find((s) => s.arRef === product.artCode);
@@ -102,7 +116,11 @@ export class RecommendedProductsComponent {
             numScroll: 1
         }
     ];
-    navigateToProductDetails(productId: string) {
-        this.router.navigate(['/store/products', productId]);
+    navigateToProductDetails(product: Product) {
+        posthog.capture('Product CF Clicked', {
+            userId: this.userCode,
+            productId: product.artCode
+        });
+        this.router.navigate(['/store/products', product.artId]);
     }
 }
