@@ -396,7 +396,7 @@ export class CommandesManagementComponent implements OnInit {
                 this.messageService.add({
                     severity: 'success',
                     summary: 'Success',
-                    detail: 'Synchronisation terminée avec succes'
+                    detail: 'tous commandes sont up to date'
                 });
             },
             error: (error) => {

@@ -17,7 +17,7 @@ import { CardModule } from 'primeng/card';
 import { TagModule } from 'primeng/tag';
 import { UserService } from '../../../core/services/client-service.service';
 import { Client } from '../../../models/Client';
-import { forkJoin } from 'rxjs';
+import { catchError, forkJoin, map, of } from 'rxjs';
 import { SynchronisationService } from '../../../core/services/synchronisation.service';
 @Component({
     selector: 'app-clients-management',
@@ -76,53 +76,42 @@ export class ClientsManagementComponent implements OnInit {
         this.loading = true;
         this.userService.getUsers().subscribe({
             next: (data) => {
-                // Create a temporary storage for all clients
                 const allClients = data;
 
-                // Track how many clients we've processed
-                let processedClients = 0;
-                this.clients = [];
+                // Create an array of observables for role checking
+                const roleCheckObservables = allClients.map((client) =>
+                    this.userService.getUserRole(client.tiersId).pipe(
+                        map((roleData) => ({ client, roleData })),
+                        catchError(() => of({ client, roleData: { roles: [] } })) // Handle errors by assuming no admin role
+                    )
+                );
 
-                // Process each client
-                allClients.forEach((client) => {
-                    this.userService.getUserRole(client.tiersId).subscribe({
-                        next: (roleData) => {
+                // Execute all role checks in parallel but maintain order
+                forkJoin(roleCheckObservables).subscribe({
+                    next: (results) => {
+                        this.clients = [];
+
+                        results.forEach(({ client, roleData }) => {
                             // Only add if not admin
                             if (!roleData.roles.includes('admin')) {
-                                // Check if we're on sync route and filter by tiersFlag
-                                if (this.isSyncRoute) {
-                                    if (client.tiersFlag === 1) {
-                                        this.clients.push(client);
-                                    }
-                                } else if (this.isNonSyncRoute) {
-                                    if (client.tiersFlag === 0) {
-                                        this.clients.push(client);
-                                    }
-                                } else {
-                                    // Normal route - add all non-admin clients
+                                // Apply route-specific filtering
+                                if (this.isSyncRoute && client.tiersFlag === 1) {
+                                    this.clients.push(client);
+                                } else if (this.isNonSyncRoute && client.tiersFlag === 0) {
+                                    this.clients.push(client);
+                                } else if (!this.isSyncRoute && !this.isNonSyncRoute) {
+                                    this.clients.push(client);
+                                }
+                            }
+                        });
 
-                                    this.clients.push(client);
-                                }
-                            }
-                        },
-                        error: () => {
-                            // If error fetching role, assume not admin
-                            if (this.isSyncRoute) {
-                                if (client.tiersFlag === 0) {
-                                    this.clients.push(client);
-                                }
-                            } else {
-                                this.clients.push(client);
-                            }
-                        },
-                        complete: () => {
-                            // Count processed clients and finish when all are done
-                            processedClients++;
-                            if (processedClients === allClients.length) {
-                                this.loading = false;
-                            }
-                        }
-                    });
+                        this.loading = false;
+                    },
+                    error: (error) => {
+                        this.toastr.error('Error loading clients', 'Error');
+                        console.error('Error loading clients:', error);
+                        this.loading = false;
+                    }
                 });
             },
             error: (error) => {
@@ -154,7 +143,29 @@ export class ClientsManagementComponent implements OnInit {
             //red reject button
             rejectButtonStyleClass: 'p-button-danger',
             accept: () => {
-                this.deleteClient(client.tiersId);
+                this.synchronisationService.deleteClient(client.tiersCode).subscribe({
+                    next: (response) => {
+                        if (response) {
+                            this.deleteClient(client.tiersId);
+                            setTimeout(() => {
+                                this.loadClients();
+                            }, 300);
+
+                            //toast to stay 3000 ms
+                            this.toastr.success('Client supprimé avec succès', 'Succès', {
+                                positionClass: 'toast-top-right',
+                                timeOut: 3000,
+                                closeButton: true,
+                                progressBar: true
+                            });
+                        } else {
+                            this.toastr.error('Suppression refusée : ce client est relié à une ou plusieurs commandes');
+                        }
+                    },
+                    error: (error) => {
+                        console.error('Erreur lors de la suppression du client dans Sage :', error);
+                    }
+                });
             }
         });
     }
@@ -162,12 +173,9 @@ export class ClientsManagementComponent implements OnInit {
     deleteClient(id: number) {
         this.userService.deleteUserProfile(id).subscribe({
             next: () => {
-                this.toastr.success('Client deleted successfully', 'Success');
-                this.loadClients();
                 this.getClientsCount();
             },
             error: (error) => {
-                this.toastr.error('Error deleting client', 'Error');
                 console.error('Error deleting client:', error);
             }
         });

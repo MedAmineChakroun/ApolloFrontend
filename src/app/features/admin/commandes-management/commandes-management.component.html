@@ -91,7 +91,11 @@
                     </td>
                     <td>
                         <div class="flex align-items-center justify-content-center">
-                            <span class="badge text-white p-2 text-center" [ngStyle]="{'background-color': getInitialColor(order.docTiersIntitule)}" style="border-radius: 50%; width: 2.5rem; height: 2.5rem; display: flex; align-items: center; justify-content: center">
+                            <span
+                                class="badge text-white p-2 text-center"
+                                [ngStyle]="{ 'background-color': getInitialColor(order.docTiersIntitule) }"
+                                style="border-radius: 50%; width: 2.5rem; height: 2.5rem; display: flex; align-items: center; justify-content: center"
+                            >
                                 {{ getInitials(order.docTiersIntitule) }}
                             </span>
                         </div>
@@ -106,9 +110,22 @@
 
                     <td class="text-right font-bold text-primary-500">{{ order.docTtc | currency: 'TND ' }}</td>
                     <td class="text-center">
-                        <p-dropdown [options]="statusOptions" [(ngModel)]="order.docEtat" optionLabel="label" optionValue="value" (onChange)="changeOrderStatus(order, order.docEtat)" appendTo="body" [style]="{ width: '100%' }">
+                        <!-- If docFlag === 1 → show read-only tag -->
+                        <p-tag *ngIf="order.docFlag !== 0" [value]="getStatus(order.docEtat).label" [severity]="getStatus(order.docEtat).severity" [rounded]="true"> </p-tag>
+
+                        <!-- Else show editable dropdown -->
+                        <p-dropdown
+                            *ngIf="order.docFlag === 0"
+                            [options]="statusOptions"
+                            [(ngModel)]="order.docEtat"
+                            optionLabel="label"
+                            optionValue="value"
+                            (onChange)="changeOrderStatus(order, order.docEtat)"
+                            appendTo="body"
+                            [style]="{ width: '100%' }"
+                        >
                             <ng-template pTemplate="selectedItem">
-                                <p-tag [value]="getStatus(order.docEtat).label" [severity]="getStatus(order.docEtat).severity" [rounded]="true"></p-tag>
+                                <p-tag [value]="getStatus(order.docEtat).label" [severity]="getStatus(order.docEtat).severity" [rounded]="true"> </p-tag>
                             </ng-template>
                             <ng-template let-option pTemplate="item">
                                 <p-tag [value]="option.label" [severity]="option.severity" [rounded]="true"></p-tag>

@@ -13,7 +13,6 @@ import { InputMaskModule } from 'primeng/inputmask';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormStateService } from './form-state.service';
 import { AuthNavbar } from '../auth-navbar/auth-navbar.component';
-import { SynchronisationService } from '../../../core/services/synchronisation.service';
 import { Store } from '@ngrx/store';
 import { selectUserCode } from '../../../store/user/user.selectors';
 import { ToastrService } from 'ngx-toastr';
@@ -81,7 +80,7 @@ export class RegisterComponent implements OnInit {
         private authService: AuthenticationService,
         private router: Router,
         private formStateService: FormStateService,
-        private synchronisationService: SynchronisationService,
+
         private store: Store,
         private toastr: ToastrService
     ) {}

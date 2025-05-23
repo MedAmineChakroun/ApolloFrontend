@@ -136,19 +136,26 @@ export class ProductManagementComponent implements OnInit {
             rejectLabel: 'Non',
             rejectButtonStyleClass: 'p-button-danger',
             accept: () => {
-                this.productService.deleteProduct(product.artId).subscribe({
-                    next: () => {
-                        this.loadProducts();
-                        this.toastr.success('Produit supprimé avec succès', 'Succès', {
-                            positionClass: 'toast-top-right',
-                            timeOut: 3000,
-                            closeButton: true,
-                            progressBar: true
-                        });
+                this.synchronisationService.deleteArticle(product.artCode).subscribe({
+                    next: (response) => {
+                        if (response) {
+                            this.productService.deleteProduct(product.artId).subscribe({
+                                next: () => {
+                                    this.loadProducts();
+                                    this.toastr.success('Produit supprimé avec succès', 'Succès', {
+                                        positionClass: 'toast-top-right',
+                                        timeOut: 3000,
+                                        closeButton: true,
+                                        progressBar: true
+                                    });
+                                }
+                            });
+                        } else {
+                            this.toastr.error('Suppression refusée : cet article est relié à une ou plusieurs commandes');
+                        }
                     },
                     error: (error) => {
                         console.error('Error deleting product:', error);
-                        this.toastr.error('Failed to delete product', 'Error');
                     }
                 });
             }

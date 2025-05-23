@@ -16,7 +16,6 @@ import { ToastrService } from 'ngx-toastr';
 import { ProductsService } from '../../../../core/services/products.service';
 import { Famille } from '../../../../models/Famille';
 import { FamillesService } from '../../../../core/services/familles.service';
-import { SynchronisationService } from '../../../../core/services/synchronisation.service';
 
 @Component({
     selector: 'app-edit-add-product',
@@ -46,8 +45,7 @@ export class EditAddProductComponent implements OnInit {
         private router: Router,
         private productService: ProductsService,
         private toastr: ToastrService,
-        private famillesService: FamillesService,
-        private synchronisationService: SynchronisationService
+        private famillesService: FamillesService
     ) {}
 
     ngOnInit(): void {

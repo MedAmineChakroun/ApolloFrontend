@@ -19,7 +19,7 @@ import { DialogModule } from 'primeng/dialog';
 import { QRCodeComponent } from 'angularx-qrcode';
 import { TooltipModule } from 'primeng/tooltip';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { SynchronisationService } from '../../../core/services/synchronisation.service';
+
 interface DecodedToken {
     Id: string;
     ClientId: string;
@@ -58,8 +58,7 @@ export class UserProfileComponent implements OnInit {
         private userService: UserService,
         private toastr: ToastrService,
         private store: Store,
-        private route: ActivatedRoute,
-        private synchronisationService: SynchronisationService
+        private route: ActivatedRoute
     ) {
         this.profileForm = this.fb.group({
             id: [''],
