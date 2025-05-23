@@ -17,7 +17,8 @@ import { CardModule } from 'primeng/card';
 import { TagModule } from 'primeng/tag';
 import { UserService } from '../../../core/services/client-service.service';
 import { Client } from '../../../models/Client';
-
+import { forkJoin } from 'rxjs';
+import { SynchronisationService } from '../../../core/services/synchronisation.service';
 @Component({
     selector: 'app-clients-management',
     standalone: true,
@@ -45,6 +46,7 @@ export class ClientsManagementComponent implements OnInit {
     private toastr = inject(ToastrService);
     private router = inject(Router);
     private fb = inject(FormBuilder);
+    private synchronisationService = inject(SynchronisationService);
 
     ngOnInit() {
         // Check if current route is the sync route
@@ -98,6 +100,7 @@ export class ClientsManagementComponent implements OnInit {
                                     }
                                 } else {
                                     // Normal route - add all non-admin clients
+
                                     this.clients.push(client);
                                 }
                             }
@@ -271,7 +274,71 @@ export class ClientsManagementComponent implements OnInit {
             this.toastr.error('Failed to export CSV file', 'Error');
         }
     }
-    synchronizeClients() {
-        this.toastr.info('Clients will be synchronized soon', 'Information');
+
+    selectedClients: any[] = [];
+    selectAll: boolean = false;
+
+    // Handle bulk synchronization of selected clients
+    synchronizeSelectedClients() {
+        if (this.selectedClients.length === 0) {
+            this.toastr.warning('Veuillez sélectionner au moins un produit à synchroniser.', 'Attention');
+            return;
+        }
+
+        this.confirmationService.confirm({
+            message: `Êtes-vous sûr de vouloir synchroniser ${this.selectedClients.length} produit(s) sélectionné(s)?`,
+            header: 'Confirmation de synchronisation',
+            icon: 'pi pi-question-circle',
+            acceptLabel: 'Oui',
+            rejectLabel: 'Non',
+            rejectButtonStyleClass: 'p-button-danger',
+            accept: () => {
+                const count = this.selectedClients.length;
+                const syncCalls = this.selectedClients.map((client) => this.synchronisationService.syncClient(client.tiersCode));
+
+                forkJoin(syncCalls).subscribe({
+                    next: () => {
+                        this.selectedClients = [];
+                        this.loadClients(); // Now this is called AFTER syncs finish
+                        this.toastr.success(`${count} client(s) synchronisé(s) avec succès!`, 'Succès', {
+                            positionClass: 'toast-top-right',
+                            timeOut: 3000,
+                            closeButton: true,
+                            progressBar: true
+                        });
+                    },
+                    error: () => {
+                        this.toastr.error('Erreur lors de la synchronisation des clients.', 'Erreur');
+                    }
+                });
+            }
+        });
+    }
+
+    clearSelection() {
+        this.selectedClients = [];
+    }
+
+    isClientSelected(client: Client): boolean {
+        return this.selectedClients.some((c) => c.tiersCode === client.tiersCode);
+    }
+
+    getSelectedCount(): number {
+        return this.selectedClients.length;
+    }
+
+    selectAllVisible() {
+        if (this.table && this.isNonSyncRoute) {
+            const visibleClients = this.table.filteredValue || this.clients;
+            this.selectedClients = [...visibleClients];
+        }
+    }
+
+    toggleSelectAll() {
+        if (this.selectedClients.length === this.clients.length) {
+            this.selectedClients = [];
+        } else {
+            this.selectedClients = [...this.clients];
+        }
     }
 }

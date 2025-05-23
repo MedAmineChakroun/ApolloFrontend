@@ -20,7 +20,8 @@ import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { Stock } from '../../../models/Stock';
 import { StockService } from '../../../core/services/stock.service';
-
+import { SynchronisationService } from '../../../core/services/synchronisation.service';
+import { forkJoin } from 'rxjs';
 type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' | undefined;
 
 // Enhanced interface for products with stock information
@@ -58,7 +59,8 @@ export class ProductManagementComponent implements OnInit {
         private productService: ProductsService,
         private toastr: ToastrService,
         private router: Router,
-        private stockService: StockService
+        private stockService: StockService,
+        private synchronisationService: SynchronisationService
     ) {}
 
     ngOnInit() {
@@ -231,5 +233,80 @@ export class ProductManagementComponent implements OnInit {
 
     navigateToCreate() {
         this.router.navigate(['store/admin/products/add']);
+    }
+    synchronizeProducts() {
+        this.toastr.info('Synchronisation des produits en cours...', 'Information');
+    }
+    selectedProducts: any[] = [];
+    selectAll: boolean = false;
+
+    // Handle bulk synchronization of selected products
+    synchronizeSelectedProducts() {
+        if (this.selectedProducts.length === 0) {
+            this.toastr.warning('Veuillez sélectionner au moins un produit à synchroniser.', 'Attention');
+            return;
+        }
+
+        this.confirmationService.confirm({
+            message: `Êtes-vous sûr de vouloir synchroniser ${this.selectedProducts.length} produit(s) sélectionné(s)?`,
+            header: 'Confirmation de synchronisation',
+            icon: 'pi pi-question-circle',
+            acceptLabel: 'Oui',
+            rejectLabel: 'Non',
+            rejectButtonStyleClass: 'p-button-danger',
+            accept: () => {
+                const count = this.selectedProducts.length;
+                const syncCalls = this.selectedProducts.map((product) => this.synchronisationService.syncArticle(product.article.artCode));
+
+                forkJoin(syncCalls).subscribe({
+                    next: () => {
+                        this.selectedProducts = [];
+                        this.loadProducts(); // Now this is called AFTER syncs finish
+                        this.toastr.success(`${count} produit(s) synchronisé(s) avec succès!`, 'Succès', {
+                            positionClass: 'toast-top-right',
+                            timeOut: 3000,
+                            closeButton: true,
+                            progressBar: true
+                        });
+                    },
+                    error: () => {
+                        this.toastr.error('Erreur lors de la synchronisation des produits.', 'Erreur');
+                    }
+                });
+            }
+        });
+    }
+
+    // Clear all selections
+    clearSelection() {
+        this.selectedProducts = [];
+    }
+
+    // Check if a specific product is selected
+    isProductSelected(product: ProductWithStock): boolean {
+        return this.selectedProducts.some((p) => p.article.artCode === product.article.artCode);
+    }
+
+    // Get count of selected products
+    getSelectedCount(): number {
+        return this.selectedProducts.length;
+    }
+
+    // Select all visible products (current page)
+    selectAllVisible() {
+        if (this.table && this.isNonSyncRoute) {
+            // Get currently visible products from the table
+            const visibleProducts = this.table.filteredValue || this.products;
+            this.selectedProducts = [...visibleProducts];
+        }
+    }
+
+    // Toggle selection of all visible products
+    toggleSelectAll() {
+        if (this.selectedProducts.length === this.products.length) {
+            this.selectedProducts = [];
+        } else {
+            this.selectedProducts = [...this.products];
+        }
     }
 }

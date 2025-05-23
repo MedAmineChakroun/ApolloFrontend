@@ -32,14 +32,16 @@
                 <h3>
                     {{ isSyncRoute ? 'Synchronized Products List' : isNonSyncRoute ? 'Non-Synchronized Products List' : 'Products List' }}
                 </h3>
+                <!-- Selection info for non-sync route -->
+                <span *ngIf="isNonSyncRoute && selectedProducts.length > 0" class="ml-3 text-primary font-semibold"> {{ selectedProducts.length }} product(s) selected </span>
             </div>
 
             <div class="p-toolbar-group-end">
+                <!-- Bulk sync button for selected products on non-sync route -->
+                <p-button *ngIf="isNonSyncRoute && selectedProducts.length > 0" label="Sync Selected ({{ selectedProducts.length }})" icon="pi pi-sync" severity="help" class="mr-2" (click)="synchronizeSelectedProducts()"> </p-button>
+
                 <!-- Add button only shown on regular products page -->
                 <p-button *ngIf="!isSyncRoute && !isNonSyncRoute" label="Ajouter" icon="pi pi-plus" styleClass="bg-primary-600 mr-2" (click)="navigateToCreate()"></p-button>
-
-                <!-- Sync button shown on non-sync route -->
-                <p-button *ngIf="isNonSyncRoute" label="Synchroniser" icon="pi pi-sync" severity="help" class="mr-2"></p-button>
 
                 <!-- Export CSV available on all pages -->
                 <p-button label="Export to CSV" icon="pi pi-download" styleClass="p-button-success mr-2" (click)="exportToCSV()"></p-button>
@@ -60,6 +62,8 @@
             styleClass="p-datatable-sm p-datatable-gridlines"
             [globalFilterFields]="['article.artCode', 'article.artIntitule', 'article.artFamille']"
             responsiveLayout="scroll"
+            [(selection)]="selectedProducts"
+            dataKey="article.artCode"
         >
             <ng-template pTemplate="caption">
                 <div class="flex justify-content-between align-items-center">
@@ -75,6 +79,10 @@
 
             <ng-template pTemplate="header">
                 <tr>
+                    <!-- Checkbox column header for non-sync route -->
+                    <th *ngIf="isNonSyncRoute" style="width: 3rem">
+                        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                    </th>
                     <th style="min-width: 5rem"></th>
                     <th pSortableColumn="article.artCode" style="width: 6rem">Code <p-sortIcon field="article.artCode"></p-sortIcon></th>
                     <th pSortableColumn="article.artIntitule" style="width: 12rem">intitule <p-sortIcon field="article.artIntitule"></p-sortIcon></th>
@@ -89,7 +97,11 @@
             </ng-template>
 
             <ng-template pTemplate="body" let-product>
-                <tr>
+                <tr [pSelectableRow]="product" [pSelectableRowDisabled]="!isNonSyncRoute">
+                    <!-- Checkbox column for non-sync route -->
+                    <td *ngIf="isNonSyncRoute">
+                        <p-tableCheckbox [value]="product"></p-tableCheckbox>
+                    </td>
                     <td class="mr-0" style="padding: 0 !important">
                         <div class="profile-image ml-4">
                             <img src="http://localhost:91/Images/{{ product.article.artImageUrl }}" alt="Product Image" (error)="handleProductImageError($event)" style="width: 50px; height: 50px; border-radius: 4px; object-fit: cover" />
@@ -119,7 +131,7 @@
 
             <ng-template pTemplate="emptymessage">
                 <tr>
-                    <td colspan="8" class="text-center p-4">No products found.</td>
+                    <td [attr.colspan]="isNonSyncRoute ? 11 : 10" class="text-center p-4">No products found.</td>
                 </tr>
             </ng-template>
         </p-table>

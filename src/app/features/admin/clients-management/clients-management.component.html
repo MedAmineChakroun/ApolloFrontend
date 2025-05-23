@@ -15,11 +15,15 @@
         <p-toolbar styleClass="mb-4">
             <div class="p-toolbar-group-start">
                 <h3>{{ isSyncRoute ? 'Liste Clients synchronisés' : 'Liste Clients' }}</h3>
+                <!-- Selection info for non-sync route -->
+                <span *ngIf="isNonSyncRoute && selectedClients.length > 0" class="ml-3 text-primary font-semibold"> {{ selectedClients.length }} Client(s) selected </span>
             </div>
 
             <div class="p-toolbar-group-end">
+                <!-- Bulk sync button for selected clients on non-sync route -->
+                <p-button *ngIf="isNonSyncRoute && selectedClients.length > 0" label="Sync Selected ({{ selectedClients.length }})" icon="pi pi-sync" severity="help" class="mr-2" (click)="synchronizeSelectedClients()"> </p-button>
+
                 <p-button label="Export to CSV" *ngIf="!isNonSyncRoute" icon="pi pi-download" styleClass="p-button-success mr-2" (click)="exportToCSV()"> </p-button>
-                <p-button label="Synchroniser" *ngIf="isNonSyncRoute" icon="pi pi-sync" severity="help" (click)="synchronizeClients()" class="mr-2" />
                 <button pButton label="Refresh" icon="pi pi-refresh" class="p-button-outlined" (click)="loadClients()"></button>
             </div>
         </p-toolbar>
@@ -30,11 +34,12 @@
             [tableStyle]="{ 'min-width': '50rem' }"
             [paginator]="true"
             [rows]="10"
-            [rowsPerPageOptions]="[5, 10, 25, 50]"
             [loading]="loading"
             styleClass="p-datatable-sm p-datatable-gridlines"
-            [globalFilterFields]="['tiersCode', 'tiersIntitule', 'tiersEmail', 'tiersVille']"
+            [globalFilterFields]="['tiersCode', 'tiersIntitule', 'tiersEmail', 'tiersVille', 'tiersDateCreate']"
             responsiveLayout="scroll"
+            [(selection)]="selectedClients"
+            dataKey="tiersCode"
         >
             <ng-template pTemplate="caption">
                 <div class="flex justify-content-between align-items-center">
@@ -48,19 +53,26 @@
 
             <ng-template pTemplate="header">
                 <tr>
+                    <th *ngIf="isNonSyncRoute" style="width: 3rem">
+                        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                    </th>
                     <th style="min-width: 5rem"></th>
                     <th pSortableColumn="tiersCode" style="width: 6rem">Code <p-sortIcon field="tiersCode"></p-sortIcon></th>
                     <th pSortableColumn="tiersIntitule" style="width: 8rem">Name <p-sortIcon field="tiersIntitule"></p-sortIcon></th>
-                    <th pSortableColumn="tiersPays" style="min-width: 8rem">Country<p-sortIcon field="tiersPays"></p-sortIcon></th>
+                    <th pSortableColumn="tiersDateCreate" style="min-width: 11rem">Creation Date<p-sortIcon field="tiersDateCreate"></p-sortIcon></th>
                     <th pSortableColumn="tiersTel1" style="min-width: 10rem">Phone <p-sortIcon field="tiersTel1"></p-sortIcon></th>
                     <th pSortableColumn="tiersEmail" style="width: 8rem">Email <p-sortIcon field="tiersEmail"></p-sortIcon></th>
                     <th pSortableColumn="tiersFlag" style="min-width: 10rem">ERP Sync <p-sortIcon field="tiersFlag"></p-sortIcon></th>
-                    <th style="min-width: 10rem">Actions</th>
+                    <th style="min-width: 8rem">Actions</th>
                 </tr>
             </ng-template>
 
             <ng-template pTemplate="body" let-client>
-                <tr>
+                <tr [pSelectableRow]="client" [pSelectableRowDisabled]="!isNonSyncRoute">
+                    <!-- Checkbox column for non-sync route -->
+                    <td *ngIf="isNonSyncRoute">
+                        <p-tableCheckbox [value]="client"></p-tableCheckbox>
+                    </td>
                     <td class="mr-0" style="padding: 0 !important">
                         <div class="profile-image ml-4">
                             <img [src]="clientImage || 'assets/general/default-avatar.jpg'" alt="Client Profile" style="width: 50; height: 50px; border-radius: 50%; object-fit: cover" />
@@ -68,7 +80,7 @@
                     </td>
                     <td>#{{ client.tiersCode }}</td>
                     <td>{{ client.tiersIntitule }}</td>
-                    <td>{{ client.tiersPays }}</td>
+                    <td>{{ client.tiersDateCreate | date: 'short' }}</td>
                     <td>{{ client.tiersTel1 }}</td>
                     <td>{{ client.tiersEmail }}</td>
                     <td>
