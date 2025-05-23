@@ -13,7 +13,10 @@ import { InputMaskModule } from 'primeng/inputmask';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormStateService } from './form-state.service';
 import { AuthNavbar } from '../auth-navbar/auth-navbar.component';
-
+import { SynchronisationService } from '../../../core/services/synchronisation.service';
+import { Store } from '@ngrx/store';
+import { selectUserCode } from '../../../store/user/user.selectors';
+import { ToastrService } from 'ngx-toastr';
 interface CountryCode {
     name: string;
     code: string;
@@ -77,7 +80,10 @@ export class RegisterComponent implements OnInit {
     constructor(
         private authService: AuthenticationService,
         private router: Router,
-        private formStateService: FormStateService
+        private formStateService: FormStateService,
+        private synchronisationService: SynchronisationService,
+        private store: Store,
+        private toastr: ToastrService
     ) {}
 
     ngOnInit() {
@@ -157,8 +163,8 @@ export class RegisterComponent implements OnInit {
         console.log('dto', registrationData);
         this.authService.register(registrationData as Register).subscribe({
             next: () => {
-                console.log('Registration successful');
                 // Clear form state on successful registration
+                this.toastr.success('Inscription réussie ! Veuillez vérifier votre boîte mail pour confirmer votre compte.');
                 this.formStateService.clearFormState();
                 this.router.navigate(['auth/login']);
             },

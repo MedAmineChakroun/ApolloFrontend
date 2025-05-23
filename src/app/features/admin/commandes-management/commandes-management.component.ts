@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommandeService } from '../../../core/services/commande.service';
+import { SynchronisationService } from '../../../core/services/synchronisation.service';
 import { DocumentVente } from '../../../models/DocumentVente';
 
 // PrimeNG imports
@@ -59,39 +60,40 @@ export class CommandesManagementComponent implements OnInit {
 
     // Color map for initials based on first character
     colorMap: { [key: string]: string } = {
-        'A': '#4CAF50', // Green
-        'B': '#FFC107', // Yellow
-        'C': '#2196F3', // Blue
-        'D': '#9C27B0', // Purple
-        'E': '#FF5722', // Deep Orange
-        'F': '#795548', // Brown
-        'G': '#607D8B', // Blue Grey
-        'H': '#F44336', // Red
-        'I': '#00BCD4', // Cyan
-        'J': '#3F51B5', // Indigo
-        'K': '#8BC34A', // Light Green
-        'L': '#FF9800', // Orange
-        'M': '#E91E63', // Pink
-        'N': '#009688', // Teal
-        'O': '#673AB7', // Deep Purple
-        'P': '#FFEB3B', // Yellow
-        'Q': '#CDDC39', // Lime
-        'R': '#03A9F4', // Light Blue
-        'S': '#FF5252', // Red Accent
-        'T': '#69F0AE', // Green Accent
-        'U': '#40C4FF', // Blue Accent
-        'V': '#B388FF', // Purple Accent
-        'W': '#FFD740', // Amber Accent
-        'X': '#64FFDA', // Teal Accent
-        'Y': '#FF80AB', // Pink Accent
-        'Z': '#B2FF59'  // Light Green Accent
+        A: '#4CAF50', // Green
+        B: '#FFC107', // Yellow
+        C: '#2196F3', // Blue
+        D: '#9C27B0', // Purple
+        E: '#FF5722', // Deep Orange
+        F: '#795548', // Brown
+        G: '#607D8B', // Blue Grey
+        H: '#F44336', // Red
+        I: '#00BCD4', // Cyan
+        J: '#3F51B5', // Indigo
+        K: '#8BC34A', // Light Green
+        L: '#FF9800', // Orange
+        M: '#E91E63', // Pink
+        N: '#009688', // Teal
+        O: '#673AB7', // Deep Purple
+        P: '#FFEB3B', // Yellow
+        Q: '#CDDC39', // Lime
+        R: '#03A9F4', // Light Blue
+        S: '#FF5252', // Red Accent
+        T: '#69F0AE', // Green Accent
+        U: '#40C4FF', // Blue Accent
+        V: '#B388FF', // Purple Accent
+        W: '#FFD740', // Amber Accent
+        X: '#64FFDA', // Teal Accent
+        Y: '#FF80AB', // Pink Accent
+        Z: '#B2FF59' // Light Green Accent
     };
 
     constructor(
         private commandeService: CommandeService,
         private confirmationService: ConfirmationService,
         private messageService: MessageService,
-        private router: Router
+        private router: Router,
+        private synchronisationService: SynchronisationService
     ) {}
 
     ngOnInit() {
@@ -155,7 +157,7 @@ export class CommandesManagementComponent implements OnInit {
 
     getInitialColor(name: string): string {
         if (!name) return '#3B82F6'; // Default to primary color
-        
+
         const firstChar = name.charAt(0).toUpperCase();
         return this.colorMap[firstChar] || '#3B82F6'; // Return mapped color or default
     }
@@ -387,6 +389,24 @@ export class CommandesManagementComponent implements OnInit {
             severity: 'info',
             summary: 'Info',
             detail: 'Synchronisation en cours...'
+        });
+        this.synchronisationService.syncCommandes().subscribe({
+            next: () => {
+                this.loadOrders();
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Success',
+                    detail: 'Synchronisation terminée avec succes'
+                });
+            },
+            error: (error) => {
+                console.error('Error during synchronization:', error);
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: 'Erreur lors de la synchronisation'
+                });
+            }
         });
     }
     canEditOrDelete(docEtat: number): boolean {

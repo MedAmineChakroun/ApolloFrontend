@@ -6,7 +6,7 @@ import { UserService } from '../../../core/services/client-service.service';
 import { ToastrService } from 'ngx-toastr';
 import { ButtonModule } from 'primeng/button';
 import { Store } from '@ngrx/store';
-import { selectUser } from '../../../store/user/user.selectors';
+import { selectUser, selectUserCode } from '../../../store/user/user.selectors';
 import { Client } from '../../../models/Client';
 import { jwtDecode } from 'jwt-decode';
 import { updateUser } from '../../../store/user/user.actions';
@@ -19,7 +19,7 @@ import { DialogModule } from 'primeng/dialog';
 import { QRCodeComponent } from 'angularx-qrcode';
 import { TooltipModule } from 'primeng/tooltip';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-
+import { SynchronisationService } from '../../../core/services/synchronisation.service';
 interface DecodedToken {
     Id: string;
     ClientId: string;
@@ -34,18 +34,7 @@ interface DecodedToken {
 @Component({
     selector: 'app-user-profile',
     standalone: true,
-    imports: [
-        ReactiveFormsModule, 
-        CommonModule, 
-        ButtonModule, 
-        InputMaskModule, 
-        ProgressSpinnerModule, 
-        InputTextModule, 
-        TagModule,
-        DialogModule,
-        QRCodeComponent,
-        TooltipModule
-    ],
+    imports: [ReactiveFormsModule, CommonModule, ButtonModule, InputMaskModule, ProgressSpinnerModule, InputTextModule, TagModule, DialogModule, QRCodeComponent, TooltipModule],
     templateUrl: './user-profile.component.html',
     styleUrls: ['./user-profile.component.scss']
 })
@@ -57,20 +46,20 @@ export class UserProfileComponent implements OnInit {
     userEmail: string = '';
     routeUrl: boolean = false;
     role: string = ''; // Default role
-    
+
     // QR Code related properties
     showQrCodeDialog: boolean = false;
     qrCodeData: string = '';
     qrCodeSize: number = 300;
     qrCodeDownloadLink: SafeUrl = '';
-    
+
     constructor(
         private fb: FormBuilder,
         private userService: UserService,
         private toastr: ToastrService,
         private store: Store,
         private route: ActivatedRoute,
-        private domSanitizer: DomSanitizer
+        private synchronisationService: SynchronisationService
     ) {
         this.profileForm = this.fb.group({
             id: [''],
@@ -121,7 +110,7 @@ export class UserProfileComponent implements OnInit {
                             country: client.tiersPays,
                             phone: client.tiersTel1
                         });
-                        
+
                         this.generateQrCodeData();
                     }
                 },
@@ -136,10 +125,9 @@ export class UserProfileComponent implements OnInit {
     // Generate QR code data from client information
     generateQrCodeData(): void {
         if (!this.clientData) return;
-        
+
         // Format with line breaks for better readability when scanned
-        const formattedText = 
-`Client: ${this.clientData.tiersIntitule}
+        const formattedText = `Client: ${this.clientData.tiersIntitule}
 ID: ${this.clientData.tiersCode}
 Email: ${this.userEmail || this.clientData.tiersEmail || 'N/A'}
 Phone: ${this.clientData.tiersTel1 || 'N/A'}
@@ -147,16 +135,16 @@ Address: ${this.clientData.tiersAdresse1 || 'N/A'}
 City: ${this.clientData.tiersVille || 'N/A'}, ${this.clientData.tiersCodePostal || 'N/A'}
 Country: ${this.clientData.tiersPays || 'N/A'}
 Role: ${this.role || 'Customer'}`;
-        
+
         this.qrCodeData = formattedText;
     }
-    
+
     // Open QR code dialog
     openQrCodeDialog(): void {
         this.generateQrCodeData();
         this.showQrCodeDialog = true;
     }
-    
+
     // Download QR code as image
     downloadQrCode(): void {
         const canvas = document.querySelector('canvas') as HTMLCanvasElement;
@@ -164,7 +152,7 @@ Role: ${this.role || 'Customer'}`;
             this.toastr.error('Cannot find QR code canvas to download');
             return;
         }
-        
+
         const link = document.createElement('a');
         const clientName = this.clientData?.tiersIntitule?.replace(/\s+/g, '_') || 'user';
         const timestamp = new Date().toISOString().slice(0, 10);
@@ -258,9 +246,15 @@ Role: ${this.role || 'Customer'}`;
         };
 
         this.userService.updateUserProfile(this.userId, updateData).subscribe({
-            next: () => this.toastr.success('Profile updated successfully'),
-            //update store fetch from db
-            complete: () => this.updateStore(),
+            next: () => {
+                this.toastr.success('Profile updated successfully');
+                this.updateStore();
+                if (this.userId !== null) {
+                    this.userService.updateUserFlag(this.userId, 0).subscribe({
+                        next: () => {}
+                    });
+                }
+            },
 
             error: (err) => this.handleUpdateError(err)
         });

@@ -148,4 +148,7 @@ export class ProductsService {
             })
         );
     }
+    updateProductFlag(id: number, flag: number): Observable<Product> {
+        return this.http.patch<Product>(`${this.apiUrl}/updateFlag/${id}?flag=${flag}`, null);
+    }
 }

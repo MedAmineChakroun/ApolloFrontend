@@ -16,6 +16,7 @@ import { ToastrService } from 'ngx-toastr';
 import { ProductsService } from '../../../../core/services/products.service';
 import { Famille } from '../../../../models/Famille';
 import { FamillesService } from '../../../../core/services/familles.service';
+import { SynchronisationService } from '../../../../core/services/synchronisation.service';
 
 @Component({
     selector: 'app-edit-add-product',
@@ -45,7 +46,8 @@ export class EditAddProductComponent implements OnInit {
         private router: Router,
         private productService: ProductsService,
         private toastr: ToastrService,
-        private famillesService: FamillesService
+        private famillesService: FamillesService,
+        private synchronisationService: SynchronisationService
     ) {}
 
     ngOnInit(): void {
@@ -138,6 +140,9 @@ export class EditAddProductComponent implements OnInit {
             this.productService.updateProductWithImage(productData, this.uploadedFile || undefined).subscribe({
                 next: () => {
                     this.toastr.success('Produit modifié avec succès', 'Succès');
+                    this.productService.updateProductFlag(this.product.artId, 0).subscribe({
+                        next: () => {}
+                    });
                     this.router.navigate(['store/admin/products']);
                 },
                 error: (error) => {
@@ -153,6 +158,7 @@ export class EditAddProductComponent implements OnInit {
             this.productService.createProductWithImage(formData, this.uploadedFile || undefined).subscribe({
                 next: () => {
                     this.toastr.success('Produit ajouté avec succès', 'Succès');
+
                     this.router.navigate(['store/admin/products']);
                 },
                 error: (error) => {
