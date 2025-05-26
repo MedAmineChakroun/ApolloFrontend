@@ -16,7 +16,7 @@ import { forkJoin } from 'rxjs';
         <div class="card">
             <div class="flex justify-between items-center mb-6">
                 <div>
-                    <div class="font-semibold text-xl">Best Selling Products</div>
+                    <div class="font-semibold text-xl">Top produits vendus</div>
                     <div class="text-sm text-muted-color mt-1">By Quantity</div>
                 </div>
             </div>

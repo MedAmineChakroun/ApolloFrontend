@@ -16,7 +16,7 @@ import { TopCategories } from './components/topCategories';
                 <app-top-categories-widget />
             </div>
             <div class="col-span-12 xl:col-span-6">
-                <app-revenue-stream-widget />
+                <app-latest-sales-orders-widget />
                 <app-best-selling-widget />
             </div>
         </div>

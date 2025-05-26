@@ -1,19 +1,17 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ChartModule } from 'primeng/chart';
-import { debounceTime, forkJoin, Subscription } from 'rxjs';
+import { debounceTime, Subscription } from 'rxjs';
 import { LayoutService } from '../../../../layout/service/layout.service';
 import { CommandeService } from '../../../../core/services/commande.service';
-import { ProductsService } from '../../../../core/services/products.service';
-import { Product } from '../../../../models/Product';
-import { DocumentVenteLigne } from '../../../../models/DocumentVenteLigne';
+import { DocumentVente } from '../../../../models/DocumentVente';
 
 @Component({
     standalone: true,
-    selector: 'app-revenue-stream-widget',
+    selector: 'app-latest-sales-orders-widget',
     imports: [ChartModule],
     template: `
         <div class="card !mb-8">
-            <div class="font-semibold text-xl mb-4">Top Products: Purchase vs Sale Price</div>
+            <div class="font-semibold text-xl mb-4">Dernières commandes de vente</div>
             <p-chart type="bar" [data]="chartData" [options]="chartOptions" class="h-90" />
         </div>
     `
@@ -25,8 +23,7 @@ export class RevenueStreamWidget implements OnInit, OnDestroy {
 
     constructor(
         public layoutService: LayoutService,
-        private commandeService: CommandeService,
-        private productsService: ProductsService
+        private commandeService: CommandeService
     ) {
         this.subscription = this.layoutService.configUpdate$.pipe(debounceTime(25)).subscribe(() => {
             this.loadChartData();
@@ -38,56 +35,37 @@ export class RevenueStreamWidget implements OnInit, OnDestroy {
     }
 
     loadChartData() {
-        this.commandeService.getTopLignesCommande().subscribe({
-            next: (lignes: DocumentVenteLigne[]) => {
-                const productCodes = [...new Set(lignes.map((l) => l.ligneArtCode))];
+        this.commandeService.getDocumentVente().subscribe({
+            next: (orders: DocumentVente[]) => {
+                // Sort by date (most recent first) and take top 5
+                const latestOrders = orders.sort((a, b) => new Date(b.docDate).getTime() - new Date(a.docDate).getTime()).slice(0, 7);
 
-                forkJoin(productCodes.map((code) => this.productsService.getProductsByCode(code))).subscribe((products: Product[]) => {
-                    const dataMap: {
-                        [key: string]: { designation: string; prixVente: number; prixAchat: number };
-                    } = {};
-
-                    lignes.forEach((ligne) => {
-                        const product = products.find((p) => p.artCode === ligne.ligneArtCode);
-                        if (product) {
-                            const designation = product.artIntitule;
-                            const vente = ligne.ligneQte * product.artPrixVente;
-                            const achat = ligne.ligneQte * product.artPrixAchat;
-
-                            if (!dataMap[designation]) {
-                                dataMap[designation] = { designation, prixVente: 0, prixAchat: 0 };
-                            }
-
-                            dataMap[designation].prixVente += vente;
-                            dataMap[designation].prixAchat += achat;
-                        }
-                    });
-
-                    const sorted = Object.values(dataMap)
-                        .sort((a, b) => b.prixVente - a.prixVente)
-                        .slice(0, 5); // top 5
-
-                    this.buildChart(sorted);
-                });
+                this.buildChart(latestOrders);
             },
-            error: (err) => console.error('Failed to load sales data', err)
+            error: (err) => console.error('Failed to load sales orders data', err)
         });
     }
 
-    buildChart(data: { designation: string; prixVente: number; prixAchat: number }[]) {
+    buildChart(orders: DocumentVente[]) {
         const documentStyle = getComputedStyle(document.documentElement);
         const textColor = documentStyle.getPropertyValue('--text-color');
         const borderColor = documentStyle.getPropertyValue('--surface-border');
         const textMutedColor = documentStyle.getPropertyValue('--text-color-secondary');
 
+        // Create labels from order piece numbers and customer names
+        const labels = orders.map((order) => {
+            const customerName = order.docTiersIntitule.length > 12 ? order.docTiersIntitule.substring(0, 12) + '...' : order.docTiersIntitule;
+            return `${order.docPiece} - ${customerName}`;
+        });
+
         this.chartData = {
-            labels: data.map((d) => (d.designation.length > 15 ? d.designation.substring(0, 15) + '...' : d.designation)),
+            labels: labels,
             datasets: [
                 {
                     type: 'bar',
-                    label: 'Prix Vente',
+                    label: 'Montant TTC',
                     backgroundColor: documentStyle.getPropertyValue('--p-primary-400'),
-                    data: data.map((d) => d.prixVente),
+                    data: orders.map((order) => order.docTtc),
                     barThickness: 32,
                     borderRadius: {
                         topLeft: 8,
@@ -98,9 +76,9 @@ export class RevenueStreamWidget implements OnInit, OnDestroy {
                 },
                 {
                     type: 'bar',
-                    label: 'Prix Achat',
+                    label: 'Montant HT',
                     backgroundColor: documentStyle.getPropertyValue('--p-primary-200'),
-                    data: data.map((d) => d.prixAchat),
+                    data: orders.map((order) => order.docTht),
                     barThickness: 32,
                     borderRadius: {
                         topLeft: 8,
@@ -121,6 +99,20 @@ export class RevenueStreamWidget implements OnInit, OnDestroy {
                     labels: {
                         color: textColor
                     }
+                },
+                tooltip: {
+                    callbacks: {
+                        title: (context: any) => {
+                            const index = context[0].dataIndex;
+                            const order = orders[index];
+                            return `Commande: ${order.docPiece}`;
+                        },
+                        afterTitle: (context: any) => {
+                            const index = context[0].dataIndex;
+                            const order = orders[index];
+                            return [`Client: ${order.docTiersIntitule}`, `Date: ${new Date(order.docDate).toLocaleDateString('fr-FR')}`];
+                        }
+                    }
                 }
             },
             scales: {
@@ -139,7 +131,13 @@ export class RevenueStreamWidget implements OnInit, OnDestroy {
                 y: {
                     stacked: false,
                     ticks: {
-                        color: textMutedColor
+                        color: textMutedColor,
+                        callback: function (value: any) {
+                            return new Intl.NumberFormat('fr-FR', {
+                                style: 'currency',
+                                currency: 'EUR'
+                            }).format(value);
+                        }
                     },
                     grid: {
                         color: borderColor,

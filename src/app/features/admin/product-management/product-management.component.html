@@ -6,34 +6,34 @@
         <!-- Header for synchronized products route -->
         <ng-template pTemplate="header" *ngIf="isSyncRoute">
             <div class="flex justify-content-between align-items-center p-3 bg-purple-500" style="border-radius: 12px 12px 0 0">
-                <h2 class="text-white m-0">Synchronized Products Management</h2>
-                <span class="text-white font-bold">Total Synchronized Products: {{ this.products.length }}</span>
+                <h2 class="text-white m-0">Gestion Produit Synchronisées</h2>
+                <span class="text-white font-bold">Total Produits synchronisées: {{ this.products.length }}</span>
             </div>
         </ng-template>
 
         <!-- Header for non-synchronized products route -->
         <ng-template pTemplate="header" *ngIf="isNonSyncRoute">
             <div class="flex justify-content-between align-items-center p-3 bg-purple-500" style="border-radius: 12px 12px 0 0">
-                <h2 class="text-white m-0">Non-Synchronized Products Management</h2>
-                <span class="text-white font-bold">Total Non-Synchronized Products: {{ this.products.length }}</span>
+                <h2 class="text-white m-0">Gestion Produits Non-Synchronisées</h2>
+                <span class="text-white font-bold">Total Produits non synchronisée: {{ this.products.length }}</span>
             </div>
         </ng-template>
 
         <!-- Default header for other routes -->
         <ng-template pTemplate="header" *ngIf="!isSyncRoute && !isNonSyncRoute">
             <div class="flex justify-content-between align-items-center p-3 bg-primary-500" style="border-radius: 12px 12px 0 0">
-                <h2 class="text-white m-0">Products Management</h2>
-                <span class="text-white font-bold">Total Products: {{ this.products.length }}</span>
+                <h2 class="text-white m-0">Gestion Produits</h2>
+                <span class="text-white font-bold">Total Produits: {{ this.products.length }}</span>
             </div>
         </ng-template>
 
         <p-toolbar styleClass="mb-4">
             <div class="p-toolbar-group-start">
                 <h3>
-                    {{ isSyncRoute ? 'Synchronized Products List' : isNonSyncRoute ? 'Non-Synchronized Products List' : 'Products List' }}
+                    {{ isSyncRoute ? 'Liste Produit Synchronisée' : isNonSyncRoute ? 'Liste Produits' : 'Liste produits' }}
                 </h3>
                 <!-- Selection info for non-sync route -->
-                <span *ngIf="isNonSyncRoute && selectedProducts.length > 0" class="ml-3 text-primary font-semibold"> {{ selectedProducts.length }} product(s) selected </span>
+                <span *ngIf="isNonSyncRoute && selectedProducts.length > 0" class="ml-3 text-primary font-semibold"> {{ selectedProducts.length }} produit(s) selectionnées </span>
             </div>
 
             <div class="p-toolbar-group-end">
@@ -44,7 +44,7 @@
                 <p-button *ngIf="!isSyncRoute && !isNonSyncRoute" label="Ajouter" icon="pi pi-plus" styleClass="bg-primary-600 mr-2" (click)="navigateToCreate()"></p-button>
 
                 <!-- Export CSV available on all pages -->
-                <p-button label="Export to CSV" icon="pi pi-download" styleClass="p-button-success mr-2" (click)="exportToCSV()"></p-button>
+                <p-button label="Export  CSV" icon="pi pi-download" styleClass="p-button-success mr-2" (click)="exportToCSV()"></p-button>
 
                 <!-- Refresh button available on all pages -->
                 <button pButton label="Refresh" icon="pi pi-refresh" class="p-button-outlined" (click)="loadProducts()"></button>
@@ -67,12 +67,9 @@
         >
             <ng-template pTemplate="caption">
                 <div class="flex justify-content-between align-items-center">
-                    <h5 class="m-0">
-                        {{ isSyncRoute ? 'Manage Synchronized Products' : isNonSyncRoute ? 'Manage Non-Synchronized Products' : 'Manage Products' }}
-                    </h5>
                     <span class="p-input-icon-left">
                         <i class="pi pi-search"></i>
-                        <input pInputText type="text" placeholder="Search by code" #codeFilter (input)="dt.filter(codeFilter.value, 'article.artCode', 'contains')" />
+                        <input pInputText type="text" placeholder="Recherche par code" #codeFilter (input)="dt.filter(codeFilter.value, 'article.artCode', 'contains')" />
                     </span>
                 </div>
             </ng-template>
@@ -90,7 +87,6 @@
                     <th pSortableColumn="article.artPrixVente" style="width: 8rem">Prix vente <p-sortIcon field="article.artPrixVente"></p-sortIcon></th>
                     <th pSortableColumn="article.artPrixAchat" style="width: 8rem">Prix achat <p-sortIcon field="article.artPrixAchat"></p-sortIcon></th>
                     <th pSortableColumn="stockQuantity" style="min-width: 6rem">Stock <p-sortIcon field="stockQuantity"></p-sortIcon></th>
-                    <th pSortableColumn="article.artTvaTaux" style="min-width: 5rem">Tva <p-sortIcon field="article.artTvaTaux"></p-sortIcon></th>
                     <th pSortableColumn="article.artFlag" style="min-width: 4rem">Sync <p-sortIcon field="article.artFlag"></p-sortIcon></th>
                     <th style="min-width: 10rem">Actions</th>
                 </tr>
@@ -117,7 +113,6 @@
                         <p-tag [value]="getStockStatusLabel(product.stockQuantity)" [severity]="getStockStatusSeverity(product.stockQuantity)" [icon]="getStockIcon(product.stockQuantity)"> </p-tag>
                         <span class="ml-2">{{ product.stockQuantity }} {{ product.article.artUnite }}(s)</span>
                     </td>
-                    <td>{{ product.article.artTvaTaux }}%</td>
                     <td>
                         <p-tag [value]="getSyncStatusLabel(product.article.artFlag)" [severity]="getSyncStatusSeverity(product.article.artFlag)" [icon]="getSyncIcon(product.article.artFlag)"> </p-tag>
                     </td>
@@ -131,7 +126,7 @@
 
             <ng-template pTemplate="emptymessage">
                 <tr>
-                    <td [attr.colspan]="isNonSyncRoute ? 11 : 10" class="text-center p-4">No products found.</td>
+                    <td [attr.colspan]="isNonSyncRoute ? 11 : 10" class="text-center p-4">Aucun Produit trouvé.</td>
                 </tr>
             </ng-template>
         </p-table>
@@ -144,7 +139,7 @@
             <div class="product-container">
                 <!-- Header with close button -->
                 <div class="product-modal-header" [ngClass]="{ 'bg-primary-500': !isSyncRoute && !isNonSyncRoute, 'bg-purple-500': isSyncRoute, 'bg-orange-500': isNonSyncRoute }">
-                    <h2 class="modal-title text-white">Product Details</h2>
+                    <h2 class="modal-title text-white">Details Produit</h2>
                 </div>
 
                 <!-- Product image and primary info section -->

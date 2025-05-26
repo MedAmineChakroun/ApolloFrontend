@@ -20,7 +20,7 @@ import { Router } from '@angular/router';
     imports: [CommonModule, TableModule, ButtonModule, RippleModule],
     template: /*html*/ `
         <div class="card !mb-8">
-            <div class="font-semibold text-xl mb-4">Recent Sales</div>
+            <div class="font-semibold text-xl mb-4">Ventes recentes</div>
             <p-table [value]="products" [paginator]="true" [rows]="5" responsiveLayout="scroll">
                 <ng-template pTemplate="header">
                     <tr>
