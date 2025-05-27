@@ -139,17 +139,7 @@ export class ProductManagementComponent implements OnInit {
                 this.synchronisationService.deleteArticle(product.artCode).subscribe({
                     next: (response) => {
                         if (response) {
-                            this.productService.deleteProduct(product.artId).subscribe({
-                                next: () => {
-                                    this.loadProducts();
-                                    this.toastr.success('Produit supprimé avec succès', 'Succès', {
-                                        positionClass: 'toast-top-right',
-                                        timeOut: 3000,
-                                        closeButton: true,
-                                        progressBar: true
-                                    });
-                                }
-                            });
+                            this.deletelocal(product);
                         } else {
                             this.toastr.error('Suppression refusée : cet article est relié à une ou plusieurs commandes');
                         }
@@ -157,6 +147,19 @@ export class ProductManagementComponent implements OnInit {
                     error: (error) => {
                         console.error('Error deleting product:', error);
                     }
+                });
+            }
+        });
+    }
+    deletelocal(product: Product) {
+        this.productService.deleteProduct(product.artId).subscribe({
+            next: () => {
+                this.loadProducts();
+                this.toastr.success('Produit supprimé avec succès', 'Succès', {
+                    positionClass: 'toast-top-right',
+                    timeOut: 3000,
+                    closeButton: true,
+                    progressBar: true
                 });
             }
         });

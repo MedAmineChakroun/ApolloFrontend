@@ -7,7 +7,7 @@
                 <p-stepper [value]="currentStep">
                     <p-step-list>
                         <p-step [value]="1" [disabled]="true">Creation</p-step>
-                        <p-step [value]="2" [disabled]="true">Terms & Conditions</p-step>
+                        <p-step [value]="2" [disabled]="true">Livraison</p-step>
                         <p-step [value]="3" [disabled]="true">Confirmation</p-step>
                     </p-step-list>
                 </p-stepper>
@@ -52,17 +52,17 @@
         <!-- Cart header -->
         <div class="shipping-banner" *ngIf="(cartItemCount$ | async) ?? 0 > 0">
             <i class="pi pi-truck"></i>
-            <span>Free Express Shipping on orders over {{ FREE_SHIPPING_THRESHOLD | currency: 'TND' : 'symbol' }}!</span>
+            <span>Livraison gratuite jusqu'a {{ FREE_SHIPPING_THRESHOLD | currency: 'DT ' : 'symbol' }}!</span>
         </div>
 
         <div class="cart-header" *ngIf="((cartItems$ | async) ?? []).length > 0">
             <div class="header-content">
-                <h1>Your Cart</h1>
-                <span class="item-count">{{ (cartItemCount$ | async) ?? 0 }} {{ ((cartItemCount$ | async) ?? 0) === 1 ? 'item' : 'items' }}</span>
+                <h1>Votre panier</h1>
+                <span class="item-count">{{ (cartItemCount$ | async) ?? 0 }} {{ ((cartItemCount$ | async) ?? 0) === 1 ? 'article' : 'articles' }}</span>
             </div>
             <button *ngIf="(cartItemCount$ | async) ?? 0 > 0" class="clear-button" (click)="clearCart()">
                 <i class="pi pi-trash"></i>
-                <span>Clear Cart</span>
+                <span>Vider le panier</span>
             </button>
         </div>
 
@@ -71,7 +71,7 @@
             <div class="status-content">
                 <i [class]="isEligibleForFreeShipping() ? 'pi pi-check-circle' : 'pi pi-info-circle'"></i>
                 <span>
-                    {{ isEligibleForFreeShipping() ? 'You are eligible for free shipping!' : 'Add ' + (FREE_SHIPPING_THRESHOLD - currentTotal | currency: 'TND' : 'symbol') + ' more to get free shipping' }}
+                    {{ isEligibleForFreeShipping() ? 'Vous êtes éligible à la livraison gratuite !' : 'Ajoutez encore ' + (FREE_SHIPPING_THRESHOLD - currentTotal | currency: 'DT ' : 'symbol') + ' pour bénéficier de la livraison gratuite' }}
                 </span>
             </div>
             <div class="progress-bar">
@@ -86,9 +86,9 @@
                 <div class="empty-cart">
                     <div class="empty-cart-content">
                         <i class="pi pi-shopping-cart"></i>
-                        <h2>Your cart is empty</h2>
-                        <p>Looks like you haven't added any items to your cart yet.</p>
-                        <button pButton label="Continue Shopping" icon="pi pi-arrow-right" class="p-button-outlined" (click)="continueShopping()"></button>
+                        <h2>Votre panier est vide</h2>
+                        <p>Il semble que vous n'ayez pas encore ajouté d'articles à votre panier.</p>
+                        <button pButton label="Continuer vos achats" icon="pi pi-arrow-right" class="p-button-outlined" (click)="continueShopping()"></button>
                     </div>
                 </div>
             </div>
@@ -108,7 +108,7 @@
                                 </button>
                             </div>
                             <p class="item-category">{{ item.product.artFamille }}</p>
-                            <p class="item-prix-vente">{{ item.product.artPrixVente | currency: 'TND' : 'symbol' }}</p>
+                            <p class="item-prix-vente">{{ item.product.artPrixVente | currency: 'DT ' : 'symbol' }}</p>
                             <p class="item-category">TVA: {{ item.product.artTvaTaux }}%</p>
                             <div class="item-actions">
                                 <div class="quantity-selector">
@@ -120,7 +120,7 @@
                                         <i class="pi pi-plus"></i>
                                     </button>
                                 </div>
-                                <span class="item-price">{{ item.product.artPrixVente * (1 + item.product.artTvaTaux / 100) * item.quantity | currency: 'TND' : 'symbol' }}</span>
+                                <span class="item-price">{{ item.product.artPrixVente * (1 + item.product.artTvaTaux / 100) * item.quantity | currency: 'DT' : 'symbol' }}</span>
                             </div>
                         </div>
                     </div>
@@ -129,33 +129,33 @@
                 <!-- Cart summary -->
                 <div class="cart-summary">
                     <div class="summary-header">
-                        <h3>Order Summary</h3>
-                        <span class="item-count">{{ cartItems.length }} {{ cartItems.length === 1 ? 'item' : 'items' }}</span>
+                        <h3>Résumé de la commande</h3>
+                        <span class="item-count">{{ cartItems.length }} {{ cartItems.length === 1 ? 'article' : 'articles' }}</span>
                     </div>
 
                     <div class="summary-content">
                         <div class="summary-row">
                             <span>Total HT</span>
-                            <span>{{ totalTht | currency: 'TND' : 'symbol' }}</span>
+                            <span>{{ totalTht | currency: 'DT ' : 'symbol' }}</span>
                         </div>
                         <div class="summary-row">
                             <span>Total TTC</span>
-                            <span>{{ (cartTotal$ | async) ?? 0 | currency: 'TND' : 'symbol' }}</span>
+                            <span>{{ (cartTotal$ | async) ?? 0 | currency: 'DT ' : 'symbol' }}</span>
                         </div>
                         <div class="summary-row">
-                            <span>Shipping</span>
-                            <span>{{ isEligibleForFreeShipping() ? 'Free' : '10 TND' }}</span>
+                            <span>Livraison</span>
+                            <span>{{ isEligibleForFreeShipping() ? 'Gratuite' : '10 DT ' }}</span>
                         </div>
                         <div class="summary-row total">
                             <span>Total</span>
                             <span class="total-price">
-                                {{ ((cartTotal$ | async) ?? 0) + (isEligibleForFreeShipping() ? 0 : 10) | currency: 'TND' : 'symbol' }}
+                                {{ ((cartTotal$ | async) ?? 0) + (isEligibleForFreeShipping() ? 0 : 10) | currency: 'DT ' : 'symbol' }}
                             </span>
                         </div>
                     </div>
 
                     <div class="cart-actions">
-                        <button pButton severity="contrast" label="Continue Shopping" (click)="continueShopping()" class="p-button-outlined"></button>
+                        <button pButton severity="contrast" label="Continuer vos achats" (click)="continueShopping()" class="p-button-outlined"></button>
                         <button
                             pButton
                             label="Passer Commande"
@@ -172,7 +172,7 @@
 
                     <div class="shipping-info" *ngIf="!isEligibleForFreeShipping()">
                         <i class="pi pi-truck"></i>
-                        <span>Add {{ FREE_SHIPPING_THRESHOLD - currentTotal | currency: 'TND' : 'symbol' }} more to get free shipping!</span>
+                        <span>Ajoutez encore {{ FREE_SHIPPING_THRESHOLD - currentTotal | currency: 'DT ' : 'symbol' }} pour bénéficier de la livraison gratuite !</span>
                     </div>
 
                     <!-- Recommendations with loading & empty states -->
@@ -180,7 +180,7 @@
                         <!-- Loading state -->
                         <div class="side-recommendations" *ngIf="isLoadingRecommendations">
                             <div class="side-recommendations-header">
-                                <h4>Finding items for you...</h4>
+                                <h4>Recherche d'articles pour vous...</h4>
                             </div>
                             <div class="recommendation-skeleton">
                                 <div class="skeleton-img"></div>
@@ -195,7 +195,7 @@
                         <!-- Recommendation items -->
                         <div class="side-recommendations" *ngIf="!isLoadingRecommendations && recommendedProducts.length > 0">
                             <div class="side-recommendations-header mt-3">
-                                <h4>Tu peut aussi aimer</h4>
+                                <h4>Vous pourriez aussi aimer</h4>
                             </div>
                             <p-carousel [value]="recommendedProducts" [numVisible]="1" [numScroll]="1" [autoplayInterval]="4200" [circular]="true" [showNavigators]="true" [showIndicators]="true" styleClass="custom-carousel">
                                 <ng-template let-product pTemplate="item">
@@ -203,12 +203,12 @@
                                         <div class="side-recommendation-img mb-3" (click)="navigateToproductFromRecommendation(product)">
                                             <img src="http://localhost:91/Images/{{ product.artImageUrl }}" [alt]="product.artIntitule" (error)="handleImageError($event)" />
                                             <div class="price-tag">
-                                                {{ product.artPrixVente | currency: 'TND' : 'symbol' }}
+                                                {{ product.artPrixVente | currency: 'DT ' : 'symbol' }}
                                             </div>
                                         </div>
                                         <div class="side-recommendation-content">
                                             <h5 class="side-product-title mb-2">{{ product.artIntitule }}</h5>
-                                            <button pButton icon="pi pi-shopping-cart" severity="warn" label="voir plus" class="p-button-sm p-button-rounded add-btn" (click)="navigateToproductFromRecommendation(product)"></button>
+                                            <button pButton icon="pi pi-shopping-cart" severity="warn" label="Voir plus" class="p-button-sm p-button-rounded add-btn" (click)="navigateToproductFromRecommendation(product)"></button>
                                         </div>
                                     </div>
                                 </ng-template>
@@ -218,12 +218,12 @@
                         <!-- No recommendations found -->
                         <div class="side-recommendations empty-recommendations" *ngIf="!isLoadingRecommendations && recommendedProducts.length === 0">
                             <div class="side-recommendations-header">
-                                <h4>Looking for more?</h4>
+                                <h4>Vous cherchez plus ?</h4>
                             </div>
                             <div class="empty-recommendations-content">
                                 <i class="pi pi-search"></i>
-                                <p>Looks like these items are a bit unique! Browse other categories to find more suggestions.</p>
-                                <button pButton label="Browse Store" icon="pi pi-shopping-bag" class="p-button-outlined p-button-sm" (click)="continueShopping()"></button>
+                                <p>Il semble que ces articles soient un peu uniques ! Parcourez d'autres catégories pour trouver plus de suggestions.</p>
+                                <button pButton label="Voir la boutique" icon="pi pi-shopping-bag" class="p-button-outlined p-button-sm" (click)="continueShopping()"></button>
                             </div>
                         </div>
                     </ng-container>
@@ -234,7 +234,7 @@
         <!-- Loading template -->
         <ng-template #loading>
             <div class="loading-container">
-                <p>Loading cart items...</p>
+                <p>Chargement des articles du panier...</p>
             </div>
         </ng-template>
     </div>

@@ -4,8 +4,8 @@
         <!-- Left Column: Branding and Welcome Section -->
         <div class="w-full md:w-2/5 p-8 flex flex-col justify-center items-center" style="background-color: #001219">
             <img class="w-24 mb-8" src="assets/general/ApolloLogo.PNG" alt="Apollo Logo" />
-            <h1 class="text-3xl font-bold mb-4 text-center text-white">Welcome to Apollo Store!</h1>
-            <p class="text-lg mb-6 text-center text-gray-300">Create an account to start shopping with us.</p>
+            <h1 class="text-3xl font-bold mb-4 text-center text-white">Bienvenue sur Apollo Store !</h1>
+            <p class="text-lg mb-6 text-center text-gray-300">Créez un compte pour commencer à faire vos achats avec nous.</p>
             <div class="w-full max-w-sm">
                 <div class="space-y-6">
                     <div class="flex items-start space-x-4 p-4 rounded-lg transition-all duration-300 hover:bg-black/20" style="background-color: rgba(4, 15, 22, 0.6)">
@@ -13,8 +13,8 @@
                             <i class="pi pi-bolt text-2xl text-yellow-500"></i>
                         </div>
                         <div>
-                            <h4 class="text-white font-medium mb-1">Fast Checkout</h4>
-                            <p class="text-gray-400 text-sm">Save your details for quick and easy purchases</p>
+                            <h4 class="text-white font-medium mb-1">Paiement rapide</h4>
+                            <p class="text-gray-400 text-sm">Enregistrez vos informations pour des achats rapides et faciles</p>
                         </div>
                     </div>
 
@@ -23,8 +23,8 @@
                             <i class="pi pi-map-marker text-2xl text-blue-500"></i>
                         </div>
                         <div>
-                            <h4 class="text-white font-medium mb-1">Order Tracking</h4>
-                            <p class="text-gray-400 text-sm">Real-time updates on your order status</p>
+                            <h4 class="text-white font-medium mb-1">Suivi de commande</h4>
+                            <p class="text-gray-400 text-sm">Mises à jour en temps réel sur le statut de votre commande</p>
                         </div>
                     </div>
 
@@ -33,8 +33,8 @@
                             <i class="pi pi-tag text-2xl text-green-500"></i>
                         </div>
                         <div>
-                            <h4 class="text-white font-medium mb-1">Exclusive Deals</h4>
-                            <p class="text-gray-400 text-sm">Access to special offers and promotions</p>
+                            <h4 class="text-white font-medium mb-1">Offres exclusives</h4>
+                            <p class="text-gray-400 text-sm">Accédez à des offres spéciales et des promotions</p>
                         </div>
                     </div>
                 </div>
@@ -43,44 +43,44 @@
 
         <!-- Right Column: Registration Form - Modified to show individual error messages -->
         <div class="w-full md:w-3/5 p-8 overflow-y-auto" style="max-height: 90vh">
-            <h2 class="text-surface-900 dark:text-surface-0 text-2xl font-medium mb-6">Create Your Account</h2>
+            <h2 class="text-surface-900 dark:text-surface-0 text-2xl font-medium mb-6">Créer votre compte</h2>
 
             <div class="p-fluid">
-                <!-- Account Information Section -->
+                <!-- Section Informations du compte -->
                 <div class="mb-5">
-                    <div class="text-surface-900 dark:text-surface-0 text-lg font-medium mb-3">Account Information</div>
+                    <div class="text-surface-900 dark:text-surface-0 text-lg font-medium mb-3">Informations du compte</div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="field">
-                            <label for="name" class="block text-surface-900 dark:text-surface-0 text-sm font-medium mb-2">Username*</label>
-                            <input pInputText id="name" type="text" placeholder="Choose a username" class="w-full" [(ngModel)]="registerDto.name" minlength="6" maxlength="69" required />
-                            <small *ngIf="usernameError" class="p-error block mt-1"> <i class="pi pi-exclamation-circle mr-1"></i>Name should not contain special characters </small>
-                            <small *ngIf="nameRequired" class="p-error block mt-1"> <i class="pi pi-exclamation-circle mr-1"></i>Name is required </small>
+                            <label for="name" class="block text-surface-900 dark:text-surface-0 text-sm font-medium mb-2">Nom d'utilisateur*</label>
+                            <input pInputText id="name" type="text" placeholder="Choisissez un nom d'utilisateur" class="w-full" [(ngModel)]="registerDto.name" minlength="6" maxlength="69" required />
+                            <small *ngIf="usernameError" class="p-error block mt-1"> <i class="pi pi-exclamation-circle mr-1"></i>Le nom ne doit pas contenir de caractères spéciaux </small>
+                            <small *ngIf="nameRequired" class="p-error block mt-1"> <i class="pi pi-exclamation-circle mr-1"></i>Le nom est requis </small>
                         </div>
                         <div class="field">
                             <label for="email" class="block text-surface-900 dark:text-surface-0 text-sm font-medium mb-2">Email*</label>
-                            <input pInputText id="email" type="email" placeholder="Email address" class="w-full" [(ngModel)]="registerDto.email" required />
-                            <small *ngIf="emailRequired" class="p-error block mt-1"> <i class="pi pi-exclamation-circle mr-1"></i>Email is required </small>
+                            <input pInputText id="email" type="email" placeholder="Adresse e-mail" class="w-full" [(ngModel)]="registerDto.email" required />
+                            <small *ngIf="emailRequired" class="p-error block mt-1"> <i class="pi pi-exclamation-circle mr-1"></i>L'e-mail est requis </small>
                         </div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
                         <div class="field">
-                            <label for="password" class="block text-surface-900 dark:text-surface-0 text-sm font-medium mb-2">Password*</label>
-                            <p-password id="password" [(ngModel)]="registerDto.password" placeholder="Create a password" [toggleMask]="true" styleClass="w-full" [feedback]="true" required></p-password>
-                            <small *ngIf="passwordRequired" class="p-error block mt-1"> <i class="pi pi-exclamation-circle mr-1"></i>Password is required </small>
+                            <label for="password" class="block text-surface-900 dark:text-surface-0 text-sm font-medium mb-2">Mot de passe*</label>
+                            <p-password id="password" [(ngModel)]="registerDto.password" placeholder="Créer un mot de passe" [toggleMask]="true" styleClass="w-full" [feedback]="true" required></p-password>
+                            <small *ngIf="passwordRequired" class="p-error block mt-1"> <i class="pi pi-exclamation-circle mr-1"></i>Le mot de passe est requis </small>
                         </div>
                         <div class="field">
-                            <label for="confirmPassword" class="block text-surface-900 dark:text-surface-0 text-sm font-medium mb-2">Confirm Password*</label>
-                            <p-password id="confirmPassword" [(ngModel)]="registerDto.confirmPassword" placeholder="Confirm your password" [toggleMask]="true" styleClass="w-full" [feedback]="false" required></p-password>
-                            <small *ngIf="passwordMismatch" class="p-error block mt-1"> <i class="pi pi-exclamation-circle mr-1"></i>Please confirm your password </small>
+                            <label for="confirmPassword" class="block text-surface-900 dark:text-surface-0 text-sm font-medium mb-2">Confirmer le mot de passe*</label>
+                            <p-password id="confirmPassword" [(ngModel)]="registerDto.confirmPassword" placeholder="Confirmez votre mot de passe" [toggleMask]="true" styleClass="w-full" [feedback]="false" required></p-password>
+                            <small *ngIf="passwordMismatch" class="p-error block mt-1"> <i class="pi pi-exclamation-circle mr-1"></i>Veuillez confirmer votre mot de passe </small>
                         </div>
                     </div>
                 </div>
 
-                <!-- Contact Information Section -->
+                <!-- Section Informations de contact -->
                 <div class="mb-5">
-                    <div class="text-surface-900 dark:text-surface-0 text-lg font-medium mb-3">Contact Information</div>
+                    <div class="text-surface-900 dark:text-surface-0 text-lg font-medium mb-3">Informations de contact</div>
                     <div class="field mb-3">
-                        <label for="phone" class="block text-surface-900 dark:text-surface-0 text-sm font-medium mb-2">Phone Number*</label>
+                        <label for="phone" class="block text-surface-900 dark:text-surface-0 text-sm font-medium mb-2">Numéro de téléphone*</label>
                         <div class="flex gap-2">
                             <p-dropdown [options]="countryCodes" [(ngModel)]="selectedCountryCode" optionLabel="name" [style]="{ width: '200px' }" placeholder="Select Country" [showClear]="false" (onChange)="onCountryCodeChange()">
                                 <ng-template pTemplate="selectedItem">
@@ -98,51 +98,51 @@
                             </p-dropdown>
                             <p-inputMask id="phone" [mask]="getPhoneMaskPattern()" [(ngModel)]="phoneNumber" placeholder="Enter phone number" styleClass="flex-1" [style]="{ width: '100%' }" [unmask]="true" required> </p-inputMask>
                         </div>
-                        <small class="text-surface-600 dark:text-surface-400 block mt-1">Select your country code, then enter your phone number</small>
-                        <small *ngIf="phoneRequired" class="p-error block mt-1"> <i class="pi pi-exclamation-circle mr-1"></i>Phone number is required </small>
+                        <small class="text-surface-600 dark:text-surface-400 block mt-1">Sélectionnez votre indicatif pays, puis saisissez votre numéro de téléphone</small>
+                        <small *ngIf="phoneRequired" class="p-error block mt-1"> <i class="pi pi-exclamation-circle mr-1"></i>Le numéro de téléphone est requis </small>
                     </div>
                 </div>
 
-                <!-- Address Information Section -->
+                <!-- Section Adresse -->
                 <div class="mb-5">
-                    <div class="text-surface-900 dark:text-surface-0 text-lg font-medium mb-3">Shipping Address</div>
+                    <div class="text-surface-900 dark:text-surface-0 text-lg font-medium mb-3">Adresse de livraison</div>
                     <div class="field mb-3">
-                        <label for="address" class="block text-surface-900 dark:text-surface-0 text-sm font-medium mb-2">Street Address*</label>
-                        <input pInputText id="address" type="text" placeholder="123 Main St" class="w-full" [(ngModel)]="registerDto.address" required />
-                        <small *ngIf="addressRequired" class="p-error block mt-1"> <i class="pi pi-exclamation-circle mr-1"></i>Address is required </small>
+                        <label for="address" class="block text-surface-900 dark:text-surface-0 text-sm font-medium mb-2">Adresse*</label>
+                        <input pInputText id="address" type="text" placeholder="123 rue Principale" class="w-full" [(ngModel)]="registerDto.address" required />
+                        <small *ngIf="addressRequired" class="p-error block mt-1"> <i class="pi pi-exclamation-circle mr-1"></i>L'adresse est requise </small>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         <div class="field">
-                            <label for="city" class="block text-surface-900 dark:text-surface-0 text-sm font-medium mb-2">City*</label>
-                            <input pInputText id="city" type="text" placeholder="Your city" class="w-full" [(ngModel)]="registerDto.city" required />
-                            <small *ngIf="cityRequired" class="p-error block mt-1"> <i class="pi pi-exclamation-circle mr-1"></i>City is required </small>
+                            <label for="city" class="block text-surface-900 dark:text-surface-0 text-sm font-medium mb-2">Ville*</label>
+                            <input pInputText id="city" type="text" placeholder="Votre ville" class="w-full" [(ngModel)]="registerDto.city" required />
+                            <small *ngIf="cityRequired" class="p-error block mt-1"> <i class="pi pi-exclamation-circle mr-1"></i>La ville est requise </small>
                         </div>
                         <div class="field">
-                            <label for="postalCode" class="block text-surface-900 dark:text-surface-0 text-sm font-medium mb-2">Postal Code*</label>
-                            <input pInputText id="postalCode" type="text" placeholder="Postal code" class="w-full" [(ngModel)]="registerDto.postalCode" required />
-                            <small *ngIf="postalCodeRequired" class="p-error block mt-1"> <i class="pi pi-exclamation-circle mr-1"></i>Postal code is required </small>
+                            <label for="postalCode" class="block text-surface-900 dark:text-surface-0 text-sm font-medium mb-2">Code postal*</label>
+                            <input pInputText id="postalCode" type="text" placeholder="Code postal" class="w-full" [(ngModel)]="registerDto.postalCode" required />
+                            <small *ngIf="postalCodeRequired" class="p-error block mt-1"> <i class="pi pi-exclamation-circle mr-1"></i>Le code postal est requis </small>
                         </div>
                         <div class="field">
-                            <label for="country" class="block text-surface-900 dark:text-surface-0 text-sm font-medium mb-2">Country*</label>
-                            <input pInputText id="country" type="text" placeholder="Enter your country" class="w-full" [(ngModel)]="registerDto.country" required />
-                            <small *ngIf="countryRequired" class="p-error block mt-1"> <i class="pi pi-exclamation-circle mr-1"></i>Country is required </small>
+                            <label for="country" class="block text-surface-900 dark:text-surface-0 text-sm font-medium mb-2">Pays*</label>
+                            <input pInputText id="country" type="text" placeholder="Entrez votre pays" class="w-full" [(ngModel)]="registerDto.country" required />
+                            <small *ngIf="countryRequired" class="p-error block mt-1"> <i class="pi pi-exclamation-circle mr-1"></i>Le pays est requis </small>
                         </div>
                     </div>
                 </div>
 
-                <!-- Terms and Conditions -->
+                <!-- Conditions générales -->
                 <div class="field-checkbox mb-4">
                     <p-checkbox id="agreeTerms" [(ngModel)]="registerDto.agreeTerms" [binary]="true" required></p-checkbox>
                     <label for="agreeTerms" class="ml-2 text-surface-700 dark:text-surface-300"
-                        >I agree to the <a (click)="openTermsConditions()" class="text-primary font-medium">Terms of Service</a> and <a (click)="openTermsConditions()" class="text-primary font-medium">Privacy Policy</a></label
+                        >J'accepte les <a (click)="openTermsConditions()" class="text-primary font-medium">Conditions d'utilisation</a> et la <a (click)="openTermsConditions()" class="text-primary font-medium">Politique de confidentialité</a></label
                     >
-                    <small *ngIf="termsRequired" class="p-error block mt-1"> <i class="pi pi-exclamation-circle mr-1"></i>You must agree to the Terms of Service </small>
+                    <small *ngIf="termsRequired" class="p-error block mt-1"> <i class="pi pi-exclamation-circle mr-1"></i>Vous devez accepter les conditions d'utilisation </small>
                 </div>
 
-                <!-- Buttons and Navigation -->
-                <p-button (click)="register()" [disabled]="loading" label="Create Account" styleClass="w-full mb-4" severity="success" raised></p-button>
+                <!-- Boutons et navigation -->
+                <p-button (click)="register()" [disabled]="loading" label="Créer un compte" styleClass="w-full mb-4" severity="success" raised></p-button>
 
-                <p style="text-align: center">Already have an account? <a class="font-medium no-underline ml-2 text-right cursor-pointer text-primary" routerLink="/auth/login">Log In</a></p>
+                <p style="text-align: center">Vous avez déjà un compte ? <a class="font-medium no-underline ml-2 text-right cursor-pointer text-primary" routerLink="/auth/login">Se connecter</a></p>
             </div>
         </div>
     </div>

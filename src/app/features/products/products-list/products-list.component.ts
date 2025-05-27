@@ -73,7 +73,7 @@ export class ProductsListComponent implements OnInit {
     filteredProducts: Product[] = [];
     searchQuery: string = '';
     isSearching: boolean = false;
-    pageTitle: string = 'All Products';
+    pageTitle: string = 'Tout les produits';
     stocks: Stock[] = [];
     // Price range slider
     priceRange: number[] = [0, 5000]; // Default price range values
@@ -84,8 +84,8 @@ export class ProductsListComponent implements OnInit {
     sortField: string = 'price';
     sortOrder: number = 0; // 0 for unsorted, 1 for ascending, -1 for descending
     sortOptions: SortOption[] = [
-        { label: 'Price: Low to High', value: 'price_asc', icon: 'pi pi-sort-amount-up' },
-        { label: 'Price: High to Low', value: 'price_desc', icon: 'pi pi-sort-amount-down' }
+        { label: 'Prix: bas a haute', value: 'price_asc', icon: 'pi pi-sort-amount-up' },
+        { label: 'Price: haute a bas', value: 'price_desc', icon: 'pi pi-sort-amount-down' }
     ];
     selectedSortOption: SortOption | null = null;
 
