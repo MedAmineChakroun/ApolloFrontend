@@ -39,7 +39,7 @@ export class OrderDetailsComponent implements OnInit {
     // Company colors
     primaryColor = '#02c39a'; // Apollo blue
     secondaryColor = '#f8f9fa'; // Light gray
-    accentColor = '#ff5400';   // Orange accent
+    accentColor = '#ff5400'; // Orange accent
 
     constructor(
         private route: ActivatedRoute,
@@ -116,14 +116,14 @@ export class OrderDetailsComponent implements OnInit {
     printInvoice() {
         // Store the original contents
         const originalContents = document.body.innerHTML;
-        
+
         // Get only the content we want to print
         const printContent = document.getElementById('pdfContent');
-        
+
         if (printContent) {
             // Create a new window for printing
             const printWindow = window.open('', '_blank');
-            
+
             if (printWindow) {
                 // Set up the print window with just our content
                 printWindow.document.write(`
@@ -220,15 +220,15 @@ export class OrderDetailsComponent implements OnInit {
                         <div class="totals">
                             <div class="total-row">
                                 <span>Subtotal:</span>
-                                <span>${this.calculateTotal().toFixed(2)} TND</span>
+                                <span>${this.calculateTotal().toFixed(2)} DT</span>
                             </div>
                             <div class="total-row">
                                 <span>Tax:</span>
-                                <span>${(this.calculateTotalTTC() - this.calculateTotal()).toFixed(2)} TND</span>
+                                <span>${(this.calculateTotalTTC() - this.calculateTotal()).toFixed(2)} DT</span>
                             </div>
                             <div class="total-row final-total">
                                 <span>Total:</span>
-                                <span>${this.calculateTotalTTC().toFixed(2)} TND</span>
+                                <span>${this.calculateTotalTTC().toFixed(2)} DT</span>
                             </div>
                         </div>
                         
@@ -239,17 +239,17 @@ export class OrderDetailsComponent implements OnInit {
                     </body>
                     </html>
                 `);
-                
+
                 // Focus on the new window and print it
                 printWindow.document.close();
                 printWindow.focus();
-                
+
                 // Print after a slight delay to ensure content is loaded
                 setTimeout(() => {
                     printWindow.print();
                     printWindow.close();
                 }, 250);
-                
+
                 this.messageService.add({ severity: 'info', summary: 'Print', detail: 'Print dialog opened' });
             } else {
                 // Fallback to old method if window.open fails (rarely happens due to popup blockers)
@@ -257,12 +257,12 @@ export class OrderDetailsComponent implements OnInit {
             }
         }
     }
-    
+
     // Helper method to render status box with appropriate color
     private renderStatusBox(): string {
         const status = this.getStatus(this.CommandeEntete?.docEtat || 0);
         let statusClass = '';
-        
+
         switch (status.severity) {
             case 'success':
                 statusClass = 'status-accepted';
@@ -274,28 +274,30 @@ export class OrderDetailsComponent implements OnInit {
                 statusClass = 'status-pending';
                 break;
         }
-        
+
         return `<div class="status ${statusClass}">${status.label}</div>`;
     }
-    
+
     // Helper method to render table rows
     private renderTableRows(): string {
-        return this.LignesCommande.map(item => `
+        return this.LignesCommande.map(
+            (item) => `
             <tr>
                 <td>#${item.ligneArtCode}</td>
                 <td>${item.ligneArtDesi || ''}</td>
                 <td class="text-center">${item.ligneQte}</td>
-                <td class="text-right">${item.lignePu.toFixed(2)} TND</td>
-                <td class="text-right">${item.ligneHt.toFixed(2)} TND</td>
-                <td class="text-right">${item.ligneTtc.toFixed(2)} TND</td>
+                <td class="text-right">${item.lignePu.toFixed(2)} DT</td>
+                <td class="text-right">${item.ligneHt.toFixed(2)} DT</td>
+                <td class="text-right">${item.ligneTtc.toFixed(2)} DT</td>
             </tr>
-        `).join('');
+        `
+        ).join('');
     }
-    
+
     goBack() {
         this.router.navigate(['/store/customer/orders']);
     }
-    
+
     exportPdf() {
         // Create new document with A4 dimensions
         const doc = new jsPDF({
@@ -303,7 +305,7 @@ export class OrderDetailsComponent implements OnInit {
             unit: 'mm',
             format: 'a4'
         });
-        
+
         const fileName = `Invoice-${this.orderDocPiece}-${new Date().toLocaleDateString().replace(/\//g, '-')}.pdf`;
         const pageWidth = doc.internal.pageSize.width;
         const pageHeight = doc.internal.pageSize.height;
@@ -312,64 +314,64 @@ export class OrderDetailsComponent implements OnInit {
         // Add header with company colors
         doc.setFillColor(this.primaryColor);
         doc.rect(0, 0, pageWidth, 35, 'F');
-        
+
         // Add company logo/name
         doc.setTextColor(255, 255, 255);
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(24);
         doc.text('APOLLO STORE', pageWidth / 2, 15, { align: 'center' });
-        
+
         doc.setFontSize(12);
         doc.text('Professional Invoice', pageWidth / 2, 25, { align: 'center' });
-        
+
         // Add invoice number with accent bar
         doc.setFillColor(this.accentColor);
-        doc.rect(margin, 45, pageWidth - (margin * 2), 10, 'F');
-        
+        doc.rect(margin, 45, pageWidth - margin * 2, 10, 'F');
+
         doc.setTextColor(255, 255, 255);
         doc.setFontSize(14);
         doc.text(`INVOICE #${this.orderDocPiece}`, pageWidth / 2, 52, { align: 'center' });
-        
+
         // Reset text color for rest of the document
         doc.setTextColor(0, 0, 0);
-        
+
         // Customer and company information section
         const sectionY = 70;
-        
+
         // Left side: Customer Information
         doc.setFillColor(this.secondaryColor);
         doc.rect(margin, sectionY, 80, 40, 'F');
-        
+
         doc.setFontSize(12);
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(this.primaryColor);
         doc.text('BILL TO:', margin + 5, sectionY + 8);
-        
+
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(0, 0, 0);
         doc.setFontSize(10);
-        
+
         // Handle long customer name with line breaks
         const customerName = this.clientData?.tiersIntitule || 'Customer Name';
         const nameLines = doc.splitTextToSize(customerName, 70);
         doc.text(nameLines, margin + 5, sectionY + 16);
-        
+
         // Calculate new Y position based on number of lines in customer name
-        let infoY = sectionY + 16 + (nameLines.length * 5);
-        
+        let infoY = sectionY + 16 + nameLines.length * 5;
+
         doc.text(`${this.clientData?.tiersAdresse1 || 'Address Line 1'}`, margin + 5, infoY);
         infoY += 5;
         doc.text(`${this.clientData?.tiersCodePostal || 'Postal Code'}, ${this.clientData?.tiersVille || 'City'}`, margin + 5, infoY);
-        
+
         // Right side: Company Information
         doc.setFillColor(this.secondaryColor);
         doc.rect(pageWidth - margin - 80, sectionY, 80, 40, 'F');
-        
+
         doc.setFontSize(12);
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(this.primaryColor);
         doc.text('FROM:', pageWidth - margin - 75, sectionY + 8);
-        
+
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(0, 0, 0);
         doc.setFontSize(10);
@@ -378,34 +380,36 @@ export class OrderDetailsComponent implements OnInit {
         doc.text('Business City, 12345', pageWidth - margin - 75, sectionY + 26);
         doc.text('contact@apollostore.com', pageWidth - margin - 75, sectionY + 31);
         doc.text('+216 123 456 789', pageWidth - margin - 75, sectionY + 36);
-        
+
         // Invoice details
         const detailsY = sectionY + 50;
-        
+
         doc.setFillColor(this.secondaryColor);
-        doc.rect(margin, detailsY, (pageWidth - (margin * 2)) / 2 - 5, 25, 'F');
-        doc.rect(pageWidth / 2, detailsY, (pageWidth - (margin * 2)) / 2, 25, 'F');
-        
+        doc.rect(margin, detailsY, (pageWidth - margin * 2) / 2 - 5, 25, 'F');
+        doc.rect(pageWidth / 2, detailsY, (pageWidth - margin * 2) / 2, 25, 'F');
+
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(this.primaryColor);
         doc.text('DATE ISSUED:', margin + 5, detailsY + 8);
         doc.text('STATUS:', pageWidth / 2 + 5, detailsY + 8);
-        
+
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(0, 0, 0);
         doc.text(`${this.formatDate(this.CommandeEntete?.docDate || new Date())}`, margin + 5, detailsY + 16);
-        
+
         // Format status with color
         const status = this.getStatus(this.CommandeEntete?.docEtat || 0);
-        doc.setTextColor(status.severity === 'success' ? 0 : (status.severity === 'danger' ? 255 : 0), 
-                        status.severity === 'success' ? 128 : (status.severity === 'danger' ? 0 : 0), 
-                        status.severity === 'success' ? 0 : (status.severity === 'danger' ? 0 : 0));
+        doc.setTextColor(
+            status.severity === 'success' ? 0 : status.severity === 'danger' ? 255 : 0,
+            status.severity === 'success' ? 128 : status.severity === 'danger' ? 0 : 0,
+            status.severity === 'success' ? 0 : status.severity === 'danger' ? 0 : 0
+        );
         doc.text(status.label, pageWidth / 2 + 5, detailsY + 16);
         doc.setTextColor(0, 0, 0);
-        
+
         // Items table
         const tableY = detailsY + 35;
-        
+
         const tableColumns = [
             { header: 'ITEM', dataKey: 'code' },
             { header: 'DESCRIPTION', dataKey: 'description' },
@@ -413,19 +417,19 @@ export class OrderDetailsComponent implements OnInit {
             { header: 'UNIT PRICE', dataKey: 'price' },
             { header: 'TOTAL', dataKey: 'total' }
         ];
-        
-        const tableData = this.LignesCommande.map(item => ({
+
+        const tableData = this.LignesCommande.map((item) => ({
             code: `#${item.ligneArtCode}`,
             description: item.ligneArtDesi || '',
             qty: item.ligneQte.toString(),
-            price: `${item.lignePu.toFixed(2)} TND`,
-            total: `${item.ligneTtc.toFixed(2)} TND`
+            price: `${item.lignePu.toFixed(2)} DT`,
+            total: `${item.ligneTtc.toFixed(2)} DT`
         }));
-        
+
         autoTable(doc, {
             startY: tableY,
-            head: [tableColumns.map(col => col.header)],
-            body: tableData.map(row => tableColumns.map(col => row[col.dataKey as keyof typeof row])),
+            head: [tableColumns.map((col) => col.header)],
+            body: tableData.map((row) => tableColumns.map((col) => row[col.dataKey as keyof typeof row])),
             margin: { top: margin, right: margin, bottom: margin, left: margin },
             headStyles: {
                 fillColor: this.primaryColor,
@@ -442,42 +446,42 @@ export class OrderDetailsComponent implements OnInit {
                 2: { cellWidth: 20, halign: 'center' },
                 3: { cellWidth: 35, halign: 'right' },
                 4: { cellWidth: 35, halign: 'right' }
-            },
+            }
         });
-        
+
         // Get the last Y position after the table
         const finalY = (doc as any).lastAutoTable.finalY + 10;
-        
+
         // Total section
         doc.setFillColor(this.secondaryColor);
         doc.rect(pageWidth - margin - 80, finalY, 80, 35, 'F');
-        
+
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(this.primaryColor);
-        
+
         let totalY = finalY + 10;
         doc.text('SUBTOTAL:', pageWidth - margin - 75, totalY);
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(0, 0, 0);
-        doc.text(`${this.calculateTotal().toFixed(2)} TND`, pageWidth - margin - 15, totalY, { align: 'right' });
-        
+        doc.text(`${this.calculateTotal().toFixed(2)} DT`, pageWidth - margin - 15, totalY, { align: 'right' });
+
         totalY += 8;
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(this.primaryColor);
         doc.text('TAX:', pageWidth - margin - 75, totalY);
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(0, 0, 0);
-        doc.text(`${(this.calculateTotalTTC() - this.calculateTotal()).toFixed(2)} TND`, pageWidth - margin - 15, totalY, { align: 'right' });
-        
+        doc.text(`${(this.calculateTotalTTC() - this.calculateTotal()).toFixed(2)} DT`, pageWidth - margin - 15, totalY, { align: 'right' });
+
         totalY += 8;
         doc.setFillColor(this.accentColor);
         doc.rect(pageWidth - margin - 80, totalY - 5, 80, 10, 'F');
-        
+
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(255, 255, 255);
         doc.text('TOTAL:', pageWidth - margin - 75, totalY);
-        doc.text(`${this.calculateTotalTTC().toFixed(2)} TND`, pageWidth - margin - 15, totalY, { align: 'right' });
-        
+        doc.text(`${this.calculateTotalTTC().toFixed(2)} DT`, pageWidth - margin - 15, totalY, { align: 'right' });
+
         // Footer
         const footerY = pageHeight - 15;
         doc.setFont('helvetica', 'normal');
@@ -485,10 +489,10 @@ export class OrderDetailsComponent implements OnInit {
         doc.setTextColor(100, 100, 100);
         doc.text('Thank you for your business! For any questions regarding this invoice, please contact us.', pageWidth / 2, footerY, { align: 'center' });
         doc.text(`Generated on ${new Date().toLocaleString()}`, pageWidth / 2, footerY + 5, { align: 'center' });
-        
+
         // Save the PDF
         doc.save(fileName);
-        
+
         this.messageService.add({
             severity: 'info',
             summary: 'PDF Exported',

@@ -129,7 +129,7 @@ export class ProductsListComponent implements OnInit {
                 this.pageTitle = params['category']; // Update page title to show category
             } else {
                 this.filters.category = '';
-                this.pageTitle = 'All Products';
+                this.pageTitle = 'Tous les produits';
             }
             if (params['rating']) this.filters.rating = +params['rating'];
             if (params['inStock']) {

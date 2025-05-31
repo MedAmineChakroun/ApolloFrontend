@@ -3,7 +3,7 @@
         <ng-template pTemplate="header">
             <div class="flex justify-content-between align-items-center p-3 bg-primary-500" style="border-radius: 12px 12px 0 0">
                 <h2 class="text-white m-0">Modifier la Commande #{{ docPiece }}</h2>
-                <span class="text-white font-bold" *ngIf="commande">Total: {{ commande.docTtc | currency: 'TND ' }}</span>
+                <span class="text-white font-bold" *ngIf="commande">Total: {{ commande.docTtc | currency: 'DT ' }}</span>
             </div>
         </ng-template>
 
@@ -115,9 +115,9 @@
                             [size]="'small'"
                         ></p-inputNumber>
                     </td>
-                    <td class="text-right font-medium">{{ ligne.lignePu | currency: 'TND ' }}</td>
-                    <td class="text-right font-medium">{{ ligne.ligneHt | currency: 'TND ' }}</td>
-                    <td class="text-right font-bold text-primary-500">{{ ligne.ligneTtc | currency: 'TND ' }}</td>
+                    <td class="text-right font-medium">{{ ligne.lignePu | currency: 'DT ' }}</td>
+                    <td class="text-right font-medium">{{ ligne.ligneHt | currency: 'DT ' }}</td>
+                    <td class="text-right font-bold text-primary-500">{{ ligne.ligneTtc | currency: 'DT ' }}</td>
                     <td>
                         <div class="flex justify-content-center">
                             <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" pTooltip="Supprimer" tooltipPosition="top" (click)="supprimerLigne(ligne)"></button>
@@ -129,8 +129,8 @@
             <ng-template pTemplate="footer" *ngIf="commande">
                 <tr>
                     <td colspan="5" class="text-right font-bold">Total :</td>
-                    <td class="text-right font-bold">{{ commande.docTht | currency: 'TND ' }}</td>
-                    <td class="text-right font-bold text-primary-500">{{ commande.docTtc | currency: 'TND ' }}</td>
+                    <td class="text-right font-bold">{{ commande.docTht | currency: 'DT ' }}</td>
+                    <td class="text-right font-bold text-primary-500">{{ commande.docTtc | currency: 'DT ' }}</td>
                     <td></td>
                 </tr>
             </ng-template>

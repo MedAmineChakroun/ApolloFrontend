@@ -135,7 +135,7 @@ export class RevenueStreamWidget implements OnInit, OnDestroy {
                         callback: function (value: any) {
                             return new Intl.NumberFormat('fr-FR', {
                                 style: 'currency',
-                                currency: 'EUR'
+                                currency: 'DT'
                             }).format(value);
                         }
                     },

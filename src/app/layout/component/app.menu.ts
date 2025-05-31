@@ -72,8 +72,8 @@ import { CheckboxModule } from 'primeng/checkbox';
                         <span>Price range</span>
                     </div>
                     <div class="price-range-labels">
-                        <span>Min: TND{{ priceRange[0] }}</span>
-                        <span>Max: TND{{ priceRange[1] }}</span>
+                        <span>Min: DT{{ priceRange[0] }}</span>
+                        <span>Max: DT{{ priceRange[1] }}</span>
                     </div>
                     <p-slider [(ngModel)]="priceRange" [range]="true" [min]="0" [max]="5000" class="w-full"></p-slider>
                     <div class="apply-filter">

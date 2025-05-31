@@ -108,7 +108,7 @@
                     <td>{{ order.docDate | date: 'MMM d, yyyy' }}</td>
                     <td class="text-center">{{ articleCounts[order.docPiece] || '0' }}</td>
 
-                    <td class="text-right font-bold text-primary-500">{{ order.docTtc | currency: 'TND ' }}</td>
+                    <td class="text-right font-bold text-primary-500">{{ order.docTtc | currency: 'DT ' }}</td>
                     <td class="text-center">
                         <!-- If docFlag === 1 → show read-only tag -->
                         <p-tag *ngIf="order.docFlag !== 0" [value]="getStatus(order.docEtat).label" [severity]="getStatus(order.docEtat).severity" [rounded]="true"> </p-tag>

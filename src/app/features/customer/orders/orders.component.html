@@ -57,8 +57,8 @@
                 </td>
                 <td>{{ order.docDate | date: 'MMM d, yyyy' }}</td>
                 <td class="text-center">{{ articleCounts[order.docPiece] || '0' }}</td>
-                <td class="text-right font-medium">{{ order.docTht | currency: 'TND ' }}</td>
-                <td class="text-right font-bold text-primary-500">{{ order.docTtc | currency: 'TND ' }}</td>
+                <td class="text-right font-medium">{{ order.docTht | currency: 'DT ' }}</td>
+                <td class="text-right font-bold text-primary-500">{{ order.docTtc | currency: 'DT ' }}</td>
                 <td class="text-center"><p-tag [value]="getStatus(order.docEtat).label" [severity]="getStatus(order.docEtat).severity" [rounded]="true"></p-tag></td>
                 <td>
                     <div class="flex gap-2 justify-content-center">

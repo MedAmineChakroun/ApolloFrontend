@@ -190,3 +190,6 @@
         padding-bottom: 90%; /* Slightly shorter for large screens */
     }
 }
+.price {
+    color: var(--p-primary-color);
+}

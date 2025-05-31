@@ -106,8 +106,8 @@
                     <td>#{{ product.article.artCode }}</td>
                     <td>{{ product.article.artIntitule }}</td>
                     <td>{{ product.article.artFamille }}</td>
-                    <td>{{ product.article.artPrixVente | currency: 'TND' : 'symbol' : '1.3-3' }}</td>
-                    <td>{{ product.article.artPrixAchat | currency: 'TND' : 'symbol' : '1.3-3' }}</td>
+                    <td>{{ product.article.artPrixVente | currency: 'DT ' : 'symbol' : '1.3-3' }}</td>
+                    <td>{{ product.article.artPrixAchat | currency: 'DT ' : 'symbol' : '1.3-3' }}</td>
 
                     <td>
                         <p-tag [value]="getStockStatusLabel(product.stockQuantity)" [severity]="getStockStatusSeverity(product.stockQuantity)" [icon]="getStockIcon(product.stockQuantity)"> </p-tag>
@@ -168,16 +168,16 @@
                 <div class="price-cards">
                     <div class="price-card">
                         <div class="price-card-header">Sale Price</div>
-                        <div class="price-card-value sale-price">{{ selectedProduct.article.artPrixVente | currency: 'TND' }}</div>
+                        <div class="price-card-value sale-price">{{ selectedProduct.article.artPrixVente | currency: 'DT ' }}</div>
                     </div>
                     <div class="price-card">
                         <div class="price-card-header">Cost Price</div>
-                        <div class="price-card-value cost-price">{{ selectedProduct.article.artPrixAchat | currency: 'TND' }}</div>
+                        <div class="price-card-value cost-price">{{ selectedProduct.article.artPrixAchat | currency: 'DT ' }}</div>
                     </div>
                     <div class="price-card">
                         <div class="price-card-header">Profit</div>
                         <div class="price-card-value" [ngClass]="calculateProfit(selectedProduct.article) > 0 ? 'profit-positive' : 'profit-negative'">
-                            {{ calculateProfit(selectedProduct.article) | currency: 'TND' }}
+                            {{ calculateProfit(selectedProduct.article) | currency: 'DT ' }}
                         </div>
                         <div class="price-card-subtitle">{{ calculateProfitMargin(selectedProduct.article) | number: '1.0-2' }}% margin</div>
                     </div>
