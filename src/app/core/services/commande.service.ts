@@ -83,4 +83,7 @@ export class CommandeService {
     toPromise<T>(observable: Observable<T>): Promise<T> {
         return firstValueFrom(observable);
     }
+    isProductPurshased(TiersCode: string, artCode: string): Observable<boolean> {
+        return this.http.get<boolean>(`${this.apiUrl}/isProductPurshased/${TiersCode}/${artCode}`);
+    }
 }

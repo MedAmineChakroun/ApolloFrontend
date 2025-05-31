@@ -17,6 +17,9 @@ import { SimilarComponent } from './similar/similar.component';
 import { ImageModule } from 'primeng/image';
 import { StockService } from '../../../core/services/stock.service';
 import { Stock } from '../../../models/Stock';
+import { CommandeService } from '../../../core/services/commande.service';
+import { Store } from '@ngrx/store';
+import { selectUserCode } from '../../../store/user/user.selectors';
 //import lazy loading for the image module from primeng
 
 type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | undefined;
@@ -33,6 +36,7 @@ export class ProductDetailsComponent implements OnInit {
     error: string | null = null;
     quantity: number = 1;
     stockQuantity: number = 0;
+    tiersCode: string = '';
     private readonly DEFAULT_PRODUCT_IMAGE = 'assets/general/product-default.png';
 
     constructor(
@@ -40,7 +44,9 @@ export class ProductDetailsComponent implements OnInit {
         private productsService: ProductsService,
         private cartService: CartService,
         private toastr: ToastrService,
-        private stockService: StockService
+        private stockService: StockService,
+        private CommandeService: CommandeService,
+        private store: Store
     ) {}
 
     ngOnInit() {

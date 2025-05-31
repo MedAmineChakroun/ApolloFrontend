@@ -51,8 +51,11 @@
 
 .rating-stars {
     margin-bottom: 0.5rem;
+    width: 100px !important;
 }
-
+.userRating {
+    width: 100px !important;
+}
 .rating-message {
     color: #6c757d;
     font-style: italic;
@@ -73,4 +76,8 @@
 
 .login-prompt a:hover {
     text-decoration: underline;
+}
+::ng-deep .custom-tooltip + .ui-tooltip {
+    max-width: 500px;
+    white-space: normal;
 }

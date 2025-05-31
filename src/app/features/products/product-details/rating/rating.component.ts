@@ -7,38 +7,45 @@ import { MessageService } from 'primeng/api';
 import { RatingDTO, RatingService } from '../../../../core/services/rating.service';
 import { AuthenticationService } from '../../../../core/services/authentication.service';
 import { Observable, take } from 'rxjs';
-import { selectUserId } from '../../../../store/user/user.selectors';
+import { selectUserId, selectUserCode } from '../../../../store/user/user.selectors';
 import { Store } from '@ngrx/store';
 import { Rate } from '../../../../models/Rate';
-
+import { CommandeService } from '../../../../core/services/commande.service';
+import { ToastrService } from 'ngx-toastr';
+import { TooltipModule } from 'primeng/tooltip';
 @Component({
     selector: 'app-rating',
     standalone: true,
-    imports: [CommonModule, FormsModule, RatingModule, ToastModule],
+    imports: [CommonModule, FormsModule, RatingModule, ToastModule, TooltipModule],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     templateUrl: './rating.component.html',
-    styleUrls: ['./rating.component.css'],
+    styleUrls: ['./rating.component.scss'],
     providers: [MessageService]
 })
 export class RatingComponent implements OnInit {
     @Input() productId!: number;
-
+    @Input() productCode!: string;
     userRating: number = 0;
     averageRating: number = 0;
     userId: number = 0;
-
+    tiersCode: string = '';
     userHasRated: boolean = false;
     isLoggedIn: boolean = false;
+    isPurchased: boolean = false;
 
     // Use inject() function with explicit types
     private ratingService: RatingService = inject(RatingService);
     private authService: AuthenticationService = inject(AuthenticationService);
     private messageService: MessageService = inject(MessageService);
     private store: Store = inject(Store);
+    private commandeService: CommandeService = inject(CommandeService);
+    private toastr = inject(ToastrService);
 
     ngOnInit(): void {
         this.isLoggedIn = this.authService.isAuthenticated();
         this.SetUserId();
+        this.getTiersCode();
+
         this.loadProductRating();
     }
 
@@ -62,7 +69,17 @@ export class RatingComponent implements OnInit {
                 });
         }
     }
-
+    private getTiersCode() {
+        this.store.select(selectUserCode).subscribe(async (userCode) => {
+            if (userCode) {
+                this.tiersCode = userCode;
+                this.isPurchased = await this.isItemPusrchased();
+                console.log(this.isPurchased);
+            } else {
+                console.error('User code not found');
+            }
+        });
+    }
     loadProductRating(): void {
         this.ratingService.getAverageRating(this.productId).subscribe({
             next: (avgRating: number) => {
@@ -104,6 +121,10 @@ export class RatingComponent implements OnInit {
             return;
         }
 
+        if (!this.isPurchased) {
+            this.toastr.info('Vous devez acheter ce produit pour le noter.');
+            return;
+        }
         const ratingDTO: RatingDTO = {
             productId: this.productId,
             userId: this.userId,
@@ -116,20 +137,27 @@ export class RatingComponent implements OnInit {
                 this.userRating = value;
                 // Refresh average rating after user rates
                 this.loadProductRating();
-                this.messageService.add({
-                    severity: 'success',
-                    summary: 'Succès',
-                    detail: 'Votre note a été enregistrée.'
-                });
-            },
-            error: (error) => {
-                console.error('Error saving rating:', error);
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Erreur',
-                    detail: "Impossible d'enregistrer votre note."
-                });
+                this.toastr.success('Merci pour votre note !');
             }
         });
+    }
+    async isItemPusrchased(): Promise<boolean> {
+        if (!this.productCode) {
+            console.warn('Product code is not defined');
+            return false;
+        }
+
+        try {
+            const isPurchased = await this.commandeService
+                .isProductPurshased(this.tiersCode, this.productCode)
+                .pipe(take(1)) // Take only the first emission
+                .toPromise();
+
+            console.log('Is Product Purchased:', isPurchased);
+            return isPurchased || false;
+        } catch (error) {
+            console.error('Error checking purchase status:', error);
+            return false;
+        }
     }
 }

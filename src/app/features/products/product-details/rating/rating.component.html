@@ -3,20 +3,20 @@
 
     <div class="rating-summary">
         <div class="rating-average">
-            <span class="rating-label">Average Rating:</span>
+            <span class="rating-label">Note moyenne&nbsp;:</span>
+            <p-rating [ngModel]="averageRating" [readonly]="true" [stars]="1"></p-rating>
             <span class="rating-value">{{ averageRating | number: '1.1-1' }}/5</span>
-            <p-rating [ngModel]="averageRating" [readonly]="true"></p-rating>
         </div>
     </div>
 
     <div class="user-rating" *ngIf="isLoggedIn">
-        <h4>Rate this product</h4>
-        <div class="rating-stars">
-            <p-rating [(ngModel)]="userRating" (onRate)="onRateChange($event.value)"></p-rating>
+        <h4>Noter ce produit</h4>
+        <div class="rating-stars" [pTooltip]="!isPurchased ? 'Vous devez acheter ce produit pour le noter' : ''" tooltipPosition="right">
+            <p-rating [(ngModel)]="userRating" [readonly]="!isPurchased" (onRate)="onRateChange($event.value)"> </p-rating>
         </div>
     </div>
 
     <div class="login-prompt" *ngIf="!isLoggedIn">
-        <p>Please <a href="/auth/login">log in</a> to rate this product</p>
+        <p>Veuillez vous <a href="/auth/login">connecter</a> pour noter ce produit</p>
     </div>
 </div>
