@@ -1,7 +1,7 @@
 <div class="similars">
     <h2 class="similar-products-header">Tu peux aussi aimer</h2>
 
-    <p-carousel [value]="products" [numVisible]="4" [numScroll]="1" [circular]="true" [autoplayInterval]="4200" [responsiveOptions]="carouselResponsiveOptions" [showIndicators]="true" [showNavigators]="true">
+    <p-carousel [value]="products" [numVisible]="4" [numScroll]="2" [circular]="true" [autoplayInterval]="4500" [responsiveOptions]="carouselResponsiveOptions" [showIndicators]="true" [showNavigators]="true">
         <ng-template let-product pTemplate="item">
             <div class="border border-surface-200 rounded-lg m-3 p-4 product-card">
                 <div class="relative mb-4" (click)="navigateToProductDetails(product.artId)">

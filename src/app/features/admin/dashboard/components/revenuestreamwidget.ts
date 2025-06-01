@@ -79,7 +79,7 @@ export class RevenueStreamWidget implements OnInit, OnDestroy {
                     label: 'Montant HT',
                     backgroundColor: documentStyle.getPropertyValue('--p-primary-200'),
                     data: orders.map((order) => order.docTht),
-                    barThickness: 32,
+                    barThickness: 26,
                     borderRadius: {
                         topLeft: 8,
                         topRight: 8,
@@ -133,9 +133,9 @@ export class RevenueStreamWidget implements OnInit, OnDestroy {
                     ticks: {
                         color: textMutedColor,
                         callback: function (value: any) {
-                            return new Intl.NumberFormat('fr-FR', {
+                            return new Intl.NumberFormat('tn-TN', {
                                 style: 'currency',
-                                currency: 'DT'
+                                currency: 'TND'
                             }).format(value);
                         }
                     },

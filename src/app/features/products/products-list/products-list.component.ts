@@ -85,7 +85,7 @@ export class ProductsListComponent implements OnInit {
     sortOrder: number = 0; // 0 for unsorted, 1 for ascending, -1 for descending
     sortOptions: SortOption[] = [
         { label: 'Prix: bas a haute', value: 'price_asc', icon: 'pi pi-sort-amount-up' },
-        { label: 'Price: haute a bas', value: 'price_desc', icon: 'pi pi-sort-amount-down' }
+        { label: 'Prix: haute a bas', value: 'price_desc', icon: 'pi pi-sort-amount-down' }
     ];
     selectedSortOption: SortOption | null = null;
 

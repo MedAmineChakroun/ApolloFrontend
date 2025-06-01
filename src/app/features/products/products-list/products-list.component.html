@@ -23,7 +23,7 @@
                 </div>
 
                 <div *ngIf="filters.priceMin > 0 || filters.priceMax < 5000" class="text-sm text-surface-600 py-1 px-3 bg-surface-100 rounded-full cursor-pointer" (click)="openPriceFilterDialog()">
-                    Price: {{ filters.priceMin | currency: 'Dt' : 'symbol' : '1.3-3' }} - {{ filters.priceMax | currency: 'Dt' : 'symbol' : '1.3-3' }}
+                    Prix: {{ filters.priceMin | currency: 'Dt' : 'symbol' : '1.3-3' }} - {{ filters.priceMax | currency: 'Dt' : 'symbol' : '1.3-3' }}
                     <i class="pi pi-filter ml-2"></i>
                 </div>
                 <div *ngIf="filters.search" class="text-sm text-surface-600 py-1 px-3 bg-surface-100 rounded-full">

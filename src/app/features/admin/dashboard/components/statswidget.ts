@@ -51,7 +51,7 @@ import { CommandeService } from '../../../../core/services/commande.service';
                         <i class="pi pi-users text-cyan-500 !text-xl"></i>
                     </div>
                 </div>
-                <span class="text-primary font-medium">nombre</span>
+                <span class="prime-text">nombre</span>
                 <span class="text-muted-color">de tous les clients</span>
             </div>
         </div>
@@ -66,7 +66,7 @@ import { CommandeService } from '../../../../core/services/commande.service';
                         <i class="pi pi-list text-purple-500 !text-xl"></i>
                     </div>
                 </div>
-                <span class="text-primary font-medium">{{ nbArticles }}</span>
+                <span class="prime-text">{{ nbArticles }}</span>
                 <span class="text-muted-color">articles associés</span>
             </div>
         </div>`
