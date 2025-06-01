@@ -86,4 +86,10 @@ export class CommandeService {
     isProductPurshased(TiersCode: string, artCode: string): Observable<boolean> {
         return this.http.get<boolean>(`${this.apiUrl}/isProductPurshased/${TiersCode}/${artCode}`);
     }
+    hasOrders(tiersCode: string): Observable<boolean> {
+        return this.http.get<boolean>(`${this.apiUrl}/hasOrders/${tiersCode}`);
+    }
+    hasOrdersForArticles(artCode: string): Observable<boolean> {
+        return this.http.get<boolean>(`${this.apiUrl}/hasOrdersForArticles/${artCode}`);
+    }
 }

@@ -19,6 +19,7 @@ import { UserService } from '../../../core/services/client-service.service';
 import { Client } from '../../../models/Client';
 import { catchError, forkJoin, map, of } from 'rxjs';
 import { SynchronisationService } from '../../../core/services/synchronisation.service';
+import { CommandeService } from '../../../core/services/commande.service';
 @Component({
     selector: 'app-clients-management',
     standalone: true,
@@ -47,6 +48,7 @@ export class ClientsManagementComponent implements OnInit {
     private router = inject(Router);
     private fb = inject(FormBuilder);
     private synchronisationService = inject(SynchronisationService);
+    private CommandeService = inject(CommandeService);
 
     ngOnInit() {
         // Check if current route is the sync route
@@ -142,41 +144,45 @@ export class ClientsManagementComponent implements OnInit {
             rejectLabel: 'Non',
             //red reject button
             rejectButtonStyleClass: 'p-button-danger',
-            accept: () => {
-                this.synchronisationService.deleteClient(client.tiersCode).subscribe({
-                    next: (response) => {
-                        if (response) {
-                            this.deleteClient(client.tiersId);
-                            setTimeout(() => {
-                                this.loadClients();
-                            }, 300);
+            accept: async () => {
+                const hasRelations = await this.checkRelations(client.tiersCode);
+                if (hasRelations) {
+                    this.toastr.warning('Suppression refusée : ce client est relié à une ou plusieurs commandes');
+                    return;
+                }
 
-                            //toast to stay 3000 ms
-                            this.toastr.success('Client supprimé avec succès', 'Succès', {
-                                positionClass: 'toast-top-right',
-                                timeOut: 3000,
-                                closeButton: true,
-                                progressBar: true
-                            });
-                        } else {
-                            this.toastr.error('Suppression refusée : ce client est relié à une ou plusieurs commandes');
-                        }
-                    },
-                    error: (error) => {
-                        console.error('Erreur lors de la suppression du client dans Sage :', error);
-                    }
+                this.deleteClientFromSage(client);
+                this.deleteClient(client.tiersId);
+
+                this.toastr.success('Client supprimé avec succès.', 'Succès', {
+                    positionClass: 'toast-top-right',
+                    timeOut: 3000,
+                    closeButton: true,
+                    progressBar: true
                 });
             }
         });
     }
-
+    deleteClientFromSage(client: Client) {
+        this.synchronisationService.deleteClient(client.tiersCode).subscribe({
+            next: (response) => {
+                console.log('Client deleted from Sage:', response);
+            },
+            error: (error) => {
+                console.error('un erreur est survenue lors de la suppression du client dans Sage');
+            }
+        });
+    }
     deleteClient(id: number) {
         this.userService.deleteUserProfile(id).subscribe({
             next: () => {
                 this.getClientsCount();
+                setTimeout(() => {
+                    this.loadClients();
+                }, 300);
             },
             error: (error) => {
-                console.error('Error deleting client:', error);
+                console.error('un erreur est survenue lors de la suppression du client en local', error);
             }
         });
     }
@@ -347,6 +353,15 @@ export class ClientsManagementComponent implements OnInit {
             this.selectedClients = [];
         } else {
             this.selectedClients = [...this.clients];
+        }
+    }
+    async checkRelations(tiersCode: string): Promise<boolean> {
+        try {
+            const result = await this.CommandeService.hasOrders(tiersCode).toPromise();
+            return result ?? false;
+        } catch (error) {
+            this.toastr.error('Erreur lors de la vérification des relations', 'Erreur');
+            return true; // Return true to prevent deletion on error
         }
     }
 }

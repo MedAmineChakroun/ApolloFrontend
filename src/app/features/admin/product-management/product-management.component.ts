@@ -22,6 +22,7 @@ import { Stock } from '../../../models/Stock';
 import { StockService } from '../../../core/services/stock.service';
 import { SynchronisationService } from '../../../core/services/synchronisation.service';
 import { forkJoin } from 'rxjs';
+import { CommandeService } from '../../../core/services/commande.service';
 type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' | undefined;
 
 // Enhanced interface for products with stock information
@@ -60,7 +61,8 @@ export class ProductManagementComponent implements OnInit {
         private toastr: ToastrService,
         private router: Router,
         private stockService: StockService,
-        private synchronisationService: SynchronisationService
+        private synchronisationService: SynchronisationService,
+        private CommandeService: CommandeService
     ) {}
 
     ngOnInit() {
@@ -135,32 +137,43 @@ export class ProductManagementComponent implements OnInit {
             acceptLabel: 'Oui',
             rejectLabel: 'Non',
             rejectButtonStyleClass: 'p-button-danger',
-            accept: () => {
-                this.synchronisationService.deleteArticle(product.artCode).subscribe({
-                    next: (response) => {
-                        if (response) {
-                            this.deletelocal(product);
-                        } else {
-                            this.toastr.error('Suppression refusée : cet article est relié à une ou plusieurs commandes');
-                        }
-                    },
-                    error: (error) => {
-                        console.error('Error deleting product:', error);
-                    }
+            accept: async () => {
+                const hasRelations = await this.checkRelations(product.artCode);
+                if (hasRelations) {
+                    this.toastr.warning('Suppression refusée : ce produit exist dans une ou plusieurs commandes');
+                    return;
+                }
+                this.deleteProductFromSage(product);
+                this.deletelocal(product);
+
+                this.toastr.success('Produit supprimé avec succès.', 'Succès', {
+                    positionClass: 'toast-top-right',
+                    timeOut: 3000,
+                    closeButton: true,
+                    progressBar: true
                 });
+            }
+        });
+    }
+    deleteProductFromSage(product: Product) {
+        this.synchronisationService.deleteArticle(product.artCode).subscribe({
+            next: (response) => {
+                console.log('product deleted from Sage:', response);
+            },
+            error: (error) => {
+                console.error('Error deleting product:', error);
             }
         });
     }
     deletelocal(product: Product) {
         this.productService.deleteProduct(product.artId).subscribe({
             next: () => {
-                this.loadProducts();
-                this.toastr.success('Produit supprimé avec succès', 'Succès', {
-                    positionClass: 'toast-top-right',
-                    timeOut: 3000,
-                    closeButton: true,
-                    progressBar: true
-                });
+                setTimeout(() => {
+                    this.loadProducts();
+                }, 300);
+            },
+            error: (error) => {
+                console.error('un erreur est survenue lors de la suppression du produit en local', error);
             }
         });
     }
@@ -317,6 +330,15 @@ export class ProductManagementComponent implements OnInit {
             this.selectedProducts = [];
         } else {
             this.selectedProducts = [...this.products];
+        }
+    }
+    async checkRelations(artCode: string): Promise<boolean> {
+        try {
+            const result = await this.CommandeService.hasOrdersForArticles(artCode).toPromise();
+            return result ?? false;
+        } catch (error) {
+            this.toastr.error('Erreur lors de la vérification des relations', 'Erreur');
+            return true; // Return true to prevent deletion on error
         }
     }
 }

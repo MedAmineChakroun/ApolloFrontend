@@ -409,8 +409,8 @@ export class CommandesManagementComponent implements OnInit {
             }
         });
     }
-    canEditOrDelete(docEtat: number): boolean {
-        return docEtat === this.STATUS_EN_ATTENTE;
+    canEditOrDelete(docFlag: number): boolean {
+        return docFlag === 1;
     }
     updateOrderDetails(orderId: string) {
         this.router.navigate(['/store/customer/orders/edit', orderId]);

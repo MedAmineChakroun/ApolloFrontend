@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
     selector: 'app-footer',
     imports: [CommonModule],
     template: /*html*/ `<div class="layout-footer">
-        <span *ngIf="ClientName !== ''">Welcome</span>
+        <span *ngIf="ClientName !== ''">Bienvenue</span>
 
         <a href="https://primeng.org" target="_blank" rel="noopener noreferrer" class="text-color">{{ ClientName }}</a>
     </div>`

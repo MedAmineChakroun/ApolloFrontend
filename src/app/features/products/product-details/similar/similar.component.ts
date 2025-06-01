@@ -12,6 +12,7 @@ import { StockService } from '../../../../core/services/stock.service';
 import { Stock } from '../../../../models/Stock';
 import { TooltipModule } from 'primeng/tooltip';
 import { CartService } from '../../../../core/services/cart.service';
+
 type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' | undefined;
 
 @Component({
