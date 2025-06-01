@@ -6,6 +6,7 @@
             <span class="rating-label">Note moyenne&nbsp;:</span>
             <p-rating [ngModel]="averageRating" [readonly]="true" [stars]="1"></p-rating>
             <span class="rating-value">{{ averageRating | number: '1.1-1' }}/5</span>
+            <span class="rating-count">({{ ratingCount }} avis)</span>
         </div>
     </div>
 

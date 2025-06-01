@@ -31,4 +31,7 @@ export class RatingService {
     getAverageRating(productId: number): Observable<number> {
         return this.http.get<number>(`${this.apiUrl}/average/${productId}`);
     }
+    getCountRating(productId: number): Observable<number> {
+        return this.http.get<number>(`${this.apiUrl}/count/${productId}`);
+    }
 }

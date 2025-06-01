@@ -32,7 +32,7 @@ export class RatingComponent implements OnInit {
     userHasRated: boolean = false;
     isLoggedIn: boolean = false;
     isPurchased: boolean = false;
-
+    ratingCount: number = 0;
     // Use inject() function with explicit types
     private ratingService: RatingService = inject(RatingService);
     private authService: AuthenticationService = inject(AuthenticationService);
@@ -45,7 +45,7 @@ export class RatingComponent implements OnInit {
         this.isLoggedIn = this.authService.isAuthenticated();
         this.SetUserId();
         this.getTiersCode();
-
+        this.loadProductRatingCount();
         this.loadProductRating();
     }
 
@@ -90,7 +90,16 @@ export class RatingComponent implements OnInit {
             }
         });
     }
-
+    loadProductRatingCount(): void {
+        this.ratingService.getCountRating(this.productId).subscribe({
+            next: (count: number) => {
+                this.ratingCount = count;
+            },
+            error: (error: any) => {
+                console.error('Error loading rating count:', error);
+            }
+        });
+    }
     loadUserRating(): void {
         if (this.isLoggedIn && this.userId > 0) {
             this.ratingService.getRatingForProduct(this.productId, this.userId).subscribe({
@@ -137,6 +146,7 @@ export class RatingComponent implements OnInit {
                 this.userRating = value;
                 // Refresh average rating after user rates
                 this.loadProductRating();
+                this.loadProductRatingCount();
                 this.toastr.success('Merci pour votre note !');
             }
         });
