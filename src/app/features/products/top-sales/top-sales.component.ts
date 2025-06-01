@@ -10,6 +10,8 @@ import { ProductsService } from '../../../core/services/products.service';
 import { StockService } from '../../../core/services/stock.service';
 import { Router } from '@angular/router';
 import { Stock } from '../../../models/Stock';
+import { CartService } from '../../../core/services/cart.service';
+
 type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' | undefined;
 
 @Component({
@@ -28,7 +30,8 @@ export class TopSalesComponent implements OnInit {
     constructor(
         private productService: ProductsService,
         private router: Router,
-        private stockService: StockService
+        private stockService: StockService,
+        private cartService: CartService
     ) {}
 
     ngOnInit() {
@@ -71,6 +74,18 @@ export class TopSalesComponent implements OnInit {
             numScroll: 1
         }
     ];
+    addToCart(product: Product) {
+        this.cartService.addToCart(product);
+
+        // Add animation to cart icon (optional)
+        const cartIcon = document.querySelector('.cart-icon');
+        if (cartIcon) {
+            cartIcon.classList.add('animate-bounce');
+            setTimeout(() => {
+                cartIcon.classList.remove('animate-bounce');
+            }, 1000);
+        }
+    }
     navigateToProductDetails(productId: string) {
         this.router.navigate(['/store/products', productId]);
     }

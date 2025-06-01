@@ -17,7 +17,7 @@
                 </div>
                 <div class="flex justify-between items-center">
                     <div class="font-semibold text-lg">{{ product.artPrixVente | currency: 'DT ' : 'symbol' : '1.3-3' }}</div>
-                    <p-button icon="pi pi-shopping-cart" styleClass=" p-button-sm" (click)="navigateToProductDetails(product.artId)"></p-button>
+                    <p-button (onClick)="$event.stopPropagation(); addToCart(product)" icon="pi pi-shopping-cart" styleClass=" p-button-sm" (click)="navigateToProductDetails(product.artId)"></p-button>
                 </div>
             </div>
         </ng-template>

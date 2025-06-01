@@ -15,6 +15,7 @@ import { Store } from '@ngrx/store';
 import { SkeletonModule } from 'primeng/skeleton';
 import { finalize } from 'rxjs';
 import posthog from 'posthog-js';
+import { CartService } from '../../../core/services/cart.service';
 
 type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' | undefined;
 
@@ -42,7 +43,8 @@ export class RecommendedProductsComponent {
         private productService: ProductsService,
         private router: Router,
         private stockService: StockService,
-        private Store: Store
+        private Store: Store,
+        private cartService: CartService
     ) {}
     getUserCode() {
         this.isLoading = true;
@@ -116,6 +118,18 @@ export class RecommendedProductsComponent {
             numScroll: 1
         }
     ];
+    addToCart(product: Product) {
+        this.cartService.addToCart(product);
+
+        // Add animation to cart icon (optional)
+        const cartIcon = document.querySelector('.cart-icon');
+        if (cartIcon) {
+            cartIcon.classList.add('animate-bounce');
+            setTimeout(() => {
+                cartIcon.classList.remove('animate-bounce');
+            }, 1000);
+        }
+    }
     navigateToProductDetails(product: Product) {
         posthog.capture('Product CF Clicked', {
             userId: this.userCode,

@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 import { StockService } from '../../../../core/services/stock.service';
 import { Stock } from '../../../../models/Stock';
 import { TooltipModule } from 'primeng/tooltip';
-
+import { CartService } from '../../../../core/services/cart.service';
 type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' | undefined;
 
 @Component({
@@ -32,7 +32,8 @@ export class SimilarComponent {
     constructor(
         private productService: ProductsService,
         private router: Router,
-        private stockService: StockService
+        private stockService: StockService,
+        private cartService: CartService
     ) {}
 
     ngOnInit() {
@@ -79,6 +80,18 @@ export class SimilarComponent {
             numScroll: 1
         }
     ];
+    addToCart(product: Product) {
+        this.cartService.addToCart(product);
+
+        // Add animation to cart icon (optional)
+        const cartIcon = document.querySelector('.cart-icon');
+        if (cartIcon) {
+            cartIcon.classList.add('animate-bounce');
+            setTimeout(() => {
+                cartIcon.classList.remove('animate-bounce');
+            }, 1000);
+        }
+    }
     navigateToProductDetails(productId: string) {
         this.router.navigate(['/store/products', productId]);
     }
