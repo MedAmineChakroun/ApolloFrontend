@@ -16,7 +16,7 @@
                     <label for="password1" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">Mot de passe</label>
                     <p-password id="password1" [(ngModel)]="loginDto.password" placeholder="Mot de passe" [toggleMask]="true" styleClass="mb-4" [fluid]="true" [feedback]="false"></p-password>
 
-                    <p-button (click)="login()" [disabled]="loading" label="Se connecter" styleClass="w-full mb-4" severity="success" raised></p-button>
+                    <p-button (click)="login()" [disabled]="loading" label="Se connecter" styleClass="w-full p-button-lg p-button-primary mb-3" raised></p-button>
                     <p style="text-align: center">Vous n'avez pas de compte ? <a class="font-medium no-underline ml-2 text-right cursor-pointer text-primary" routerLink="/auth/register">S'inscrire</a></p>
                     <div *ngIf="errorMessage" class="mt-4 p-3 border-round bg-red-50 dark:bg-red-900/20 border-1 border-red-200 dark:border-red-800">
                         <ul class="list-none p-0 m-0 text-left">

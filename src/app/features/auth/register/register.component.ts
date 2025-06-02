@@ -7,6 +7,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { RippleModule } from 'primeng/ripple';
+import { DialogModule } from 'primeng/dialog';
 import { AuthenticationService } from '../../../core/services/authentication.service';
 import { Register } from '../../../models/Register';
 import { InputMaskModule } from 'primeng/inputmask';
@@ -16,6 +17,8 @@ import { AuthNavbar } from '../auth-navbar/auth-navbar.component';
 import { Store } from '@ngrx/store';
 import { selectUserCode } from '../../../store/user/user.selectors';
 import { ToastrService } from 'ngx-toastr';
+import { TermsConditions } from '../terms-conditions/terms-conditions';
+
 interface CountryCode {
     name: string;
     code: string;
@@ -36,7 +39,7 @@ export interface RegisterDto {
 @Component({
     selector: 'app-register',
     standalone: true,
-    imports: [CommonModule, ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, InputMaskModule, DropdownModule, AuthNavbar],
+    imports: [CommonModule, ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, InputMaskModule, DropdownModule, AuthNavbar, DialogModule, TermsConditions],
     templateUrl: './register.component.html',
     styleUrl: './register.component.scss'
 })
@@ -47,8 +50,7 @@ export class RegisterComponent implements OnInit {
     selectedCountryCode: CountryCode | null = null;
     phoneNumber: string = '';
 
-    // Individual error flags
-    usernameError: boolean = false;
+    // Validation states
     nameRequired: boolean = false;
     emailRequired: boolean = false;
     emailInvalid: boolean = false;
@@ -62,6 +64,11 @@ export class RegisterComponent implements OnInit {
     postalCodeRequired: boolean = false;
     countryRequired: boolean = false;
     termsRequired: boolean = false;
+    usernameError: boolean = false;
+
+    showTermsDialog: boolean = false;
+    termsAccepted: boolean = false;
+
     countryCodes: CountryCode[] = [
         { name: 'Tunisie', code: 'TN', dialCode: '+216' },
         { name: 'États-Unis', code: 'US', dialCode: '+1' },
@@ -188,18 +195,33 @@ export class RegisterComponent implements OnInit {
     validateForm(): boolean {
         let isValid = true;
 
-        // Check username format
-        if (this.registerDto.name) {
-            if (!/^[a-zA-Z0-9]+$/.test(this.registerDto.name)) {
-                this.usernameError = true;
-                isValid = false;
-            }
-        } else {
+        // Reset all error states
+        this.nameRequired = false;
+        this.emailRequired = false;
+        this.emailInvalid = false;
+        this.passwordRequired = false;
+        this.passwordMismatch = false;
+        this.phoneRequired = false;
+        this.addressRequired = false;
+        this.cityRequired = false;
+        this.postalCodeRequired = false;
+        this.countryRequired = false;
+        this.termsRequired = false;
+        this.usernameError = false;
+
+        // Username validation (letters and numbers only, min 6 chars)
+        if (!this.registerDto.name) {
             this.nameRequired = true;
+            isValid = false;
+        } else if (this.registerDto.name.length < 3) {
+            this.usernameError = true;
+            isValid = false;
+        } else if (!/^[a-zA-Z0-9]+$/.test(this.registerDto.name)) {
+            this.usernameError = true;
             isValid = false;
         }
 
-        // Check email
+        // Email validation
         if (!this.registerDto.email) {
             this.emailRequired = true;
             isValid = false;
@@ -208,58 +230,56 @@ export class RegisterComponent implements OnInit {
             isValid = false;
         }
 
-        // Check password
+        // Password validation
         if (!this.registerDto.password) {
+            this.passwordRequired = true;
+            isValid = false;
+        } else if (this.registerDto.password.length < 8) {
             this.passwordRequired = true;
             isValid = false;
         }
 
-        // Check confirm password
-        if (!this.registerDto.confirmPassword) {
-            this.confirmPasswordRequired = true;
-            isValid = false;
-        } else if (this.registerDto.password !== this.registerDto.confirmPassword) {
+        // Password confirmation
+        if (this.registerDto.password !== this.registerDto.confirmPassword) {
             this.passwordMismatch = true;
             isValid = false;
         }
 
-        // Check country code
-        if (!this.selectedCountryCode) {
-            this.countryCodeRequired = true;
-            isValid = false;
-        }
-
-        // Check phone number
+        // Phone validation
         if (!this.phoneNumber) {
             this.phoneRequired = true;
             isValid = false;
         }
 
-        // Check address
-        if (!this.registerDto.address) {
+        // Address validation
+        if (!this.registerDto.address?.trim()) {
             this.addressRequired = true;
             isValid = false;
         }
 
-        // Check city
-        if (!this.registerDto.city) {
+        // City validation
+        if (!this.registerDto.city?.trim()) {
             this.cityRequired = true;
             isValid = false;
         }
 
-        // Check postal code
-        if (!this.registerDto.postalCode) {
+        // Postal code validation
+        if (!this.registerDto.postalCode?.trim()) {
+            this.postalCodeRequired = true;
+            isValid = false;
+        } else if (!/^\d{4}$/.test(this.registerDto.postalCode)) {
+            // Format for Tunisia
             this.postalCodeRequired = true;
             isValid = false;
         }
 
-        // Check country
-        if (!this.registerDto.country) {
+        // Country validation
+        if (!this.registerDto.country?.trim()) {
             this.countryRequired = true;
             isValid = false;
         }
 
-        // Check terms agreement
+        // Terms acceptance
         if (!this.registerDto.agreeTerms) {
             this.termsRequired = true;
             isValid = false;
@@ -268,9 +288,72 @@ export class RegisterComponent implements OnInit {
         return isValid;
     }
 
-    openTermsConditions() {
-        // Save form state before navigating
-        this.formStateService.saveFormState(this.registerDto, this.phoneNumber, this.selectedCountryCode);
-        this.router.navigate(['/auth/terms-conditions']);
+    onShowTerms() {
+        this.showTermsDialog = true;
+    }
+
+    onTermsResponse(accepted: boolean) {
+        this.termsAccepted = accepted;
+        this.registerDto.agreeTerms = accepted;
+        this.showTermsDialog = false;
+    }
+
+    // Real-time validation methods
+    validateUsername(): void {
+        this.nameRequired = false;
+        this.usernameError = false;
+
+        if (!this.registerDto.name) {
+            this.nameRequired = true;
+        } else if (this.registerDto.name.length < 3) {
+            this.usernameError = true;
+        } else if (!/^[a-zA-Z0-9]+$/.test(this.registerDto.name)) {
+            this.usernameError = true;
+        }
+    }
+
+    validateEmail(): void {
+        this.emailRequired = false;
+        this.emailInvalid = false;
+
+        if (!this.registerDto.email) {
+            this.emailRequired = true;
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.registerDto.email)) {
+            this.emailInvalid = true;
+        }
+    }
+
+    validatePasswords(): void {
+        this.passwordRequired = false;
+        this.passwordMismatch = false;
+
+        // Password validation
+        if (!this.registerDto.password) {
+            this.passwordRequired = true;
+        } else {
+            const hasMinLength = this.registerDto.password.length >= 8;
+            const hasUpperCase = /[A-Z]/.test(this.registerDto.password);
+            const hasNumber = /[0-9]/.test(this.registerDto.password);
+            const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(this.registerDto.password);
+
+            if (!hasMinLength || !hasUpperCase || !hasNumber || !hasSpecialChar) {
+                this.passwordRequired = true;
+            }
+        }
+
+        // Confirm password validation
+        if (this.registerDto.password !== this.registerDto.confirmPassword) {
+            this.passwordMismatch = true;
+        }
+    }
+
+    validatePostalCode(): void {
+        this.postalCodeRequired = false;
+
+        if (!this.registerDto.postalCode?.trim()) {
+            this.postalCodeRequired = true;
+        } else if (!/^\d{4}$/.test(this.registerDto.postalCode)) {
+            this.postalCodeRequired = true;
+        }
     }
 }

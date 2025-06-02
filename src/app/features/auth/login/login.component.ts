@@ -48,7 +48,7 @@ export class LoginComponent {
             },
             error: (err) => {
                 console.error('Login failed', err);
-                this.errorMessage = 'Invalid email or password.';
+                this.errorMessage = 'Email ou mot de passe incorrect. Veuillez réessayer.';
                 this.loading = false;
             },
             complete: () => {
