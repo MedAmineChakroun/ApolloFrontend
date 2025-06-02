@@ -7,46 +7,215 @@
                 <p-stepper [value]="currentStep">
                     <p-step-list>
                         <p-step [value]="1" [disabled]="true">Creation</p-step>
-                        <p-step [value]="2" [disabled]="true">Livraison</p-step>
+                        <p-step [value]="2" [disabled]="true">Informations Personnelles</p-step>
                         <p-step [value]="3" [disabled]="true">Confirmation</p-step>
                     </p-step-list>
                 </p-stepper>
             </div>
         </div>
-
+        <!-- Delivery Info Dialog -->
         <p-dialog
-            header="Conditions Générales d'Utilisation"
+            header="Information de livraison"
             [(visible)]="display"
             [breakpoints]="{ '960px': '75vw' }"
-            [style]="{ width: '50vw', maxWidth: '90vw', maxHeight: '60vh' }"
+            [style]="{ width: '50vw', maxWidth: '90vw' }"
             [modal]="true"
             [draggable]="false"
             [baseZIndex]="10000"
-            contentStyleClass="pt-0 scrollable-dialog"
+            contentStyleClass="delivery-info-dialog"
             class="p-0"
         >
-            <div class="text-sm leading-relaxed px-3 py-4 space-y-4">
-                <p class="text-gray-600">Veuillez lire attentivement les conditions générales suivantes avant de finaliser votre commande :</p>
-                <ul class="list-disc list-inside space-y-2 text-gray-700">
-                    <li><strong>Acceptation :</strong> En poursuivant, vous acceptez les présentes conditions générales d'utilisation.</li>
-                    <li><strong>Exactitude des informations :</strong> Vous confirmez que toutes les informations fournies sont exactes, complètes et à jour.</li>
-                    <li><strong>Utilisation :</strong> Le service est soumis à des règles strictes dans le respect des lois et des bonnes pratiques.</li>
-                    <li><strong>Responsabilités :</strong> L'utilisateur est responsable de l'usage du service. Aucune responsabilité ne saurait être engagée en cas de mauvaise utilisation.</li>
-                    <li><strong>Modifications :</strong> Les conditions peuvent être modifiées à tout moment. Il est de votre responsabilité de les consulter régulièrement.</li>
-                </ul>
-
-                <div class="flex items-center gap-2 mt-4">
-                    <p-checkbox [(ngModel)]="accepted" binary="true" inputId="acceptTerms" (click)="set()"></p-checkbox>
-                    <label for="acceptTerms" class="text-gray-800 cursor-pointer">J'ai lu et j'accepte les conditions générales</label>
+            <!-- Step Indicator -->
+            <div class="step-indicator mb-4">
+                <div class="steps-wrapper flex justify-between items-center px-4">
+                    <div class="step-item flex flex-col items-center">
+                        <div class="step-circle" [class.completed]="currentStep > 1" [class.active]="currentStep === 1">{{ currentStep > 1 ? '✓' : '1' }}</div>
+                        <span class="step-label mt-2 text-sm" [class.completed]="currentStep > 1" [class.active]="currentStep === 1">Panier</span>
+                    </div>
+                    <div class="step-line" [class.completed]="currentStep > 1"></div>
+                    <div class="step-item flex flex-col items-center">
+                        <div class="step-circle" [class.completed]="currentStep > 2" [class.active]="currentStep === 2">{{ currentStep > 2 ? '✓' : '2' }}</div>
+                        <span class="step-label mt-2 text-sm" [class.completed]="currentStep > 2" [class.active]="currentStep === 2">Livraison</span>
+                    </div>
+                    <div class="step-line" [class.completed]="currentStep > 2"></div>
+                    <div class="step-item flex flex-col items-center">
+                        <div class="step-circle" [class.completed]="currentStep > 3" [class.active]="currentStep === 3">3</div>
+                        <span class="step-label mt-2 text-sm" [class.completed]="currentStep > 3" [class.active]="currentStep === 3">Confirmation</span>
+                    </div>
                 </div>
             </div>
 
-            <ng-template pTemplate="footer">
-                <div class="flex justify-end gap-3 px-3 py-2 border-t border-gray-200">
-                    <button pButton label="Annuler" class="p-button-outlined p-button-sm" (click)="close()"></button>
-                    <button pButton label="Accepter" class="p-button-sm" [disabled]="!accepted" (click)="PasserCommande()"></button>
+            <div class="client-profile-container p-4">
+                <!-- Profile Header with enhanced styling -->
+                <div class="profile-header flex items-center gap-4 pb-4 border-b border-gray-200 bg-gray-50 rounded-lg p-4 mb-4">
+                    <div class="avatar-container bg-primary bg-opacity-10 rounded-full p-3">
+                        <i class="pi pi-user text-4xl text-primary"></i>
+                    </div>
+                    <div class="profile-info flex-1">
+                        <h2 class="text-xl font-semibold text-gray-800">{{ TiersIntitule }}</h2>
+                        <p class="text-sm text-gray-500 mt-1">Client depuis {{ TiersDateCreate | date: 'mediumDate' }}</p>
+                    </div>
+                    <button pButton icon="pi pi-user-edit" label="Modifier" class="p-button-outlined" (click)="navigateToProfile()"></button>
                 </div>
-            </ng-template>
+
+                <!-- Delivery Information -->
+                <div class="delivery-info mt-4 space-y-4">
+                    <div class="info-section">
+                        <h3 class="text-lg font-medium text-gray-700 mb-3">Adresse de livraison</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Address -->
+                            <div class="info-item flex flex-col">
+                                <label class="text-sm text-gray-500">Adresse</label>
+                                <p class="text-gray-800">{{ TiersAdresse1 || 'Non spécifié' }}</p>
+                            </div>
+                            <!-- Postal Code -->
+                            <div class="info-item flex flex-col">
+                                <label class="text-sm text-gray-500">Code Postal</label>
+                                <p class="text-gray-800">{{ TiersCodePostal || 'Non spécifié' }}</p>
+                            </div>
+                            <!-- City -->
+                            <div class="info-item flex flex-col">
+                                <label class="text-sm text-gray-500">Ville</label>
+                                <p class="text-gray-800">{{ TiersVille || 'Non spécifié' }}</p>
+                            </div>
+                            <!-- Country -->
+                            <div class="info-item flex flex-col">
+                                <label class="text-sm text-gray-500">Pays</label>
+                                <p class="text-gray-800">{{ TiersPays || 'Non spécifié' }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Information -->
+                    <div class="info-section mt-4">
+                        <h3 class="text-lg font-medium text-gray-700 mb-3">Contact</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="info-item flex flex-col">
+                                <label class="text-sm text-gray-500">Téléphone</label>
+                                <p class="text-gray-800">{{ TiersTel1 || 'Non spécifié' }}</p>
+                            </div>
+                            <div class="info-item flex flex-col">
+                                <label class="text-sm text-gray-500">Email</label>
+                                <p class="text-gray-800">{{ TiersEmail || 'Non spécifié' }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Footer -->
+                <div class="action-footer mt-6 flex justify-end gap-3">
+                    <button pButton label="Annuler" class="p-button-outlined p-button-sm" (click)="close()"></button>
+                    <button pButton label="Confirmer la commande" class="p-button-sm" [disabled]="!hasRequiredInfo()" (click)="PasserCommande()"></button>
+                </div>
+
+                <!-- Warning Message -->
+                <div *ngIf="!hasRequiredInfo()" class="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                    <div class="flex items-start gap-2">
+                        <i class="pi pi-exclamation-triangle text-yellow-500"></i>
+                        <p class="text-sm text-yellow-700">Certaines informations de livraison sont manquantes. Veuillez compléter votre profil avant de passer commande.</p>
+                    </div>
+                </div>
+            </div>
+        </p-dialog>
+
+        <!-- Final Confirmation Dialog -->
+        <p-dialog
+            header="Confirmation de la commande"
+            [(visible)]="confirmationDisplay"
+            [breakpoints]="{ '960px': '75vw' }"
+            [style]="{ width: '50vw' }"
+            [modal]="true"
+            [draggable]="false"
+            [closable]="!isProcessing"
+            [closeOnEscape]="!isProcessing"
+            [blockScroll]="true"
+        >
+            <!-- Step Indicator -->
+            <div class="step-indicator mb-4">
+                <div class="steps-wrapper flex justify-between items-center px-4">
+                    <div class="step-item flex flex-col items-center">
+                        <div class="step-circle completed">✓</div>
+                        <span class="step-label mt-2 text-sm completed">Panier</span>
+                    </div>
+                    <div class="step-line completed"></div>
+                    <div class="step-item flex flex-col items-center">
+                        <div class="step-circle completed">✓</div>
+                        <span class="step-label mt-2 text-sm completed">Livraison</span>
+                    </div>
+                    <div class="step-line completed"></div>
+                    <div class="step-item flex flex-col items-center">
+                        <div class="step-circle active">3</div>
+                        <span class="step-label mt-2 text-sm active">Confirmation</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loading Overlay with enhanced styling -->
+            <div *ngIf="isProcessing" class="absolute inset-0 flex items-center justify-center bg-white bg-opacity-90 z-50 backdrop-blur-sm">
+                <div class="text-center bg-white p-6 rounded-lg shadow-lg">
+                    <i class="pi pi-spin pi-spinner text-4xl text-primary mb-3"></i>
+                    <p class="font-medium text-gray-800">Traitement de votre commande en cours...</p>
+                    <p class="text-sm text-gray-600 mt-2">Veuillez patienter...</p>
+                </div>
+            </div>
+
+            <!-- Order Content with enhanced styling -->
+            <div class="p-4">
+                <!-- Client Profile Section with improved visuals -->
+                <div class="mb-6 bg-gradient-to-r from-primary-50 to-primary-100 px-4 py-2 rounded-xl shadow-md flex items-center gap-4 animate-fadeIn min-h-[70px]" style="min-height: 70px">
+                    <div class="flex items-center justify-center bg-primary bg-opacity-10 rounded-full" style="width: 56px; height: 56px; min-width: 56px; min-height: 56px">
+                        <i class="pi pi-truck text-success" style="font-size: 2rem"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-base text-gray-700 leading-relaxed m-0">
+                            Merci pour votre commande.<br />
+                            Nous allons préparer et livrer votre commande dès qu'elle sera acceptée.<br />
+                            Vous recevrez une notification dès qu'elle sera en route.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Delivery Address -->
+                <div class="delivery-details mb-4">
+                    <div class="flex items-center gap-2 mb-2">
+                        <i class="pi pi-map-marker text-primary"></i>
+                        <span class="font-medium">Adresse de livraison</span>
+                    </div>
+                    <div class="ml-6 text-gray-600">
+                        <p>{{ TiersAdresse1 }}</p>
+                        <p>{{ TiersCodePostal }} {{ TiersVille }}</p>
+                        <p>{{ TiersPays }}</p>
+                    </div>
+                </div>
+
+                <!-- Order Details -->
+                <div class="order-details">
+                    <div class="flex items-center gap-2 mb-2">
+                        <i class="pi pi-shopping-cart text-primary"></i>
+                        <span class="font-medium">Détails de la commande</span>
+                    </div>
+                    <div class="ml-6 space-y-2">
+                        <div class="flex justify-between text-gray-600">
+                            <span>Total TC</span>
+                            <span>{{ totalTht | currency: 'DT ' : 'symbol' }}</span>
+                        </div>
+                        <div class="flex justify-between text-gray-600">
+                            <span>Livraison</span>
+                            <span>{{ isEligibleForFreeShipping() ? 'Gratuite' : '10 DT' }}</span>
+                        </div>
+                        <div class="flex justify-between font-medium text-gray-800 border-t border-gray-200 pt-2 mt-2">
+                            <span>Total TTC</span>
+                            <span>{{ currentTotal + (isEligibleForFreeShipping() ? 0 : 10) | currency: 'DT ' : 'symbol' }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex justify-end gap-3 mt-6">
+                    <button pButton label="Retour" class="p-button-outlined" [disabled]="isProcessing" (click)="closeConfirmation()"></button>
+                    <button pButton label="Confirmer" icon="pi pi-check" [loading]="isProcessing" (click)="confirmOrder()" [disabled]="isProcessing"></button>
+                </div>
+            </div>
         </p-dialog>
 
         <!-- Cart header -->

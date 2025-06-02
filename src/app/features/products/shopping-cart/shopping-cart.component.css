@@ -866,14 +866,290 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Responsive adjustments */
-@media screen and (max-width: 768px) {
-    .terms-item {
+/* Step Indicator Styles */
+.step-indicator {
+    padding: 1rem 0;
+}
+
+.steps-wrapper {
+    position: relative;
+    padding: 0 2rem;
+}
+
+.step-item {
+    z-index: 1;
+}
+
+.step-circle {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background-color: #e2e8f0;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.step-circle.active {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.step-circle.completed {
+    background-color: #22c55e;
+    color: white;
+}
+
+.step-label {
+    color: #64748b;
+    font-weight: 500;
+}
+
+.step-label.active {
+    color: var(--primary-color);
+}
+
+.step-label.completed {
+    color: #22c55e;
+}
+
+.step-line {
+    position: relative;
+    flex: 1;
+    height: 2px;
+    background-color: #e2e8f0;
+    margin: 0 0.5rem;
+}
+
+.step-line.completed {
+    background-color: #22c55e;
+}
+
+/* Dialog Enhancements */
+
+/* Modal Dialog Enhancements */
+.delivery-info-dialog,
+.p-dialog-content {
+    background: var(--surface-card);
+    border-radius: 1.25rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    padding: 0 !important;
+}
+
+.client-profile-container,
+.p-dialog-content .client-profile-container {
+    background: transparent;
+    padding: 0;
+}
+
+.profile-header {
+    background: var(--surface-ground);
+    border-radius: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    margin-bottom: 2rem;
+    padding: 1.5rem 1rem 1rem 1rem;
+    border: none;
+}
+
+.profile-header .avatar-container {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+    background: var(--primary-50);
+}
+
+.delivery-info,
+.delivery-details,
+.order-details {
+    background: var(--surface-ground);
+    border-radius: 0.75rem;
+    padding: 1.25rem 1rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+.info-section h3,
+.order-details .font-medium,
+.delivery-details .font-medium {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.info-item label {
+    font-size: 0.95rem;
+    color: var(--text-color-secondary);
+    margin-bottom: 0.15rem;
+}
+
+.info-item p {
+    font-size: 1.05rem;
+    color: var(--text-color);
+    margin: 0;
+}
+
+.action-footer,
+.flex.justify-end.gap-3.mt-6 {
+    background: transparent;
+    padding: 0;
+    margin-top: 2rem !important;
+    gap: 1.25rem !important;
+}
+
+.action-footer button,
+.flex.justify-end.gap-3.mt-6 button {
+    min-width: 120px;
+    font-size: 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.action-footer button.p-button-outlined,
+.flex.justify-end.gap-3.mt-6 button.p-button-outlined {
+    background: var(--surface-ground);
+    color: var(--primary-color);
+    border: 1.5px solid var(--primary-color);
+}
+
+.action-footer button.p-button-outlined:hover,
+.flex.justify-end.gap-3.mt-6 button.p-button-outlined:hover {
+    background: var(--primary-color);
+    color: #fff;
+}
+
+.action-footer button.p-button-sm,
+.flex.justify-end.gap-3.mt-6 button.p-button-sm {
+    padding: 0.5rem 1.25rem;
+    font-size: 0.98rem;
+}
+
+.p-dialog-content .bg-yellow-50 {
+    background: #fffbe6 !important;
+    border-color: #ffe58f !important;
+}
+
+.p-dialog-content .text-yellow-700 {
+    color: #ad8b00 !important;
+}
+
+.p-dialog-content .border-yellow-200 {
+    border-color: #ffe58f !important;
+}
+
+/* Confirmation Dialog Enhancements */
+.p-dialog-content .order-details {
+    background: var(--surface-ground);
+    border-radius: 0.75rem;
+    padding: 1.25rem 1rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+.p-dialog-content .delivery-details {
+    background: var(--surface-ground);
+    border-radius: 0.75rem;
+    padding: 1.25rem 1rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+.p-dialog-content .ml-6.text-gray-600 p {
+    color: var(--text-color);
+    font-size: 1.05rem;
+    margin: 0;
+}
+
+.p-dialog-content .flex.items-center.gap-2.mb-2 i {
+    color: var(--primary-color);
+    font-size: 1.2rem;
+}
+
+.p-dialog-content .font-medium {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.p-dialog-content .flex.justify-end.gap-3.mt-6 button {
+    min-width: 120px;
+    font-size: 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.p-dialog-content .flex.justify-end.gap-3.mt-6 button.p-button-outlined {
+    background: var(--surface-ground);
+    color: var(--primary-color);
+    border: 1.5px solid var(--primary-color);
+}
+
+.p-dialog-content .flex.justify-end.gap-3.mt-6 button.p-button-outlined:hover {
+    background: var(--primary-color);
+    color: #fff;
+}
+
+/* Responsive Tweaks for Modals */
+@media (max-width: 640px) {
+    .delivery-info,
+    .delivery-details,
+    .order-details {
+        padding: 0.75rem 0.5rem;
+    }
+    .profile-header {
         flex-direction: column;
-        gap: 0.75rem;
+        gap: 1rem;
+        padding: 1rem 0.5rem 0.5rem 0.5rem;
+    }
+    .action-footer,
+    .flex.justify-end.gap-3.mt-6 {
+        flex-direction: column;
+        gap: 0.75rem !important;
+    }
+}
+
+.client-profile-container {
+    background-color: #ffffff;
+}
+
+.profile-header {
+    transition: all 0.3s ease;
+}
+
+.profile-header:hover {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.avatar-container {
+    width: 3.5rem;
+    height: 3.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Loading Overlay */
+.backdrop-blur-sm {
+    backdrop-filter: blur(4px);
+}
+
+/* Button and Interactive Element Styles */
+button.p-button-outlined {
+    transition: all 0.2s ease;
+}
+
+button.p-button-outlined:hover {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 640px) {
+    .step-label {
+        font-size: 0.75rem;
     }
 
-    .terms-item i {
-        font-size: 1.5rem;
+    .step-circle {
+        width: 2rem;
+        height: 2rem;
     }
 }

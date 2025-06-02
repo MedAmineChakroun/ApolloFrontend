@@ -44,10 +44,19 @@ export class ShoppingCartComponent implements OnInit {
     totalTht = 0;
     TiersCode: string | null = null;
     TiersIntitule: string | null = null;
+    TiersAdresse1: string | null = null;
+    TiersCodePostal: string | null = null;
+    TiersVille: string | null = null;
+    TiersPays: string | null = null;
+    TiersTel1: string | null = null;
+    TiersEmail: string | null = null;
+    TiersDateCreate: Date | null = null;
     docVentePiece: string | null = null;
     currentStep = 1;
     display = false;
+    confirmationDisplay = false;
     accepted = false;
+    isProcessing = false;
     recommendedProducts: Product[] = [];
     isLoadingRecommendations = false;
 
@@ -106,8 +115,8 @@ export class ShoppingCartComponent implements OnInit {
     }
 
     close() {
-        this.currentStep = 1;
         this.display = false;
+        this.currentStep = 1;
     }
     ngOnInit(): void {
         if (this.authService.isAuthenticated()) {
@@ -125,21 +134,53 @@ export class ShoppingCartComponent implements OnInit {
     isAuthenticated(): boolean {
         return this.authService.isAuthenticated();
     }
-
     PasserCommande(): void {
-        if (this.authService.isAuthenticated()) {
-            //traiter la commande
-            this.currentStep = 3;
-            this.traiterCommande();
-            this.close();
+        if (!this.authService.isAuthenticated()) {
+            this.toastr.warning('Veuillez vous connecter pour continuer');
+            return;
         }
+
+        if (!this.hasRequiredInfo()) {
+            this.toastr.warning('Veuillez compléter votre profil pour continuer');
+            this.navigateToProfile();
+            return;
+        }
+
+        this.display = false;
+        this.confirmationDisplay = true;
+        this.currentStep = 3;
     }
-    traiterCommande(): void {
-        try {
-            this.creerDocument();
-        } catch (error) {
-            this.toastr.error('Erreur lors de la création de la commande');
+
+    closeConfirmation(): void {
+        this.confirmationDisplay = false;
+        this.currentStep = 2;
+        this.display = true;
+        this.isProcessing = false;
+    }
+    confirmOrder(): void {
+        this.isProcessing = true;
+
+        if (!this.hasRequiredInfo()) {
+            this.isProcessing = false;
+            this.toastr.error('Informations de livraison incomplètes');
+            return;
         }
+
+        this.cartItems$.pipe(take(1)).subscribe((items) => {
+            if (items.length === 0) {
+                this.isProcessing = false;
+                this.toastr.error('Le panier est vide');
+                return;
+            }
+
+            try {
+                this.creerDocument();
+            } catch (error) {
+                this.isProcessing = false;
+                console.error('Error during order creation:', error);
+                this.toastr.error('Erreur lors de la création de la commande');
+            }
+        });
     }
     getClientFromStore(): void {
         this.store.select(selectUser).subscribe({
@@ -147,20 +188,45 @@ export class ShoppingCartComponent implements OnInit {
                 if (user) {
                     this.TiersCode = user.tiersCode;
                     this.TiersIntitule = user.tiersIntitule;
+                    this.TiersAdresse1 = user.tiersAdresse1;
+                    this.TiersCodePostal = user.tiersCodePostal;
+                    this.TiersVille = user.tiersVille;
+                    this.TiersPays = user.tiersPays;
+                    this.TiersTel1 = user.tiersTel1;
+                    this.TiersEmail = user.tiersEmail;
+                    this.TiersDateCreate = user.tiersDateCreate;
                 }
             },
             error: (error) => {
-                console.log(error);
+                console.error('Error fetching user data:', error);
             }
         });
     }
+
+    navigateToProfile(): void {
+        this.close();
+        this.router.navigate(['/store/customer/profile'], {
+            queryParams: { returnUrl: '/store/products/cart' }
+        });
+    }
+
+    hasRequiredInfo(): boolean {
+        return !!(this.TiersAdresse1 && this.TiersCodePostal && this.TiersVille && this.TiersPays && this.TiersTel1 && this.TiersEmail);
+    }
     creerDocument(): void {
+        if (!this.TiersCode || !this.TiersIntitule) {
+            this.isProcessing = false;
+            this.toastr.error('Erreur: Informations client manquantes');
+            return;
+        }
+
         const docVenteDto: DocVenteDto = {
-            docTiersCode: this.TiersCode || '',
-            docTiersIntitule: this.TiersIntitule || '',
+            docTiersCode: this.TiersCode,
+            docTiersIntitule: this.TiersIntitule,
             docTht: this.totalTht,
-            docTtc: this.currentTotal
+            docTtc: this.currentTotal + (!this.isEligibleForFreeShipping() ? 10 : 0) // Add shipping cost if not eligible
         };
+
         this.commandeService.createDocumentVente(docVenteDto).subscribe({
             next: (response) => {
                 this.docVentePiece = response.docPiece;
@@ -174,6 +240,15 @@ export class ShoppingCartComponent implements OnInit {
             }
         });
     }
+    private cleanupAndNavigate(): void {
+        this.clearCart();
+        this.confirmationDisplay = false;
+        this.currentStep = 1;
+        this.isProcessing = false;
+        this.router.navigate(['/store/customer/orders'], {
+            queryParams: { type: 'en-attente' }
+        });
+    }
     creerDocumentLignes(): void {
         this.cartItems$.pipe(take(1)).subscribe((cartItems) => {
             let completedLines = 0;
@@ -181,7 +256,7 @@ export class ShoppingCartComponent implements OnInit {
 
             if (totalLines === 0) {
                 this.toastr.success('Commande passée avec succès');
-                this.clearCart();
+                this.cleanupAndNavigate();
                 return;
             }
 
@@ -196,37 +271,39 @@ export class ShoppingCartComponent implements OnInit {
                     ligneTtc: item.product.artPrixVente * (1 + item.product.artTvaTaux / 100) * item.quantity
                 };
 
-                console.log(docLigneDto);
+                console.log('Creating document line:', docLigneDto);
                 this.commandeService.createDocumentventeLigne(docLigneDto).subscribe({
                     next: (response) => {
-                        console.log('Document ligne created successfully:', response);
+                        console.log('Document line created successfully:', response);
                         completedLines++;
-                        // Check if all lines are created
+
                         if (completedLines === totalLines) {
                             this.toastr.success('Commande passée avec succès');
-                            this.clearCart();
+                            this.cleanupAndNavigate();
                         }
                     },
                     error: (error) => {
-                        console.error('Error creating document ligne:', error);
+                        console.error('Error creating document line:', error);
                         this.toastr.error('Erreur lors de la création des lignes de commande');
+                        this.isProcessing = false;
                     }
                 });
             });
         });
     }
-    removeFromCart(productId: number): void {
-        this.store.dispatch(CartActions.removeFromCart({ productId }));
-    }
-
     updateQuantity(productId: number, quantity: number): void {
         if (quantity > 0) {
             this.store.dispatch(CartActions.updateQuantity({ productId, quantity }));
         }
     }
 
+    removeFromCart(productId: number): void {
+        this.store.dispatch(CartActions.removeFromCart({ productId }));
+    }
+
     clearCart(): void {
         this.cartService.clearCart();
+        this.store.dispatch(CartActions.clearCart());
     }
 
     continueShopping(): void {
@@ -243,7 +320,7 @@ export class ShoppingCartComponent implements OnInit {
 
     getProgressWidth(): string {
         const progress = (this.currentTotal / this.FREE_SHIPPING_THRESHOLD) * 100;
-        return `${Math.min(progress, 100)}%`;
+        return Math.min(progress, 100) + '%';
     }
 
     getRecommendedProducts(items: CartItem[]): void {
