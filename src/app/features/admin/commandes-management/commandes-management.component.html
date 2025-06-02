@@ -53,7 +53,11 @@
                     <div>
                         <span class="p-input-icon-left">
                             <i class="pi pi-search"></i>
-                            <input pInputText type="text" placeholder="rechercher par code" (input)="onSearchChange($event)" />
+                            <input class="ml-2" pInputText type="text" placeholder="ReChercher par Code" #codeFilter (input)="dt.filter(codeFilter.value, 'docPiece', 'contains')" />
+                        </span>
+                        <span class="p-input-icon-left ml-3">
+                            <i class="pi pi-search"></i>
+                            <input class="ml-2" pInputText type="text" placeholder="ReChercher par client" #docTiersCodeFilter (input)="dt.filter(docTiersCodeFilter.value, 'docTiersCode', 'contains')" />
                         </span>
                     </div>
                     <div class="flex gap-2">

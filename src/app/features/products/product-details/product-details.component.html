@@ -5,15 +5,7 @@
             <div class="product-image-wrapper rounded-2xl shadow-md bg-white overflow-hidden">
                 <!-- Stock status badge -->
                 <div class="absolute top-4 left-4 z-10">
-                    <p-tag
-                        [value]="getStockStatus(this.stockQuantity)"
-                        [severity]="getStockSeverity(this.stockQuantity)"
-                        [style]="{
-                            'font-size': '0.9rem',
-                            'font-weight': '600',
-                            padding: '0.5rem 1rem'
-                        }"
-                    ></p-tag>
+                    <p-tag [value]="getStockStatus(stockQuantity)" [severity]="getStockSeverity(stockQuantity)" [icon]="getStockIcon(stockQuantity)"> </p-tag>
                 </div>
 
                 <!-- Product image with improved display -->
@@ -65,12 +57,13 @@
                     <div class="product-detail-item">
                         <div class="text-sm text-gray-500 mb-1">Type d'unité</div>
                         <div class="font-medium text-gray-800">{{ product.artUnite }}</div>
+                        <div class="text-sm text-gray-500 mt-3">
+                            Quantité restante : <span class="font-semibold text-gray-800">{{ stockQuantity }}</span>
+                        </div>
                     </div>
                     <div class="product-detail-item">
                         <div class="text-sm text-gray-500 mb-1">Statut du stock</div>
-                        <div class="font-medium" [ngClass]="{ 'text-green-600': !isOutOfStock(this.stockQuantity), 'text-red-600': isOutOfStock(this.stockQuantity) }">
-                            {{ getStockStatus(this.stockQuantity) }}
-                        </div>
+                        <p-tag [value]="getStockStatus(stockQuantity)" [severity]="getStockSeverity(stockQuantity)" [icon]="getStockIcon(stockQuantity)"> </p-tag>
                     </div>
                 </div>
             </div>

@@ -66,10 +66,14 @@
             dataKey="article.artCode"
         >
             <ng-template pTemplate="caption">
-                <div class="flex justify-content-between align-items-center">
+                <div class="flex flex-wrap gap-3 align-items-center">
                     <span class="p-input-icon-left">
                         <i class="pi pi-search"></i>
-                        <input pInputText type="text" placeholder="Recherche par code" #codeFilter (input)="dt.filter(codeFilter.value, 'article.artCode', 'contains')" />
+                        <input class="ml-2" pInputText type="text" placeholder="Rechercher par code" #codeFilter (input)="dt.filter(codeFilter.value, 'article.artCode', 'contains')" />
+                    </span>
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-search"></i>
+                        <input class="ml-2" pInputText type="text" placeholder="Rechercher par intitule" #intituleFilter (input)="dt.filter(intituleFilter.value, 'article.artIntitule', 'contains')" />
                     </span>
                 </div>
             </ng-template>

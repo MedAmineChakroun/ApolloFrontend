@@ -42,10 +42,14 @@
             dataKey="tiersCode"
         >
             <ng-template pTemplate="caption">
-                <div class="flex justify-content-between align-items-center">
+                <div class="flex flex-wrap gap-3 align-items-center">
                     <span class="p-input-icon-left">
                         <i class="pi pi-search"></i>
-                        <input pInputText type="text" placeholder="rechercher par Nom" #globalFilter (input)="dt.filterGlobal(globalFilter.value, 'contains')" />
+                        <input class="ml-2" pInputText type="text" placeholder="ReChercher par Code" #codeFilter (input)="dt.filter(codeFilter.value, 'tiersCode', 'contains')" />
+                    </span>
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-search"></i>
+                        <input class="ml-2" pInputText type="text" placeholder="ReChercher par Intitulé" #intituleFilter (input)="dt.filter(intituleFilter.value, 'tiersIntitule', 'contains')" />
                     </span>
                 </div>
             </ng-template>

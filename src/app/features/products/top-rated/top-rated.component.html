@@ -11,7 +11,7 @@
                         <div class="product-image-container" (click)="navigateToProductDetails(ratedProduct.article.artId)">
                             <img src="http://localhost:91/Images/{{ ratedProduct.article.artImageUrl }}" [alt]="ratedProduct.article.artIntitule" (error)="handleProductImageError($event)" class="product-image rounded-border" />
                             <div class="absolute bg-black/70 rounded-border" [ngStyle]="{ 'left.px': 5, 'top.px': 5 }">
-                                <p-tag [value]="getSeverityValue(ratedProduct.stockQuantity)" [severity]="getSeverity(ratedProduct.stockQuantity)" />
+                                <p-tag [value]="getSeverityValue(ratedProduct.stockQuantity)" [severity]="getSeverity(ratedProduct.stockQuantity)" [icon]="getStockIcon(ratedProduct.stockQuantity)"></p-tag>
                             </div>
                         </div>
                         <div class="product-title">{{ ratedProduct.article.artIntitule }}</div>

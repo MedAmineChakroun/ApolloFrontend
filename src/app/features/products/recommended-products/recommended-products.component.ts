@@ -90,11 +90,25 @@ export class RecommendedProductsComponent {
         event.target.src = this.DEFAULT_PRODUCT_IMAGE;
     }
 
-    getSeverity(stockValue: number): TagSeverity {
-        return stockValue > 0 ? 'success' : 'danger';
+    getSeverity(stockQty: number | undefined): TagSeverity {
+        const stock = stockQty || 0;
+        if (stock == 0) return 'danger';
+        if (stock <= 10) return 'warn';
+        return 'success';
     }
-    getSeverityValue(stockValue: number): string {
-        return stockValue > 0 ? 'En Stock' : 'Sold out';
+
+    getSeverityValue(stockQty: number | undefined): string {
+        const stock = stockQty || 0;
+        if (stock == 0) return 'Rupture';
+        if (stock <= 10) return 'Faible';
+        return 'Disponible';
+    }
+
+    getStockIcon(stockQty: number | undefined): string {
+        const stock = stockQty || 0;
+        if (stock == 0) return 'pi pi-exclamation-circle';
+        if (stock <= 10) return 'pi pi-info-circle';
+        return 'pi pi-check-circle';
     }
     carouselResponsiveOptions = [
         {

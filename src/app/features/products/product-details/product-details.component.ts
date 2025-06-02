@@ -99,14 +99,26 @@ export class ProductDetailsComponent implements OnInit {
         event.target.src = this.DEFAULT_PRODUCT_IMAGE;
     }
 
-    getStockStatus(stockValue: number): string {
-        return stockValue > 0 ? 'IN STOCK' : 'OUT OF STOCK';
+    getStockSeverity(stockQty: number | undefined): TagSeverity {
+        const stock = stockQty || 0;
+        if (stock == 0) return 'danger';
+        if (stock <= 10) return 'warn';
+        return 'success';
     }
 
-    getStockSeverity(stockValue: number): TagSeverity {
-        return stockValue > 0 ? 'success' : 'danger';
+    getStockStatus(stockQty: number | undefined): string {
+        const stock = stockQty || 0;
+        if (stock == 0) return 'Rupture';
+        if (stock <= 10) return 'Faible';
+        return 'Disponible';
     }
 
+    getStockIcon(stockQty: number | undefined): string {
+        const stock = stockQty || 0;
+        if (stock == 0) return 'pi pi-exclamation-circle';
+        if (stock <= 10) return 'pi pi-info-circle';
+        return 'pi pi-check-circle';
+    }
     isOutOfStock(stockValue: number): boolean {
         return stockValue === 0;
     }

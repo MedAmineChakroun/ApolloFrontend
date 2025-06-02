@@ -48,7 +48,8 @@ export class ProductManagementComponent implements OnInit {
     loading: boolean = true;
     isSyncRoute = false;
     isNonSyncRoute = false;
-
+    selectedProducts: any[] = [];
+    selectAll: boolean = false;
     private readonly DEFAULT_PRODUCT_IMAGE = 'assets/general/product-default.png';
 
     handleProductImageError(event: any): void {
@@ -209,22 +210,22 @@ export class ProductManagementComponent implements OnInit {
     // Stock status methods - now correctly using the stockQuantity parameter
     getStockStatusSeverity(stockQty: number | undefined): TagSeverity {
         const stock = stockQty || 0;
-        if (stock <= 10) return 'danger';
-        if (stock <= 30) return 'warn';
+        if (stock == 0) return 'danger';
+        if (stock <= 10) return 'warn';
         return 'success';
     }
 
     getStockStatusLabel(stockQty: number | undefined): string {
         const stock = stockQty || 0;
-        if (stock <= 10) return 'Low';
-        if (stock <= 30) return 'Medium';
-        return 'High';
+        if (stock == 0) return 'Epuisé ';
+        if (stock <= 10) return 'Moyenne';
+        return 'Elevee';
     }
 
     getStockIcon(stockQty: number | undefined): string {
         const stock = stockQty || 0;
-        if (stock <= 10) return 'pi pi-exclamation-circle';
-        if (stock <= 30) return 'pi pi-info-circle';
+        if (stock == 0) return 'pi pi-exclamation-circle';
+        if (stock <= 10) return 'pi pi-info-circle';
         return 'pi pi-check-circle';
     }
 
@@ -260,8 +261,6 @@ export class ProductManagementComponent implements OnInit {
     synchronizeProducts() {
         this.toastr.info('Synchronisation des produits en cours...', 'Information');
     }
-    selectedProducts: any[] = [];
-    selectAll: boolean = false;
 
     // Handle bulk synchronization of selected products
     synchronizeSelectedProducts() {

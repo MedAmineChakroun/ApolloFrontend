@@ -75,7 +75,7 @@ import { CheckboxModule } from 'primeng/checkbox';
                         <span>Min: DT{{ priceRange[0] }}</span>
                         <span>Max: DT{{ priceRange[1] }}</span>
                     </div>
-                    <p-slider [(ngModel)]="priceRange" [range]="true" [min]="0" [max]="5000" class="w-full"></p-slider>
+                    <p-slider [(ngModel)]="priceRange" [range]="true" [min]="0" [max]="10000" class="w-full"></p-slider>
                     <div class="apply-filter">
                         <button pButton label="Apply Filter" icon="pi pi-filter" (click)="applyPriceFilter()" class="p-button-sm"></button>
                     </div>
@@ -326,7 +326,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 })
 export class AppMenu implements OnInit {
     activeMenu: string = '';
-    priceRange: number[] = [0, 2500]; // Default price range values
+    priceRange: number[] = [0, 10000]; // Default price range values
     productFamilies: string[] = [];
     showCategories: boolean = false;
     showCommandes: boolean = false; // Control visibility of commandes submenu
@@ -335,7 +335,7 @@ export class AppMenu implements OnInit {
 
     filters = {
         priceMin: 0,
-        priceMax: 5000,
+        priceMax: 10000,
         category: ''
     };
 

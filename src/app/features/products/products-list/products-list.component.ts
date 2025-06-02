@@ -76,7 +76,7 @@ export class ProductsListComponent implements OnInit {
     pageTitle: string = 'Tout les produits';
     stocks: Stock[] = [];
     // Price range slider
-    priceRange: number[] = [0, 5000]; // Default price range values
+    priceRange: number[] = [0, 10000]; // Default price range values
     inStockOnly: boolean = false;
     showPriceDialog: boolean = false;
 
@@ -91,7 +91,7 @@ export class ProductsListComponent implements OnInit {
 
     filters = {
         priceMin: 0,
-        priceMax: 5000,
+        priceMax: 10000,
         category: '',
         rating: 0,
         inStock: false,
@@ -442,7 +442,7 @@ export class ProductsListComponent implements OnInit {
         // Determine if any filters are active
         const isFilterActive =
             priceMin > 0 ||
-            priceMax < 5000 || // 5000 is your max default, so user reduced it
+            priceMax < 10000 || // 10000 is your max default, so user reduced it
             !!category?.trim() ||
             !!inStock ||
             !!search?.trim();
@@ -495,11 +495,24 @@ export class ProductsListComponent implements OnInit {
 
     // Update stock methods to use stockQuantity property instead of artEtat
     getSeverity(product: any): TagSeverity {
-        return product.stockQuantity > 0 ? 'success' : 'danger';
+        const stock = product.stockQuantity || 0;
+        if (stock == 0) return 'danger';
+        if (stock <= 10) return 'warn';
+        return 'success';
     }
 
     getSeverityValue(product: any): string {
-        return product.stockQuantity > 0 ? 'En Stock' : 'Sold out';
+        const stock = product.stockQuantity || 0;
+        if (stock == 0) return 'Rupture ';
+        if (stock <= 10) return 'Faible';
+        return 'Disponible';
+    }
+
+    getStockIcon(product: any): string {
+        const stock = product.stockQuantity || 0;
+        if (stock == 0) return 'pi pi-exclamation-circle';
+        if (stock <= 10) return 'pi pi-info-circle';
+        return 'pi pi-check-circle';
     }
 
     isOutOfStock(product: any): boolean {
