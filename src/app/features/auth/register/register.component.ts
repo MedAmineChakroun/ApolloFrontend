@@ -62,18 +62,17 @@ export class RegisterComponent implements OnInit {
     postalCodeRequired: boolean = false;
     countryRequired: boolean = false;
     termsRequired: boolean = false;
-
     countryCodes: CountryCode[] = [
-        { name: 'Tunisia', code: 'TN', dialCode: '+216' },
-        { name: 'United States', code: 'US', dialCode: '+1' },
-        { name: 'United Kingdom', code: 'GB', dialCode: '+44' },
+        { name: 'Tunisie', code: 'TN', dialCode: '+216' },
+        { name: 'États-Unis', code: 'US', dialCode: '+1' },
+        { name: 'Royaume-Uni', code: 'GB', dialCode: '+44' },
         { name: 'France', code: 'FR', dialCode: '+33' },
-        { name: 'Germany', code: 'DE', dialCode: '+49' },
-        { name: 'Italy', code: 'IT', dialCode: '+39' },
-        { name: 'Spain', code: 'ES', dialCode: '+34' },
-        { name: 'Morocco', code: 'MA', dialCode: '+212' },
-        { name: 'Algeria', code: 'DZ', dialCode: '+213' },
-        { name: 'Egypt', code: 'EG', dialCode: '+20' }
+        { name: 'Allemagne', code: 'DE', dialCode: '+49' },
+        { name: 'Italie', code: 'IT', dialCode: '+39' },
+        { name: 'Espagne', code: 'ES', dialCode: '+34' },
+        { name: 'Maroc', code: 'MA', dialCode: '+212' },
+        { name: 'Algérie', code: 'DZ', dialCode: '+213' },
+        { name: 'Égypte', code: 'EG', dialCode: '+20' }
     ];
 
     constructor(
@@ -163,7 +162,7 @@ export class RegisterComponent implements OnInit {
         this.authService.register(registrationData as Register).subscribe({
             next: () => {
                 // Clear form state on successful registration
-                this.toastr.success('Inscription réussie ! Veuillez vérifier votre boîte mail pour confirmer votre compte.');
+                this.toastr.success('Inscription réussie ! Vous pouvez maintenant vous connecter avec vos identifiants.');
                 this.formStateService.clearFormState();
                 this.router.navigate(['auth/login']);
             },

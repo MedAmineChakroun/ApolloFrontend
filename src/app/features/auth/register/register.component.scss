@@ -19,3 +19,115 @@ small.p-error {
 .p-error .pi-exclamation-circle {
     color: red !important;
 }
+
+/* Modern Input Styles */
+:host ::ng-deep {
+    .p-inputtext,
+    .p-password input,
+    .p-dropdown {
+        border-radius: 0.5rem;
+        border-color: #cbd5e1;
+        background: white;
+        transition: all 0.2s;
+
+        &:hover {
+            border-color: #60a5fa;
+        }
+
+        &:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+        }
+    }
+
+    .p-dropdown {
+        border: 1px solid #cbd5e1;
+        &:not(.p-disabled).p-focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+        }
+    }
+
+    .p-password {
+        .p-password-panel {
+            border-radius: 0.5rem;
+            box-shadow:
+                0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border: none;
+        }
+    }
+
+    .p-checkbox {
+        .p-checkbox-box {
+            border-radius: 0.25rem;
+            border-color: #cbd5e1;
+            transition: all 0.2s;
+
+            &:not(.p-disabled):hover {
+                border-color: #60a5fa;
+            }
+
+            &.p-highlight {
+                background: #3b82f6;
+                border-color: #3b82f6;
+
+                &:hover {
+                    background: #2563eb;
+                    border-color: #2563eb;
+                }
+            }
+        }
+    }
+}
+
+/* Form Section Styles */
+.bg-surface-50 {
+    transition: all 0.3s;
+    &:hover {
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+}
+
+/* Error Messages */
+.p-error {
+    color: #ef4444;
+    font-size: 0.875rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.375rem;
+
+    i {
+        color: #ef4444;
+    }
+}
+
+/* Dark Mode Adjustments */
+:host-context(.dark) {
+    .p-inputtext,
+    .p-password input,
+    .p-dropdown {
+        background: #1e293b;
+        border-color: #475569;
+        color: #f8fafc;
+
+        &:hover {
+            border-color: #60a5fa;
+        }
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    :host ::ng-deep {
+        .p-button.p-button-lg {
+            padding: 0.625rem 1.25rem;
+            font-size: 0.875rem;
+        }
+    }
+    .bg-surface-50 {
+        padding: 1rem;
+    }
+}

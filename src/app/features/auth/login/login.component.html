@@ -4,20 +4,20 @@
         <div style="border-radius: 56px; padding: 0.3rem; background: linear-gradient(360deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%)">
             <div class="w-full bg-surface-0 dark:bg-surface-900 py-16 px-8 sm:px-20" style="border-radius: 53px">
                 <div class="text-center mb-8">
-                    <img class="mb-8 w-16 shrink-0 mx-auto" src="assets/general/ApolloLogo.PNG" style="width: 80px" />
-                    <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">Welcome Back!</div>
-                    <span class="text-muted-color font-medium">Sign in to continue</span>
+                    <img class="mb-8 w-16 shrink-0 mx-auto" src="assets/general/apolo2.png" style="width: 80px" />
+                    <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">Bienvenue !</div>
+                    <span class="text-muted-color font-medium">Connectez-vous pour continuer</span>
                 </div>
 
                 <div (keyup.enter)="login()">
                     <label for="email1" class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Email</label>
-                    <input pInputText id="email1" type="text" placeholder="Email address" class="w-full md:w-[30rem] mb-8" [(ngModel)]="loginDto.email" />
+                    <input pInputText id="email1" type="text" placeholder="Adresse email" class="w-full md:w-[30rem] mb-8" [(ngModel)]="loginDto.email" />
 
-                    <label for="password1" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">Password</label>
-                    <p-password id="password1" [(ngModel)]="loginDto.password" placeholder="Password" [toggleMask]="true" styleClass="mb-4" [fluid]="true" [feedback]="false"></p-password>
+                    <label for="password1" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">Mot de passe</label>
+                    <p-password id="password1" [(ngModel)]="loginDto.password" placeholder="Mot de passe" [toggleMask]="true" styleClass="mb-4" [fluid]="true" [feedback]="false"></p-password>
 
-                    <p-button (click)="login()" [disabled]="loading" label="Sign In" styleClass="w-full mb-4" severity="success" raised></p-button>
-                    <p style="text-align: center">Don't have an account? <a class="font-medium no-underline ml-2 text-right cursor-pointer text-primary" routerLink="/auth/register">Register</a></p>
+                    <p-button (click)="login()" [disabled]="loading" label="Se connecter" styleClass="w-full mb-4" severity="success" raised></p-button>
+                    <p style="text-align: center">Vous n'avez pas de compte ? <a class="font-medium no-underline ml-2 text-right cursor-pointer text-primary" routerLink="/auth/register">S'inscrire</a></p>
                     <div *ngIf="errorMessage" class="mt-4 p-3 border-round bg-red-50 dark:bg-red-900/20 border-1 border-red-200 dark:border-red-800">
                         <ul class="list-none p-0 m-0 text-left">
                             <li *ngFor="let error of errorMessage.split('\n')" class="text-red-500 dark:text-red-300 mb-1 flex align-items-center">
