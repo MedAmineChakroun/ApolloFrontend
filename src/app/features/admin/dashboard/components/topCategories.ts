@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ChartModule } from 'primeng/chart';
-import { ProductsService } from '../../../../core/services/products.service';
-import { Product } from '../../../../models/Product';
+import { CommandeService } from '../../../../core/services/commande.service';
 
 @Component({
     standalone: true,
@@ -18,36 +17,18 @@ export class TopCategories implements OnInit {
     chartData: any;
     chartOptions: any;
 
-    constructor(private productsService: ProductsService) {}
+    constructor(private CommandeService: CommandeService) {}
 
     ngOnInit() {
         this.loadChartData();
     }
 
     loadChartData() {
-        this.productsService.getProducts().subscribe({
-            next: (response: any) => {
-                let products: Product[] = [];
-
-                if (response?.data?.produits && Array.isArray(response.data.produits)) {
-                    products = response.data.produits;
-                } else if (Array.isArray(response)) {
-                    products = response;
-                }
-
-                const familyCounts: { [key: string]: number } = {};
-                products.forEach((product) => {
-                    if (product?.artFamille) {
-                        familyCounts[product.artFamille] = (familyCounts[product.artFamille] || 0) + 1;
-                    }
-                });
-
-                const sortedCategories = Object.entries(familyCounts)
-                    .sort((a, b) => b[1] - a[1])
-                    .slice(0, 4);
-
-                const labels = sortedCategories.map(([label]) => label);
-                const values = sortedCategories.map(([_, count]) => count);
+        this.CommandeService.getTopCategories().subscribe({
+            next: (response: any[]) => {
+                // Response format: [{ categoryName: string, totalQuantitySold: number }]
+                const labels = response.map((category) => category.categoryName || 'Unknown');
+                const values = response.map((category) => category.totalQuantitySold || 0);
 
                 const documentStyle = getComputedStyle(document.documentElement);
                 const textColor = documentStyle.getPropertyValue('--text-color');
@@ -57,12 +38,7 @@ export class TopCategories implements OnInit {
                     datasets: [
                         {
                             data: values.length > 0 ? values : [0],
-                            backgroundColor: [
-                                documentStyle.getPropertyValue('--p-teal-500'), // teal is second again
-                                documentStyle.getPropertyValue('--p-indigo-500'),
-                                documentStyle.getPropertyValue('--p-purple-500'), // purple is third again
-                                documentStyle.getPropertyValue('--p-orange-500')
-                            ],
+                            backgroundColor: [documentStyle.getPropertyValue('--p-teal-500'), documentStyle.getPropertyValue('--p-indigo-500'), documentStyle.getPropertyValue('--p-purple-500'), documentStyle.getPropertyValue('--p-orange-500')],
                             hoverBackgroundColor: [documentStyle.getPropertyValue('--p-teal-400'), documentStyle.getPropertyValue('--p-indigo-400'), documentStyle.getPropertyValue('--p-purple-400'), documentStyle.getPropertyValue('--p-orange-400')]
                         }
                     ]
@@ -75,12 +51,33 @@ export class TopCategories implements OnInit {
                                 usePointStyle: true,
                                 color: textColor
                             }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context: any) {
+                                    const label = context.label || '';
+                                    const value = context.parsed || 0;
+                                    return `${label}: ${value} sold`;
+                                }
+                            }
                         }
                     }
                 };
             },
             error: (error) => {
-                console.error('Error loading product data:', error);
+                console.error('Error loading top categories data:', error);
+
+                // Set empty chart data on error
+                this.chartData = {
+                    labels: ['No Data'],
+                    datasets: [
+                        {
+                            data: [0],
+                            backgroundColor: ['#cccccc'],
+                            hoverBackgroundColor: ['#aaaaaa']
+                        }
+                    ]
+                };
             }
         });
     }

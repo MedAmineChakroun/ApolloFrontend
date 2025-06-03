@@ -7,7 +7,7 @@
                 <div class="contact-icon-container">
                     <i class="pi pi-comments text-3xl"></i>
                 </div>
-                <h2 class="text-3xl font-bold gradient-text">Prendre contact avec nous!</h2>
+                <h2 class="text-3xl font-bold gradient-text">Contactez-nous !</h2>
             </div>
         </ng-template>
 
@@ -16,14 +16,22 @@
             <div class="field mb-4 input-group">
                 <label for="email" class="block text-900 font-medium mb-2"> <i class="pi pi-envelope input-icon"></i> Email </label>
                 <span class="p-input-icon-left w-full">
-                    <input id="email" type="email" pInputText formControlName="email" class="w-full" placeholder="your.email@example.com" [ngClass]="{ 'ng-invalid ng-dirty': contactForm.get('email')?.invalid && contactForm.get('email')?.touched }" />
+                    <input
+                        id="email"
+                        type="email"
+                        pInputText
+                        formControlName="email"
+                        class="w-full"
+                        placeholder="votre.email@exemple.com"
+                        [ngClass]="{ 'ng-invalid ng-dirty': contactForm.get('email')?.invalid && contactForm.get('email')?.touched }"
+                    />
                 </span>
-                <small *ngIf="contactForm.get('email')?.invalid && contactForm.get('email')?.touched" class="p-error"> <i class="pi pi-exclamation-circle"></i> Please enter a valid email address </small>
+                <small *ngIf="contactForm.get('email')?.invalid && contactForm.get('email')?.touched" class="p-error"> <i class="pi pi-exclamation-circle"></i> Veuillez saisir une adresse email valide </small>
             </div>
 
             <!-- Subject Field -->
             <div class="field mb-4 input-group">
-                <label for="subject" class="block text-900 font-medium mb-2"> <i class="pi pi-tag input-icon"></i> Subject </label>
+                <label for="subject" class="block text-900 font-medium mb-2"> <i class="pi pi-tag input-icon"></i> Sujet </label>
                 <span class="p-input-icon-left w-full">
                     <input
                         id="subject"
@@ -31,11 +39,11 @@
                         pInputText
                         formControlName="subject"
                         class="w-full"
-                        placeholder="How can we help you?"
+                        placeholder="Comment pouvons-nous vous aider ?"
                         [ngClass]="{ 'ng-invalid ng-dirty': contactForm.get('subject')?.invalid && contactForm.get('subject')?.touched }"
                     />
                 </span>
-                <small *ngIf="contactForm.get('subject')?.invalid && contactForm.get('subject')?.touched" class="p-error"> <i class="pi pi-exclamation-circle"></i> Subject is required </small>
+                <small *ngIf="contactForm.get('subject')?.invalid && contactForm.get('subject')?.touched" class="p-error"> <i class="pi pi-exclamation-circle"></i> Le sujet est requis </small>
             </div>
 
             <!-- Message Field -->
@@ -46,21 +54,21 @@
                     id="message"
                     formControlName="message"
                     pTextarea
-                    placeholder="Your Message"
+                    placeholder="Votre message"
                     [autoResize]="true"
                     rows="5"
                     cols="30"
                     class="w-full"
-                    placeholder="Tell us what you need help with..."
+                    placeholder="Dites-nous comment nous pouvons vous aider..."
                     [ngClass]="{ 'ng-invalid ng-dirty': contactForm.get('message')?.invalid && contactForm.get('message')?.touched }"
                 ></textarea>
-                <small *ngIf="contactForm.get('message')?.invalid && contactForm.get('message')?.touched" class="p-error"> <i class="pi pi-exclamation-circle"></i> Message is required </small>
+                <small *ngIf="contactForm.get('message')?.invalid && contactForm.get('message')?.touched" class="p-error"> <i class="pi pi-exclamation-circle"></i> Le message est requis </small>
             </div>
 
             <!-- Submit Section -->
             <div class="form-footer mt-5">
                 <div class="send-button-container">
-                    <p-button severity="success" type="submit" [label]="loading ? 'Sending...' : 'Send Message'" icon="pi pi-send" [disabled]="contactForm.invalid || loading" styleClass="w-full send-button"></p-button>
+                    <p-button severity="success" type="submit" [label]="loading ? 'Envoi en cours...' : 'Envoyer le message'" icon="pi pi-send" [disabled]="contactForm.invalid || loading" styleClass="w-full send-button"></p-button>
 
                     <div *ngIf="loading" class="loading-spinner">
                         <i class="pi pi-spinner pi-spin"></i>
@@ -91,7 +99,7 @@
                 </div>
                 <div class="response-time">
                     <i class="pi pi-clock text-sm"></i>
-                    <span>We typically respond within 24 hours</span>
+                    <span>Nous répondons généralement sous 24h</span>
                 </div>
             </div>
         </ng-template>

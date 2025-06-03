@@ -162,9 +162,9 @@
             <!-- Order Content with enhanced styling -->
             <div class="p-4">
                 <!-- Client Profile Section with improved visuals -->
-                <div class="mb-6 bg-gradient-to-r from-primary-50 to-primary-100 px-4 py-2 rounded-xl shadow-md flex items-center gap-4 animate-fadeIn min-h-[70px]" style="min-height: 70px">
+                <div class="mb-6 bg-primary-50 px-4 py-2 rounded-xl shadow-md flex items-center gap-4 animate-fadeIn min-h-[70px]">
                     <div class="flex items-center justify-center bg-primary bg-opacity-10 rounded-full" style="width: 56px; height: 56px; min-width: 56px; min-height: 56px">
-                        <i class="pi pi-truck text-success" style="font-size: 2rem"></i>
+                        <i class="pi pi-truck text-warn" style="font-size: 2rem"></i>
                     </div>
                     <div class="flex-1">
                         <p class="text-base text-gray-700 leading-relaxed m-0">
@@ -385,8 +385,8 @@
                         </div>
 
                         <!-- No recommendations found -->
-                        <div class="side-recommendations empty-recommendations" *ngIf="!isLoadingRecommendations && recommendedProducts.length === 0">
-                            <div class="side-recommendations-header">
+                        <div class="side-recommendations empty-recommendations mt-3" *ngIf="!isLoadingRecommendations && recommendedProducts.length === 0">
+                            <div class="side-recommendations-header mt-3">
                                 <h4>Vous cherchez plus ?</h4>
                             </div>
                             <div class="empty-recommendations-content">

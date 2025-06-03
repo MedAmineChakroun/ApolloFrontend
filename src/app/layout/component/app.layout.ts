@@ -19,7 +19,8 @@ import { AuthenticationService } from '../../core/services/authentication.servic
             <div class="layout-main">
                 <router-outlet></router-outlet>
             </div>
-            <app-chatbot></app-chatbot>
+            <app-chatbot *ngIf="!isAdmin"></app-chatbot>
+
             <app-footer></app-footer>
         </div>
         <div class="layout-mask animate-fadein"></div>

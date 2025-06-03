@@ -39,7 +39,7 @@ export class OrderDetailsComponent implements OnInit {
     // Company colors
     primaryColor = '#02c39a'; // Apollo blue
     secondaryColor = '#f8f9fa'; // Light gray
-    accentColor = '#ff5400'; // Orange accent
+    accentColor = '#ff9f1c'; // Orange accent
 
     constructor(
         private route: ActivatedRoute,
@@ -129,7 +129,7 @@ export class OrderDetailsComponent implements OnInit {
                 printWindow.document.write(`
                     <html>
                     <head>
-                        <title>Invoice #${this.orderDocPiece}</title>
+                        <title>Commande #${this.orderDocPiece}</title>
                         <style>
                             body { font-family: Arial, sans-serif; margin: 20px; }
                             .header { display: flex; justify-content: space-between; margin-bottom: 30px; }
@@ -140,7 +140,7 @@ export class OrderDetailsComponent implements OnInit {
                             .status-pending { background-color: #e3f2fd; color: #1565c0; }
                             .billing-info { display: flex; justify-content: space-between; margin-bottom: 30px; }
                             .bill-to, .company-info { width: 48%; }
-                            .section-title { color: #FF5400; font-weight: bold; margin-bottom: 5px; font-size: 18px; }
+                            .section-title { color:rgb(238, 112, 48); font-weight: bold; margin-bottom: 5px; font-size: 18px; }
                             .details { margin-bottom: 20px; }
                             .detail-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
                             .label { color: #666; }
@@ -158,13 +158,13 @@ export class OrderDetailsComponent implements OnInit {
                     </head>
                     <body>
                         <div class="header">
-                            <div class="invoice-number">Document #${this.orderDocPiece}</div>
+                            <div class="invoice-number">Commande #${this.orderDocPiece}</div>
                             ${this.renderStatusBox()}
                         </div>
                         
                         <div class="billing-info">
                             <div class="bill-to">
-                                <div class="section-title">Bill To:</div>
+                                <div class="section-title">Facturer à:</div>
                                 <div>${this.clientData?.tiersIntitule || ''}</div>
                                 <div>${this.clientData?.tiersAdresse1 || ''}</div>
                                 <div>${this.clientData?.tiersCodePostal || ''}, ${this.clientData?.tiersVille || ''}</div>
@@ -184,7 +184,7 @@ export class OrderDetailsComponent implements OnInit {
                         
                         <div class="details">
                             <div class="detail-row">
-                                <span class="label">Invoice #:</span>
+                                <span class="label">N° Commande #:</span>
                                 <span class="value">#${this.CommandeEntete?.docPiece || ''}</span>
                             </div>
                             <div class="detail-row">
@@ -192,7 +192,7 @@ export class OrderDetailsComponent implements OnInit {
                                 <span class="value">${this.formatDate(this.CommandeEntete?.docDate || new Date())}</span>
                             </div>
                             <div class="detail-row">
-                                <span class="label">Client Code:</span>
+                                <span class="label">Code Client:</span>
                                 <span class="value">#${this.CommandeEntete?.docTiersCode || ''}</span>
                             </div>
                             <div class="detail-row">
@@ -204,10 +204,10 @@ export class OrderDetailsComponent implements OnInit {
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Item Code</th>
+                                    <th>Code Article</th>
                                     <th>Description</th>
-                                    <th class="text-center">Quantity</th>
-                                    <th class="text-right">Unit Price</th>
+                                    <th class="text-center">Quantité</th>
+                                    <th class="text-right">Prix</th>
                                     <th class="text-right">Total HT</th>
                                     <th class="text-right">Total TTC</th>
                                 </tr>
@@ -233,9 +233,9 @@ export class OrderDetailsComponent implements OnInit {
                         </div>
                         
                         <div class="footer">
-                            <p>Thank you for choosing Apollo Store! We appreciate your business.</p>
-                            <p>Generated on ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}</p>
-                        </div>
+                            <p>Merci d'avoir choisi Apollo Store ! Nous apprécions votre confiance.</p>
+                            <p>Généré le ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}</p>
+                       </div>
                     </body>
                     </html>
                 `);
@@ -306,7 +306,7 @@ export class OrderDetailsComponent implements OnInit {
             format: 'a4'
         });
 
-        const fileName = `Invoice-${this.orderDocPiece}-${new Date().toLocaleDateString().replace(/\//g, '-')}.pdf`;
+        const fileName = `Commande-${this.orderDocPiece}-${new Date().toLocaleDateString().replace(/\//g, '-')}.pdf`;
         const pageWidth = doc.internal.pageSize.width;
         const pageHeight = doc.internal.pageSize.height;
         const margin = 15;
@@ -322,15 +322,15 @@ export class OrderDetailsComponent implements OnInit {
         doc.text('APOLLO STORE', pageWidth / 2, 15, { align: 'center' });
 
         doc.setFontSize(12);
-        doc.text('Professional Invoice', pageWidth / 2, 25, { align: 'center' });
+        doc.text('Commande Professionnelle', pageWidth / 2, 25, { align: 'center' });
 
-        // Add invoice number with accent bar
+        // Add order number with accent bar
         doc.setFillColor(this.accentColor);
         doc.rect(margin, 45, pageWidth - margin * 2, 10, 'F');
 
         doc.setTextColor(255, 255, 255);
         doc.setFontSize(14);
-        doc.text(`INVOICE #${this.orderDocPiece}`, pageWidth / 2, 52, { align: 'center' });
+        doc.text(`COMMANDE #${this.orderDocPiece}`, pageWidth / 2, 52, { align: 'center' });
 
         // Reset text color for rest of the document
         doc.setTextColor(0, 0, 0);
@@ -345,23 +345,23 @@ export class OrderDetailsComponent implements OnInit {
         doc.setFontSize(12);
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(this.primaryColor);
-        doc.text('BILL TO:', margin + 5, sectionY + 8);
+        doc.text('FACTURER À :', margin + 5, sectionY + 8);
 
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(0, 0, 0);
         doc.setFontSize(10);
 
         // Handle long customer name with line breaks
-        const customerName = this.clientData?.tiersIntitule || 'Customer Name';
+        const customerName = this.clientData?.tiersIntitule || 'Nom du client';
         const nameLines = doc.splitTextToSize(customerName, 70);
         doc.text(nameLines, margin + 5, sectionY + 16);
 
         // Calculate new Y position based on number of lines in customer name
         let infoY = sectionY + 16 + nameLines.length * 5;
 
-        doc.text(`${this.clientData?.tiersAdresse1 || 'Address Line 1'}`, margin + 5, infoY);
+        doc.text(`${this.clientData?.tiersAdresse1 || 'Adresse'}`, margin + 5, infoY);
         infoY += 5;
-        doc.text(`${this.clientData?.tiersCodePostal || 'Postal Code'}, ${this.clientData?.tiersVille || 'City'}`, margin + 5, infoY);
+        doc.text(`${this.clientData?.tiersCodePostal || 'Code Postal'}, ${this.clientData?.tiersVille || 'Ville'}`, margin + 5, infoY);
 
         // Right side: Company Information
         doc.setFillColor(this.secondaryColor);
@@ -370,18 +370,18 @@ export class OrderDetailsComponent implements OnInit {
         doc.setFontSize(12);
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(this.primaryColor);
-        doc.text('FROM:', pageWidth - margin - 75, sectionY + 8);
+        doc.text('DE :', pageWidth - margin - 75, sectionY + 8);
 
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(0, 0, 0);
         doc.setFontSize(10);
         doc.text('Apollo Store Inc.', pageWidth - margin - 75, sectionY + 16);
-        doc.text('123 Business Street', pageWidth - margin - 75, sectionY + 21);
-        doc.text('Business City, 12345', pageWidth - margin - 75, sectionY + 26);
+        doc.text('123 Rue des Affaires', pageWidth - margin - 75, sectionY + 21);
+        doc.text("Ville d'Affaires, 12345", pageWidth - margin - 75, sectionY + 26);
         doc.text('contact@apollostore.com', pageWidth - margin - 75, sectionY + 31);
         doc.text('+216 123 456 789', pageWidth - margin - 75, sectionY + 36);
 
-        // Invoice details
+        // Order details
         const detailsY = sectionY + 50;
 
         doc.setFillColor(this.secondaryColor);
@@ -390,8 +390,8 @@ export class OrderDetailsComponent implements OnInit {
 
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(this.primaryColor);
-        doc.text('DATE ISSUED:', margin + 5, detailsY + 8);
-        doc.text('STATUS:', pageWidth / 2 + 5, detailsY + 8);
+        doc.text('DATE D\'ÉMISSION :', margin + 5, detailsY + 8);
+        doc.text('STATUT :', pageWidth / 2 + 5, detailsY + 8);
 
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(0, 0, 0);
@@ -411,10 +411,10 @@ export class OrderDetailsComponent implements OnInit {
         const tableY = detailsY + 35;
 
         const tableColumns = [
-            { header: 'ITEM', dataKey: 'code' },
+            { header: 'ARTICLE', dataKey: 'code' },
             { header: 'DESCRIPTION', dataKey: 'description' },
-            { header: 'QTY', dataKey: 'qty' },
-            { header: 'UNIT PRICE', dataKey: 'price' },
+            { header: 'QTE', dataKey: 'qty' },
+            { header: 'PRIX UNITAIRE', dataKey: 'price' },
             { header: 'TOTAL', dataKey: 'total' }
         ];
 
@@ -460,7 +460,7 @@ export class OrderDetailsComponent implements OnInit {
         doc.setTextColor(this.primaryColor);
 
         let totalY = finalY + 10;
-        doc.text('SUBTOTAL:', pageWidth - margin - 75, totalY);
+        doc.text('SOUS-TOTAL :', pageWidth - margin - 75, totalY);
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(0, 0, 0);
         doc.text(`${this.calculateTotal().toFixed(2)} DT`, pageWidth - margin - 15, totalY, { align: 'right' });
@@ -468,7 +468,7 @@ export class OrderDetailsComponent implements OnInit {
         totalY += 8;
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(this.primaryColor);
-        doc.text('TAX:', pageWidth - margin - 75, totalY);
+        doc.text('TVA :', pageWidth - margin - 75, totalY);
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(0, 0, 0);
         doc.text(`${(this.calculateTotalTTC() - this.calculateTotal()).toFixed(2)} DT`, pageWidth - margin - 15, totalY, { align: 'right' });
@@ -479,7 +479,7 @@ export class OrderDetailsComponent implements OnInit {
 
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(255, 255, 255);
-        doc.text('TOTAL:', pageWidth - margin - 75, totalY);
+        doc.text('TOTAL :', pageWidth - margin - 75, totalY);
         doc.text(`${this.calculateTotalTTC().toFixed(2)} DT`, pageWidth - margin - 15, totalY, { align: 'right' });
 
         // Footer
@@ -487,16 +487,16 @@ export class OrderDetailsComponent implements OnInit {
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(8);
         doc.setTextColor(100, 100, 100);
-        doc.text('Thank you for your business! For any questions regarding this invoice, please contact us.', pageWidth / 2, footerY, { align: 'center' });
-        doc.text(`Generated on ${new Date().toLocaleString()}`, pageWidth / 2, footerY + 5, { align: 'center' });
+        doc.text("Merci pour votre confiance ! Pour toute question concernant cette commande, veuillez nous contacter.", pageWidth / 2, footerY, { align: 'center' });
+        doc.text(`Généré le ${new Date().toLocaleString()}`, pageWidth / 2, footerY + 5, { align: 'center' });
 
         // Save the PDF
         doc.save(fileName);
 
         this.messageService.add({
             severity: 'info',
-            summary: 'PDF Exported',
-            detail: `Professional invoice has been exported as PDF`
+            summary: 'PDF Exporté',
+            detail: `La commande professionnelle a été exportée en PDF`
         });
     }
     getStatus(etat: number): { label: string; severity: 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' | undefined } {

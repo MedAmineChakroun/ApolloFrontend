@@ -5,7 +5,7 @@
     <div class="flex flex-row justify-content-between align-items-center mb-4 p-3 border-round-lg" style="background: linear-gradient(to right, var(--surface-50), var(--surface-100))">
         <div class="flex align-items-center">
             <i class="pi pi-file-invoice text-primary mr-2" style="font-size: 1.5rem"></i>
-            <h2 class="m-0 text-900">Document #{{ orderDocPiece }}</h2>
+            <h2 class="m-0 text-900">Document n°{{ orderDocPiece }}</h2>
         </div>
         <!-- Show status message based on order status -->
         <div *ngIf="!loading && CommandeEntete && clientData" class="flex my-2">
@@ -21,7 +21,7 @@
                 <div class="bg-pink-500 border-round-sm p-2 mr-3">
                     <i class="pi pi-ban text-white"></i>
                 </div>
-                <span class="text-pink-600 font-medium">Raison de refus : {{ CommandeEntete.docNote }}</span>
+                <span class="text-pink-600 font-medium">Raison du refus : {{ CommandeEntete.docNote }}</span>
             </div>
             <!-- Pending message -->
             <div *ngIf="CommandeEntete.docEtat === 0" class="flex align-items-center bg-blue-100 border-round p-3 w-full shadow-1">
@@ -32,8 +32,8 @@
             </div>
         </div>
         <div class="flex gap-2 md:mt-0">
-            <button pButton icon="pi pi-file-pdf" label="Export PDF" (click)="exportPdf()" class="p-button-primary" style="background-color: #02c39a; border-color: #02c39a"></button>
-            <button pButton icon="pi pi-print" label="Print" (click)="printInvoice()" class="p-button-outlined" style="color: #ff5400; border-color: #ff5400"></button>
+            <button pButton icon="pi pi-file-pdf" label="Exporter PDF" (click)="exportPdf()" class="p-button-primary" style="background-color: #02c39a; border-color: #02c39a"></button>
+            <button pButton icon="pi pi-print" label="Imprimer" (click)="printInvoice()" class="p-button-outlined" style="color: #ff5400; border-color: #ff5400"></button>
         </div>
     </div>
 
@@ -51,9 +51,9 @@
                     <div class="col-12 md:col-6 lg:col-6 entete">
                         <!-- Company Info (This would typically be your company's info) -->
                         <div class="flex flex-column" style="width: 60%">
-                            <div class="text-800 font-bold text-xl mb-2" style="color: #ff5400">
-                                <i class="pi pi-wallet" style="font-size: 1.5rem; color: #ff5400"></i>
-                                Bill To:
+                            <div class="text-800 font-bold text-xl mb-2" style="color: #ff7b00">
+                                <i class="pi pi-wallet" style="font-size: 1.5rem; color: #ff7b00"></i>
+                                Facturer à :
                             </div>
                             <div class="text-600 font-medium">{{ clientData.tiersIntitule }}</div>
                             <div class="text-600">{{ clientData.tiersAdresse1 }}</div>
@@ -65,9 +65,9 @@
 
                         <!-- Client Info -->
                         <div class="flex flex-column align-items-end" style="width: 40%">
-                            <div class="text-800 font-bold text-xl mb-2" style="color: #ff5400">
+                            <div class="text-800 font-bold text-xl mb-2" style="color: #ff7b00">
                                 Apollo Store
-                                <i class="pi pi-shop text-primary-500" style="font-size: 1.5rem; color: #ff5400"></i>
+                                <i class="pi pi-shop text-primary-500" style="font-size: 1.5rem; color: #ff7b00"></i>
                             </div>
                             <div class="text-600">123 Business Street</div>
                             <div class="text-600">Business City, 12345</div>
@@ -82,22 +82,16 @@
                             <div class="grid">
                                 <div class="col-12">
                                     <div class="flex flex-row align-items-start justify-content-between mb-2">
-                                        <div class="text-600 font-medium" style="width: 120px">Invoice #:</div>
+                                        <div class="text-600 font-medium" style="width: 120px">Facture n° :</div>
                                         <div class="text-900 font-medium text-right">#{{ CommandeEntete.docPiece }}</div>
                                     </div>
                                     <div class="flex flex-row align-items-start justify-content-between mb-2">
-                                        <div class="text-600 font-medium" style="width: 120px">Date:</div>
+                                        <div class="text-600 font-medium" style="width: 120px">Date :</div>
                                         <div class="text-900 font-medium text-right">{{ formatDate(CommandeEntete.docDate) }}</div>
                                     </div>
                                     <div class="flex flex-row align-items-start justify-content-between mb-2">
-                                        <div class="text-600 font-medium" style="width: 120px">Client Code:</div>
+                                        <div class="text-600 font-medium" style="width: 120px">Code client :</div>
                                         <div class="text-900 font-medium text-right">#{{ CommandeEntete.docTiersCode }}</div>
-                                    </div>
-                                    <div class="flex flex-row align-items-start justify-content-between">
-                                        <div class="text-600 font-medium" style="width: 120px">Status:</div>
-                                        <div class="text-right">
-                                            <p-tag [value]="getStatus(CommandeEntete.docEtat).label" [severity]="getStatus(CommandeEntete.docEtat).severity" [rounded]="true"></p-tag>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -110,14 +104,14 @@
         <!-- Order Lines Table -->
         <div class="col-12 mt-3">
             <p-card>
-                <h3 style="color: #02c39a; border-bottom: 2px solid #f0f0f0; padding-bottom: 0.5rem"><i class="pi pi-list mr-2"></i>Order Items</h3>
+                <h3 style="color: #ff7b00; border-bottom: 2px solid #f0f0f0; padding-bottom: 0.5rem"><i class="pi pi-list mr-2"></i>Articles de la commande</h3>
                 <p-table [value]="LignesCommande" [paginator]="LignesCommande.length > 10" [rows]="10" [showCurrentPageReport]="true" responsiveLayout="scroll" styleClass="p-datatable-sm p-datatable-gridlines" [rowHover]="true">
                     <ng-template pTemplate="header">
                         <tr style="background-color: #f8fbff">
-                            <th pSortableColumn="ligneArtCode" style="background-color: #02c39a; color: white; width: 10%">Item Code <p-sortIcon field="ligneArtCode"></p-sortIcon></th>
+                            <th pSortableColumn="ligneArtCode" style="background-color: #02c39a; color: white; width: 10%">Code article <p-sortIcon field="ligneArtCode"></p-sortIcon></th>
                             <th pSortableColumn="ligneArtDesi" style="background-color: #02c39a; color: white; width: 40%">Description <p-sortIcon field="ligneArtDesi"></p-sortIcon></th>
-                            <th pSortableColumn="ligneQte" class="text-center" style="background-color: #02c39a; color: white; width: 10%">Quantity <p-sortIcon field="ligneQte"></p-sortIcon></th>
-                            <th pSortableColumn="lignePu" class="text-right" style="background-color: #02c39a; color: white; width: 15%">Unit Price <p-sortIcon field="lignePu"></p-sortIcon></th>
+                            <th pSortableColumn="ligneQte" class="text-center" style="background-color: #02c39a; color: white; width: 10%">Quantité <p-sortIcon field="ligneQte"></p-sortIcon></th>
+                            <th pSortableColumn="lignePu" class="text-right" style="background-color: #02c39a; color: white; width: 15%">Prix unitaire <p-sortIcon field="lignePu"></p-sortIcon></th>
                             <th pSortableColumn="ligneHt" class="text-right" style="background-color: #02c39a; color: white; width: 12.5%">Total HT <p-sortIcon field="ligneHt"></p-sortIcon></th>
                             <th pSortableColumn="ligneTtc" class="text-right" style="background-color: #02c39a; color: white; width: 12.5%">Total TTC <p-sortIcon field="ligneTtc"></p-sortIcon></th>
                         </tr>
@@ -126,7 +120,7 @@
                     <ng-template pTemplate="body" let-item let-even="even">
                         <tr [ngClass]="even ? 'surface-ground' : ''">
                             <td>
-                                <span class="p-1 font-medium" style="color: #02c39a">#{{ item.ligneArtCode }}</span>
+                                <span class="p-1 font-medium" style="color: black">#{{ item.ligneArtCode }}</span>
                             </td>
                             <td>{{ item.ligneArtDesi }}</td>
                             <td class="text-center">
@@ -140,17 +134,17 @@
 
                     <ng-template pTemplate="footer">
                         <tr>
-                            <td colspan="4" class="text-right font-bold">Subtotal:</td>
+                            <td colspan="4" class="text-right font-bold">Sous-total :</td>
                             <td class="text-right">{{ calculateTotal() | currency: 'DT ' }}</td>
                             <td></td>
                         </tr>
                         <tr>
-                            <td colspan="4" class="text-right font-bold">Tax:</td>
+                            <td colspan="4" class="text-right font-bold">TVA :</td>
                             <td class="text-right">{{ calculateTotalTTC() - calculateTotal() | currency: 'DT ' }}</td>
                             <td></td>
                         </tr>
                         <tr style="background-color: #f5f8ff">
-                            <td colspan="4" class="text-right font-bold text-xl" style="color: #02c39a">Total:</td>
+                            <td colspan="4" class="text-right font-bold text-xl" style="color: #02c39a">Total :</td>
                             <td></td>
                             <td class="text-right font-bold text-xl" style="color: #02c39a">{{ calculateTotalTTC() | currency: 'DT ' }}</td>
                         </tr>
@@ -158,7 +152,7 @@
 
                     <ng-template pTemplate="emptymessage">
                         <tr>
-                            <td colspan="6" class="text-center p-4">No order items found</td>
+                            <td colspan="6" class="text-center p-4">Aucun article de commande trouvé</td>
                         </tr>
                     </ng-template>
                 </p-table>
@@ -168,70 +162,7 @@
         <!-- Trust & Service Section (replaced Terms & Conditions) -->
         <div class="col-12 mt-3">
             <p-card>
-                <div class="grid">
-                    <div class="col-12 md:col-8 md:col-offset-2">
-                        <h3 class="mb-3" style="color: #02c39a; border-bottom: 2px solid #f0f0f0; padding-bottom: 0.5rem"><i class="pi pi-shield mr-2"></i>Our Commitment to You</h3>
-
-                        <div class="grid">
-                            <!-- Trust Column -->
-                            <div class="col-12 md:col-6 mb-3">
-                                <div class="p-3 border-round-lg shadow-1" style="background-color: #f5f8ff; border-left: 4px solid #02c39a">
-                                    <div class="flex align-items-center mb-3">
-                                        <div class="p-2 bg-blue-100 border-round mr-3">
-                                            <i class="pi pi-verified text-blue-600 text-xl"></i>
-                                        </div>
-                                        <span class="font-bold text-lg text-900">Trust & Reliability</span>
-                                    </div>
-                                    <ul class="list-none p-0 m-0 mb-3 line-height-3">
-                                        <li class="flex align-items-center mb-2">
-                                            <i class="pi pi-check-circle mr-2" style="color: #ff9f1c"></i>
-                                            <span>100% Satisfaction Guarantee</span>
-                                        </li>
-                                        <li class="flex align-items-center mb-2">
-                                            <i class="pi pi-check-circle mr-2" style="color: #ff9f1c"></i>
-                                            <span>Secure Payment Processing</span>
-                                        </li>
-                                        <li class="flex align-items-center">
-                                            <i class="pi pi-check-circle mr-2" style="color: #ff9f1c"></i>
-                                            <span>Trusted by over 10,000 customers</span>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-
-                            <!-- Service Column -->
-                            <div class="col-12 md:col-6">
-                                <div class="p-3 border-round-lg shadow-1" style="background-color: #f5f8ff; border-left: 4px solid #ff9f1c">
-                                    <div class="flex align-items-center mb-3">
-                                        <div class="p-2 bg-orange-100 border-round mr-3">
-                                            <i class="pi pi-star text-orange-600 text-xl"></i>
-                                        </div>
-                                        <span class="font-bold text-lg text-900">Premium Service</span>
-                                    </div>
-                                    <ul class="list-none p-0 m-0 mb-3 line-height-3">
-                                        <li class="flex align-items-center mb-2">
-                                            <i class="pi pi-check-circle mr-2" style="color: #02c39a"></i>
-                                            <span>Fast Delivery (1-3 business days)</span>
-                                        </li>
-                                        <li class="flex align-items-center mb-2">
-                                            <i class="pi pi-check-circle mr-2" style="color: #02c39a"></i>
-                                            <span>24/7 Customer Support</span>
-                                        </li>
-                                        <li class="flex align-items-center">
-                                            <i class="pi pi-check-circle mr-2" style="color: #02c39a"></i>
-                                            <span>Easy Returns & Exchanges</span>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="mt-4 text-center">
-                            <p-divider></p-divider>
-                            <p class="text-700 font-medium">Thank you for choosing Apollo Store! We appreciate your business.</p>
-                        </div>
-                    </div>
-                </div>
+                <p class="text-700 font-medium text-center">Merci d'avoir choisi Apollo Store ! Nous apprécions votre confiance.</p>
             </p-card>
         </div>
     </div>
@@ -239,8 +170,8 @@
     <!-- Error State -->
     <div *ngIf="!loading && (!CommandeEntete || !clientData)" class="card my-4 surface-section border-round p-4 text-center">
         <i class="pi pi-exclamation-triangle text-5xl mb-3" style="color: #ff9f1c"></i>
-        <h3 class="m-0 mb-3">Unable to load invoice details</h3>
-        <p class="m-0 text-600">There was a problem loading the invoice information. Please try again later.</p>
-        <button pButton label="Go Back" icon="pi pi-arrow-left" class="p-button-outlined mt-4" style="color: #02c39a; border-color: #02c39a" (click)="goBack()"></button>
+        <h3 class="m-0 mb-3">Impossible de charger les détails de la facture</h3>
+        <p class="m-0 text-600">Un problème est survenu lors du chargement des informations de la facture. Veuillez réessayer plus tard.</p>
+        <button pButton label="Retour" icon="pi pi-arrow-left" class="p-button-outlined mt-4" style="color: #02c39a; border-color: #02c39a" (click)="goBack()"></button>
     </div>
 </div>

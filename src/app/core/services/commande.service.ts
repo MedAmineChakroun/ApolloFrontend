@@ -92,4 +92,10 @@ export class CommandeService {
     hasOrdersForArticles(artCode: string): Observable<boolean> {
         return this.http.get<boolean>(`${this.apiUrl}/hasOrdersForArticles/${artCode}`);
     }
+    getTopCategories(): Observable<any[]> {
+        return this.http.get<any[]>(`${this.apiUrlLigneCommande}/top-categories`);
+    }
+    getTopProduits(): Observable<any[]> {
+        return this.http.get<any[]>(`${this.apiUrlLigneCommande}/top-products`);
+    }
 }
