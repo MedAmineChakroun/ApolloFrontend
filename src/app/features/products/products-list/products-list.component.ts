@@ -107,7 +107,6 @@ export class ProductsListComponent implements OnInit {
         private stockService: StockService
     ) {}
 
-    // Method to handle image loading errors
     handleProductImageError(event: any): void {
         event.target.src = this.DEFAULT_PRODUCT_IMAGE;
     }
@@ -168,9 +167,6 @@ export class ProductsListComponent implements OnInit {
         this.loadProducts();
     }
 
-    /**
-     * Load products from the service
-     */
     loadProducts() {
         // Check if we have a category filter
         if (this.filters.category) {
@@ -228,9 +224,6 @@ export class ProductsListComponent implements OnInit {
         }
     }
 
-    /**
-     * Load stock data and merge it with products
-     */
     loadStockData() {
         this.stockService.getAllStock().subscribe({
             next: (stockData: Stock[]) => {
@@ -255,9 +248,6 @@ export class ProductsListComponent implements OnInit {
         });
     }
 
-    /**
-     * Apply price filter
-     */
     applyPriceFilter() {
         // Get current query parameters to preserve other filters
         const currentParams = { ...this.route.snapshot.queryParams };
@@ -283,9 +273,6 @@ export class ProductsListComponent implements OnInit {
             });
     }
 
-    /**
-     * Toggle in-stock filter
-     */
     toggleInStock() {
         // Get current query parameters to preserve other filters
         const currentParams = { ...this.route.snapshot.queryParams };
@@ -307,16 +294,10 @@ export class ProductsListComponent implements OnInit {
             });
     }
 
-    /**
-     * Open price filter dialog
-     */
     openPriceFilterDialog() {
         this.showPriceDialog = true;
     }
 
-    /**
-     * Clear category filter
-     */
     clearCategoryFilter() {
         if (this.filters.category) {
             // Create a new query params object without the category param
@@ -334,9 +315,6 @@ export class ProductsListComponent implements OnInit {
         }
     }
 
-    /**
-     * Clear in-stock filter
-     */
     clearInStockFilter() {
         if (this.filters.inStock) {
             // Create a new query params object without the inStock param
@@ -355,9 +333,6 @@ export class ProductsListComponent implements OnInit {
         }
     }
 
-    /**
-     * Handle search form submission
-     */
     searchProducts() {
         this.isSearching = true;
 
@@ -374,9 +349,6 @@ export class ProductsListComponent implements OnInit {
             });
     }
 
-    /**
-     * Clear search and reset filter
-     */
     clearSearch() {
         if (this.searchQuery) {
             this.searchQuery = '';
@@ -399,9 +371,6 @@ export class ProductsListComponent implements OnInit {
         }
     }
 
-    /**
-     * Update sort field and order based on selected option
-     */
     updateSortingFromOption(optionValue: string) {
         if (optionValue === 'price_asc') {
             this.sortField = 'artPrixVente';
@@ -412,9 +381,6 @@ export class ProductsListComponent implements OnInit {
         }
     }
 
-    /**
-     * Handle sort option change
-     */
     onSortChange(event: any) {
         const value = event.value.value;
 

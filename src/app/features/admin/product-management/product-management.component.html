@@ -203,10 +203,7 @@
                             <div class="detail-label">VAT Rate</div>
                             <div class="detail-value">{{ selectedProduct.article.artTvaTaux }}%</div>
                         </div>
-                        <div class="detail-item">
-                            <div class="detail-label">Status</div>
-                            <div class="detail-value">{{ selectedProduct.article.artEtat === 1 ? 'Active' : 'Inactive' }}</div>
-                        </div>
+
                         <div class="detail-item">
                             <div class="detail-label">Created On</div>
                             <div class="detail-value">{{ selectedProduct.article.artDateCreate | date: 'medium' }}</div>

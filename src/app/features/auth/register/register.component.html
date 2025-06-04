@@ -145,7 +145,7 @@
                                 <label for="postalCode" class="block text-surface-900 dark:text-surface-0 text-sm font-medium mb-2">Code postal*</label>
                                 <input pInputText id="postalCode" type="text" placeholder="Code postal" class="w-full" [(ngModel)]="registerDto.postalCode" (input)="validatePostalCode()" required />
                                 <small class="text-surface-600 dark:text-surface-400 block mt-1">Format: XXXX pour la Tunisie</small>
-                                <small *ngIf="postalCodeRequired" class="p-error block mt-1"> <i class="pi pi-exclamation-circle mr-1"></i>Le code postal est requis </small>
+                                <small *ngIf="postalCodeRequired" class="p-error block mt-1"> <i class="pi pi-exclamation-circle mr-1"></i>Le code postal est invalide</small>
                             </div>
                             <div class="field">
                                 <label for="country" class="block text-surface-900 dark:text-surface-0 text-sm font-medium mb-2">Pays*</label>
