@@ -22,6 +22,7 @@ import { Stock } from '../../../models/Stock';
 import { StockService } from '../../../core/services/stock.service';
 import { SynchronisationService } from '../../../core/services/synchronisation.service';
 import { forkJoin } from 'rxjs';
+import { ImageModule } from 'primeng/image';
 import { CommandeService } from '../../../core/services/commande.service';
 type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' | undefined;
 
@@ -34,7 +35,7 @@ interface ProductWithStock {
 @Component({
     selector: 'app-product-management',
     standalone: true,
-    imports: [CommonModule, FormsModule, TableModule, ButtonModule, InputTextModule, CardModule, ToolbarModule, DialogModule, ConfirmDialogModule, ToastModule, TagModule, TooltipModule],
+    imports: [CommonModule, FormsModule, TableModule, ButtonModule, InputTextModule, ImageModule, CardModule, ToolbarModule, DialogModule, ConfirmDialogModule, ToastModule, TagModule, TooltipModule],
     providers: [ConfirmationService, MessageService],
     templateUrl: './product-management.component.html',
     styleUrl: './product-management.component.scss'

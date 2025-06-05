@@ -149,7 +149,7 @@
                 <!-- Product image and primary info section -->
                 <div class="product-hero">
                     <div class="product-image-container">
-                        <img src="http://localhost:91/Images/{{ selectedProduct.article.artImageUrl }}" alt="{{ selectedProduct.article.artIntitule }}" (error)="handleProductImageError($event)" />
+                        <p-image src="http://localhost:91/Images/{{ selectedProduct.article.artImageUrl }}" [alt]="selectedProduct.article.artIntitule" width="100%" [preview]="true"> </p-image>
                     </div>
                     <div class="product-primary-info">
                         <div class="product-title-section">

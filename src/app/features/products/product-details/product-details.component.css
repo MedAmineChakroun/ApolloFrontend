@@ -19,37 +19,26 @@
         sans-serif;
 }
 
-/* Product image enhancements */
+/* Product image enhancements - FIXED */
 .product-image-wrapper {
     position: relative;
-    background-color: white;
-    padding: 1rem;
+    background-color: #f8f9fa;
+    padding: 2rem;
     border: 1px solid rgba(0, 0, 0, 0.05);
-    height: 100%;
+    height: 500px; /* Fixed height for consistency */
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
 }
 
 .product-image-container {
-    height: 0;
-    padding-bottom: 100%; /* 1:1 Aspect ratio */
-    width: 100%;
     position: relative;
-    overflow: hidden;
+    width: 100%;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.product-image {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: contain; /* Makes image maintain aspect ratio */
-    background-color: white;
 }
 
 /* Quantity control styling */
@@ -57,8 +46,155 @@
     min-width: 130px;
 }
 
+.price {
+    color: var(--p-primary-color);
+}
+
+/* Animation for the cart icon */
+@keyframes bounce {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.animate-bounce {
+    animation: bounce 0.7s cubic-bezier(0.28, 0.84, 0.42, 1);
+}
+
+/* Animation for loading skeletons */
+@keyframes skeleton-animation {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.6;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
 /* Custom styling for PrimeNG components */
 :host ::ng-deep {
+    /* P-IMAGE COMPONENT STYLING - COMPLETELY FIXED */
+    .product-image-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+
+        .p-image {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+
+            /* Target the actual image element inside p-image */
+            img {
+                max-width: 100% !important;
+                max-height: 100% !important;
+                width: auto !important;
+                height: auto !important;
+                object-fit: contain !important;
+                transition: all 0.3s ease-in-out !important;
+                border-radius: 0.5rem;
+                background-color: transparent;
+                position: relative;
+                display: block;
+                margin: 0 auto;
+            }
+
+            /* Target the image wrapper inside p-image */
+            .p-image-preview-container {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+
+                img {
+                    max-width: 100%;
+                    max-height: 100%;
+                    width: auto;
+                    height: auto;
+                    object-fit: contain;
+                }
+            }
+        }
+    }
+
+    /* Enhanced hover effects for product images */
+    .product-image-container.group:hover {
+        .p-image img {
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+    }
+
+    /* Fix for the preview overlay */
+    .p-image-preview-indicator {
+        background: rgba(0, 0, 0, 0.6) !important;
+        border-radius: 50%;
+        padding: 0.75rem;
+        transition: all 0.3s ease;
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        z-index: 10;
+        opacity: 0;
+        transform: scale(0.8);
+
+        .p-icon,
+        i {
+            color: white !important;
+            font-size: 1.2rem;
+        }
+
+        &:hover {
+            background: rgba(0, 0, 0, 0.8) !important;
+            transform: scale(1.1);
+        }
+    }
+
+    /* Show preview button on hover */
+    .product-image-container:hover .p-image-preview-indicator {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    /* Ensure the preview dialog is properly styled */
+    .p-image-preview-container {
+        .p-image-preview {
+            max-width: 90vw;
+            max-height: 90vh;
+            object-fit: contain;
+        }
+    }
+
+    /* Fix for image loading states */
+    .p-image {
+        &.p-image-loading {
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+
+            &::before {
+                content: 'Chargement...';
+                color: #6c757d;
+                font-size: 0.875rem;
+            }
+        }
+    }
+
     /* Button styling */
     .p-button {
         border-radius: 0.5rem;
@@ -113,38 +249,8 @@
             animation: skeleton-animation 1.5s ease-in-out infinite;
         }
     }
-}
 
-/* Animation for the cart icon */
-@keyframes bounce {
-    0%,
-    100% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-10px);
-    }
-}
-
-.animate-bounce {
-    animation: bounce 0.7s cubic-bezier(0.28, 0.84, 0.42, 1);
-}
-
-/* Animation for loading skeletons */
-@keyframes skeleton-animation {
-    0% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.6;
-    }
-    100% {
-        opacity: 1;
-    }
-}
-
-/* Toast customization */
-:host ::ng-deep {
+    /* Toast customization */
     .toast-success {
         background-color: #10b981; /* Tailwind green-500 */
         box-shadow:
@@ -162,12 +268,9 @@
 
 /* Media queries for better responsiveness */
 @media (max-width: 768px) {
-    .product-image-container {
-        padding-bottom: 75%; /* 4:3 aspect ratio on mobile */
-    }
-
     .product-image-wrapper {
-        padding: 0.5rem;
+        height: 300px;
+        padding: 1rem;
     }
 }
 
@@ -176,20 +279,24 @@
         width: 100%;
         margin-bottom: 1rem;
     }
+
+    .product-image-wrapper {
+        height: 250px;
+        padding: 0.5rem;
+    }
 }
 
-/* Fix for larger images in product detail view */
+/* Enhanced styling for larger screens */
 @media (min-width: 1024px) {
     .product-image-wrapper {
-        min-height: 400px;
-        display: flex;
-        align-items: center;
-    }
-
-    .product-image-container {
-        padding-bottom: 90%; /* Slightly shorter for large screens */
+        height: 600px;
+        padding: 3rem;
     }
 }
-.price {
-    color: var(--p-primary-color);
+
+@media (min-width: 1280px) {
+    .product-image-wrapper {
+        height: 650px;
+        padding: 4rem;
+    }
 }
