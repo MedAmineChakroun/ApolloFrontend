@@ -22,13 +22,13 @@ import { AuthenticationService } from '../../../core/services/authentication.ser
                 </a>
 
                 <nav class="hidden lg:flex space-x-8">
-                    <a (click)="router.navigate([''], { fragment: 'hero' })" [ngClass]="{ 'text-white': !scrolled, 'text-black': scrolled }" class="hover:text-gray-300 transition cursor-pointer ">Home</a>
+                    <a (click)="router.navigate([''], { fragment: 'hero' })" [ngClass]="{ 'text-white': !scrolled, 'text-black': scrolled }" class="hover:text-gray-300 transition cursor-pointer ">Accueil</a>
 
-                    <a (click)="router.navigate(['/store/products'])" [ngClass]="{ 'text-white': !scrolled, 'text-black': scrolled }" class="hover:text-gray-300 transition cursor-pointer">Store</a>
+                    <a (click)="router.navigate(['/store/products'])" [ngClass]="{ 'text-white': !scrolled, 'text-black': scrolled }" class="hover:text-gray-300 transition cursor-pointer">Boutique</a>
 
-                    <a (click)="router.navigate([''], { fragment: 'features' })" [ngClass]="{ 'text-white': !scrolled, 'text-black': scrolled }" class="hover:text-gray-300 transition cursor-pointer">Features</a>
+                    <a (click)="router.navigate([''], { fragment: 'features' })" [ngClass]="{ 'text-white': !scrolled, 'text-black': scrolled }" class="hover:text-gray-300 transition cursor-pointer">Fonctionnalités</a>
 
-                    <a (click)="router.navigate([''], { fragment: 'highlights' })" [ngClass]="{ 'text-white': !scrolled, 'text-black': scrolled }" class="hover:text-gray-300 transition cursor-pointer">About us</a>
+                    <a (click)="router.navigate([''], { fragment: 'highlights' })" [ngClass]="{ 'text-white': !scrolled, 'text-black': scrolled }" class="hover:text-gray-300 transition cursor-pointer">À Propos</a>
                 </nav>
 
                 <ng-container *ngIf="authService.isAuthenticated(); else notAuthenticated">
@@ -36,8 +36,8 @@ import { AuthenticationService } from '../../../core/services/authentication.ser
                 </ng-container>
                 <ng-template #notAuthenticated>
                     <div class="flex gap-2">
-                        <button pButton pRipple label="Login" routerLink="/auth/login" [rounded]="true" [text]="true"></button>
-                        <button pButton pRipple label="Register" routerLink="/auth/register" [rounded]="true"></button>
+                        <button pButton pRipple label="Connexion" routerLink="/auth/login" [rounded]="true" [text]="true"></button>
+                        <button pButton pRipple label="Inscription" routerLink="/auth/register" [rounded]="true"></button>
                     </div>
                 </ng-template>
             </div>
@@ -45,17 +45,17 @@ import { AuthenticationService } from '../../../core/services/authentication.ser
             <!-- Mobile Menu -->
             <div *ngIf="mobileMenuOpen" class="lg:hidden mobile-menu">
                 <div class="flex flex-col p-4 bg-white/95 shadow-lg backdrop-blur-md">
-                    <a (click)="navigateMobile([''], { fragment: 'hero' })" class="mobile-menu-item">Home</a>
-                    <a (click)="navigateMobile(['/store/products'])" class="mobile-menu-item">Store</a>
-                    <a (click)="navigateMobile([''], { fragment: 'features' })" class="mobile-menu-item">Features</a>
-                    <a (click)="navigateMobile([''], { fragment: 'highlights' })" class="mobile-menu-item">About us</a>
+                    <a (click)="navigateMobile([''], { fragment: 'hero' })" class="mobile-menu-item">Accueil</a>
+                    <a (click)="navigateMobile(['/store/products'])" class="mobile-menu-item">Boutique</a>
+                    <a (click)="navigateMobile([''], { fragment: 'features' })" class="mobile-menu-item">Fonctionnalités</a>
+                    <a (click)="navigateMobile([''], { fragment: 'highlights' })" class="mobile-menu-item">À Propos</a>
 
                     <div class="flex flex-col mt-4 space-y-2" *ngIf="!authService.isAuthenticated()">
-                        <button pButton pRipple label="Login" routerLink="/auth/login" [rounded]="true" class="w-full"></button>
-                        <button pButton pRipple label="Register" routerLink="/auth/register" [rounded]="true" severity="secondary" class="w-full"></button>
+                        <button pButton pRipple label="Connexion" routerLink="/auth/login" [rounded]="true" class="w-full"></button>
+                        <button pButton pRipple label="Inscription" routerLink="/auth/register" [rounded]="true" severity="secondary" class="w-full"></button>
                     </div>
                     <div class="mt-4" *ngIf="authService.isAuthenticated()">
-                        <button pButton pRipple label="My Profile" (click)="navigateMobile(['/store/customer/profile'])" icon="pi pi-user" class="w-full"></button>
+                        <button pButton pRipple label="Mon Profil" (click)="navigateMobile(['/store/customer/profile'])" icon="pi pi-user" class="w-full"></button>
                     </div>
                 </div>
             </div>

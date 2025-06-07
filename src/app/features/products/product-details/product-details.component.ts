@@ -19,7 +19,7 @@ import { StockService } from '../../../core/services/stock.service';
 import { Stock } from '../../../models/Stock';
 import { CommandeService } from '../../../core/services/commande.service';
 import { Store } from '@ngrx/store';
-import { selectUserCode } from '../../../store/user/user.selectors';
+import { AuthenticationService } from '../../../core/services/authentication.service';
 
 //import lazy loading for the image module from primeng
 
@@ -38,6 +38,8 @@ export class ProductDetailsComponent implements OnInit {
     quantity: number = 1;
     stockQuantity: number = 0;
     tiersCode: string = '';
+    userRole: string = '';
+    isAuthenticated: boolean = false;
     private readonly DEFAULT_PRODUCT_IMAGE = 'assets/general/product-default.png';
 
     constructor(
@@ -47,7 +49,8 @@ export class ProductDetailsComponent implements OnInit {
         private toastr: ToastrService,
         private stockService: StockService,
         private CommandeService: CommandeService,
-        private store: Store
+        private store: Store,
+        private authenticationService: AuthenticationService
     ) {}
 
     ngOnInit() {
@@ -57,8 +60,8 @@ export class ProductDetailsComponent implements OnInit {
                 this.loadProduct(productId);
             }
         });
+        if (this.authenticationService.isAuthenticated()) this.getUserRole();
     }
-
     private loadProduct(productId: string) {
         // Reset product and stock data first
         this.product = null;
@@ -151,5 +154,76 @@ export class ProductDetailsComponent implements OnInit {
                 cartIcon.classList.remove('animate-bounce');
             }, 1000);
         }
+    }
+    getUserRole() {
+        this.userRole = this.authenticationService.getUserRole();
+    }
+    getProfitMargin(): number {
+        if (!this.product) return 0;
+        return this.product.artPrixVente - this.product.artPrixAchat;
+    }
+
+    getProfitMarginPercentage(): string {
+        if (!this.product || this.product.artPrixAchat === 0) return '0.0';
+        const margin = ((this.product.artPrixVente - this.product.artPrixAchat) / this.product.artPrixAchat) * 100;
+        return margin.toFixed(1);
+    }
+
+    getTaxAmount(): number {
+        if (!this.product) return 0;
+        return (this.product.artPrixVente * this.product.artTvaTaux) / 100;
+    }
+
+    getPriceRatio(): string {
+        if (!this.product || this.product.artPrixAchat === 0) return '0.00';
+        const ratio = this.product.artPrixVente / this.product.artPrixAchat;
+        return ratio.toFixed(2);
+    }
+
+    getDaysAgo(): number {
+        if (!this.product) return 0;
+        const creationDate = new Date(this.product.artDateCreate);
+        const now = new Date();
+        const diffTime = Math.abs(now.getTime() - creationDate.getTime());
+        return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    }
+
+    getProfitStatus(): string {
+        const margin = this.getProfitMargin();
+        if (margin > 0) return 'Rentable';
+        if (margin === 0) return 'Équilibré';
+        return 'Déficitaire';
+    }
+
+    getProfitSeverity(): TagSeverity {
+        const margin = this.getProfitMargin();
+        if (margin > 0) return 'success';
+        if (margin === 0) return 'info';
+        return 'danger';
+    }
+
+    getProductAge(): string {
+        const days = this.getDaysAgo();
+        if (days < 30) return 'Nouveau';
+        if (days < 365) return 'Récent';
+        return 'Ancien';
+    }
+
+    getTotalPriceWithTax(): number {
+        if (!this.product) return 0;
+        return this.product.artPrixVente + this.getTaxAmount();
+    }
+    getTotalPriceWithoutTax(): number {
+        if (!this.product) return 0;
+        return this.product.artPrixVente;
+    }
+
+    getMarkupPercentage(): string {
+        if (!this.product || this.product.artPrixAchat === 0) return '0.0';
+        const markup = ((this.product.artPrixVente - this.product.artPrixAchat) / this.product.artPrixAchat) * 100;
+        return markup.toFixed(1);
+    }
+    UserisAuthenticated() {
+        this.isAuthenticated = this.authenticationService.isAuthenticated();
     }
 }

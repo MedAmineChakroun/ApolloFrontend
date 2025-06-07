@@ -8,8 +8,8 @@ import { CommonModule } from '@angular/common';
     template: /*html*/ ` <div id="features" class="py-6 px-6 lg:px-20 mt-8 mx-0 lg:mx-20">
         <div class="grid grid-cols-12 gap-4 justify-center">
             <div class="col-span-12 text-center mt-20 mb-6">
-                <div class="text-surface-900 dark:text-surface-0 font-normal mb-2 text-4xl">Smart Shopping Features</div>
-                <span class="text-muted-color text-2xl">Experience the future of e-commerce with AI-powered intelligence</span>
+                <div class="text-surface-900 dark:text-surface-0 font-normal mb-2 text-4xl">Fonctionnalités de Shopping Intelligent</div>
+                <span class="text-muted-color text-2xl">Découvrez l'avenir du e-commerce avec l'intelligence alimentée par l'IA</span>
             </div>
 
             <div class="col-span-12 md:col-span-12 lg:col-span-4 p-0 lg:pr-8 lg:pb-8 mt-6 lg:mt-0">
@@ -18,8 +18,8 @@ import { CommonModule } from '@angular/common';
                         <div class="flex items-center justify-center bg-yellow-200 mb-4" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
                             <i class="pi pi-fw pi-bolt !text-2xl text-yellow-700"></i>
                         </div>
-                        <h5 class="mb-2 text-surface-900 dark:text-surface-0">AI Recommendations</h5>
-                        <span class="text-surface-600 dark:text-surface-200">Personalized product suggestions based on your preferences and browsing history.</span>
+                        <h5 class="mb-2 text-surface-900 dark:text-surface-0">Recommandations IA</h5>
+                        <span class="text-surface-600 dark:text-surface-200">Suggestions de produits personnalisées basées sur vos préférences et votre historique de navigation.</span>
                     </div>
                 </div>
             </div>
@@ -30,8 +30,8 @@ import { CommonModule } from '@angular/common';
                         <div class="flex items-center justify-center bg-cyan-200 mb-4" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
                             <i class="pi pi-fw pi-filter !text-2xl text-cyan-700"></i>
                         </div>
-                        <h5 class="mb-2 text-surface-900 dark:text-surface-0">Smart Filtering</h5>
-                        <span class="text-surface-600 dark:text-surface-200">Advanced filtering options to help you find exactly what you're looking for.</span>
+                        <h5 class="mb-2 text-surface-900 dark:text-surface-0">Filtrage Intelligent</h5>
+                        <span class="text-surface-600 dark:text-surface-200">Options de filtrage avancées pour vous aider à trouver exactement ce que vous cherchez.</span>
                     </div>
                 </div>
             </div>
@@ -42,8 +42,8 @@ import { CommonModule } from '@angular/common';
                         <div class="flex items-center justify-center bg-indigo-200" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
                             <i class="pi pi-fw pi-shield !text-2xl text-indigo-700"></i>
                         </div>
-                        <div class="mt-6 mb-1 text-surface-900 dark:text-surface-0 text-xl font-semibold">Secure Checkout</div>
-                        <span class="text-surface-600 dark:text-surface-200">Safe and secure payment processing with multiple payment options.</span>
+                        <div class="mt-6 mb-1 text-surface-900 dark:text-surface-0 text-xl font-semibold">Paiement Sécurisé</div>
+                        <span class="text-surface-600 dark:text-surface-200">Traitement des paiements sûr et sécurisé avec plusieurs options de paiement.</span>
                     </div>
                 </div>
             </div>
@@ -54,8 +54,8 @@ import { CommonModule } from '@angular/common';
                         <div class="flex items-center justify-center bg-slate-200 mb-4" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
                             <i class="pi pi-fw pi-mobile !text-2xl text-slate-700"></i>
                         </div>
-                        <div class="mt-6 mb-1 text-surface-900 dark:text-surface-0 text-xl font-semibold">Mobile Experience</div>
-                        <span class="text-surface-600 dark:text-surface-200">Seamless shopping experience across all devices with responsive design.</span>
+                        <div class="mt-6 mb-1 text-surface-900 dark:text-surface-0 text-xl font-semibold">Expérience Mobile</div>
+                        <span class="text-surface-600 dark:text-surface-200">Expérience d'achat fluide sur tous les appareils avec une conception responsive.</span>
                     </div>
                 </div>
             </div>
@@ -66,8 +66,8 @@ import { CommonModule } from '@angular/common';
                         <div class="flex items-center justify-center bg-orange-200 mb-4" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
                             <i class="pi pi-fw pi-user !text-2xl text-orange-700"></i>
                         </div>
-                        <div class="mt-6 mb-1 text-surface-900 dark:text-surface-0 text-xl font-semibold">User-Friendly</div>
-                        <span class="text-surface-600 dark:text-surface-200">Intuitive interface designed for effortless navigation and shopping.</span>
+                        <div class="mt-6 mb-1 text-surface-900 dark:text-surface-0 text-xl font-semibold">Interface Conviviale</div>
+                        <span class="text-surface-600 dark:text-surface-200">Interface intuitive conçue pour une navigation et des achats sans effort.</span>
                     </div>
                 </div>
             </div>
@@ -78,8 +78,8 @@ import { CommonModule } from '@angular/common';
                         <div class="flex items-center justify-center bg-pink-200 mb-4" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
                             <i class="pi pi-fw pi-comments !text-2xl text-pink-700"></i>
                         </div>
-                        <div class="mt-6 mb-1 text-surface-900 dark:text-surface-0 text-xl font-semibold">Service Assistance</div>
-                        <span class="text-surface-600 dark:text-surface-200">24/7 customer support and AI-powered assistance for all your needs.</span>
+                        <div class="mt-6 mb-1 text-surface-900 dark:text-surface-0 text-xl font-semibold">Assistance Service</div>
+                        <span class="text-surface-600 dark:text-surface-200">Support client 24/7 et assistance alimentée par l'IA pour tous vos besoins.</span>
                     </div>
                 </div>
             </div>
@@ -90,8 +90,8 @@ import { CommonModule } from '@angular/common';
                         <div class="flex items-center justify-center bg-teal-200 mb-4" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
                             <i class="pi pi-fw pi-heart !text-2xl text-teal-700"></i>
                         </div>
-                        <div class="mt-6 mb-1 text-surface-900 dark:text-surface-0 text-xl font-semibold">Wishlist</div>
-                        <span class="text-surface-600 dark:text-surface-200">Save your favorite items and get notified about price drops and availability.</span>
+                        <div class="mt-6 mb-1 text-surface-900 dark:text-surface-0 text-xl font-semibold">Liste de Souhaits</div>
+                        <span class="text-surface-600 dark:text-surface-200">Sauvegardez vos articles préférés et soyez notifié des baisses de prix et de la disponibilité.</span>
                     </div>
                 </div>
             </div>
@@ -102,8 +102,8 @@ import { CommonModule } from '@angular/common';
                         <div class="flex items-center justify-center bg-blue-200 mb-4" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
                             <i class="pi pi-fw pi-shop !text-2xl text-blue-700"></i>
                         </div>
-                        <div class="mt-6 mb-1 text-surface-900 dark:text-surface-0 text-xl font-semibold">Supplier Dashboard</div>
-                        <span class="text-surface-600 dark:text-surface-200">Comprehensive tools for suppliers to manage products and track performance.</span>
+                        <div class="mt-6 mb-1 text-surface-900 dark:text-surface-0 text-xl font-semibold">Tableau de Bord Fournisseur</div>
+                        <span class="text-surface-600 dark:text-surface-200">Outils complets pour les fournisseurs pour gérer les produits et suivre les performances.</span>
                     </div>
                 </div>
             </div>
@@ -114,8 +114,8 @@ import { CommonModule } from '@angular/common';
                         <div class="flex items-center justify-center bg-purple-200 mb-4" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
                             <i class="pi pi-fw pi-sync !text-2xl text-purple-700"></i>
                         </div>
-                        <div class="mt-6 mb-1 text-surface-900 dark:text-surface-0 text-xl font-semibold">Real-Time Updates</div>
-                        <span class="text-surface-600 dark:text-surface-200">Instant updates on orders, inventory, and customer interactions for both buyers and sellers.</span>
+                        <div class="mt-6 mb-1 text-surface-900 dark:text-surface-0 text-xl font-semibold">Mises à Jour en Temps Réel</div>
+                        <span class="text-surface-600 dark:text-surface-200">Mises à jour instantanées sur les commandes, l'inventaire et les interactions clients pour les acheteurs et les vendeurs.</span>
                     </div>
                 </div>
             </div>
@@ -130,10 +130,9 @@ import { CommonModule } from '@angular/common';
                         <div class="text-gray-600 text-2xl">&</div>
                         <div class="text-gray-900 text-3xl font-semibold">Fedi Boughnimi</div>
                     </div>
-                    <span class="text-gray-600 text-2xl">Full Stack Developers & AI Engineers</span>
+                    <span class="text-gray-600 text-2xl">Développeurs Full Stack & Ingénieurs IA</span>
                     <p class="text-gray-900 sm:line-height-2 md:line-height-4 text-2xl mt-6" style="max-width: 800px">
-                        "As founders, we've integrated cutting-edge AI technology to revolutionize the e-commerce experience. Our intelligent recommendation system has not only increased sales but also created a more personalized shopping journey for
-                        our users. The AI-powered features have transformed how customers discover and purchase products, making every interaction meaningful and efficient."
+                        "En tant que fondateurs, nous avons intégré une technologie d'IA de pointe pour révolutionner l'expérience e-commerce. Notre système de recommandation intelligent a non seulement augmenté les ventes mais a également créé un parcours d'achat plus personnalisé pour nos utilisateurs. Les fonctionnalités alimentées par l'IA ont transformé la façon dont les clients découvrent et achètent des produits, rendant chaque interaction significative et efficace."
                     </p>
                     <div class="flex items-center gap-2 mt-6">
                         <img src="assets/general/ApolloLogo.PNG" class="h-12" alt="Apollo Logo" />

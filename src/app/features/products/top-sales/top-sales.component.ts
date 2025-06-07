@@ -64,7 +64,10 @@ export class TopSalesComponent implements OnInit {
         if (stock <= 10) return 'Faible';
         return 'Disponible';
     }
-
+    getTotalPriceWithTax(product: Product): number {
+        if (product == null) return 0;
+        return product.artPrixVente + (product.artPrixVente * product.artTvaTaux) / 100;
+    }
     getStockIcon(stockQty: number | undefined): string {
         const stock = stockQty || 0;
         if (stock == 0) return 'pi pi-exclamation-circle';

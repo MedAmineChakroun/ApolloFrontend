@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
                     <!-- Company Info -->
                     <div>
                         <h3 class="text-2xl font-bold mb-4 text-white">Apollo</h3>
-                        <p class="text-gray-400 text-sm mb-4">Your trusted partner in e-commerce solutions.</p>
+                        <p class="text-gray-400 text-sm mb-4">Votre partenaire de confiance en solutions e-commerce.</p>
                         <div class="flex space-x-4">
                             <a href="#" class="text-gray-400 hover:text-white transition duration-300">
                                 <i class="pi pi-facebook text-xl"></i>
@@ -26,9 +26,9 @@ import { Router } from '@angular/router';
 
                     <!-- Quick Links -->
                     <div>
-                        <h4 class="text-lg font-semibold mb-4 text-white">Quick Links</h4>
+                        <h4 class="text-lg font-semibold mb-4 text-white">Liens Rapides</h4>
                         <ul class="space-y-2">
-                            <li><a routerLink="/products" class="text-gray-400 hover:text-white transition duration-300">Products</a></li>
+                            <li><a routerLink="/products" class="text-gray-400 hover:text-white transition duration-300">Produits</a></li>
                             <li><a routerLink="/services" class="text-gray-400 hover:text-white transition duration-300">Services</a></li>
                             <li><a routerLink="/solutions" class="text-gray-400 hover:text-white transition duration-300">Solutions</a></li>
                         </ul>
@@ -38,9 +38,9 @@ import { Router } from '@angular/router';
                     <div>
                         <h4 class="text-lg font-semibold mb-4 text-white">Support</h4>
                         <ul class="space-y-2">
-                            <li><a routerLink="/help" class="text-gray-400 hover:text-white transition duration-300">Help Center</a></li>
+                            <li><a routerLink="/help" class="text-gray-400 hover:text-white transition duration-300">Centre d'Aide</a></li>
                             <li><a routerLink="/documentation" class="text-gray-400 hover:text-white transition duration-300">Documentation</a></li>
-                            <li><a routerLink="/contact" class="text-gray-400 hover:text-white transition duration-300">Contact Us</a></li>
+                            <li><a routerLink="/contact" class="text-gray-400 hover:text-white transition duration-300">Contactez-nous</a></li>
                         </ul>
                     </div>
 
@@ -50,7 +50,7 @@ import { Router } from '@angular/router';
                         <ul class="space-y-2 text-gray-400">
                             <li class="flex items-center">
                                 <i class="pi pi-map-marker mr-2"></i>
-                                <span>123 Business Street</span>
+                                <span>123 Rue des Affaires</span>
                             </li>
                             <li class="flex items-center">
                                 <i class="pi pi-phone mr-2"></i>
@@ -67,11 +67,11 @@ import { Router } from '@angular/router';
                 <!-- Bottom Bar -->
                 <div class="mt-12 pt-8 border-t border-gray-800">
                     <div class="flex flex-col md:flex-row justify-between items-center">
-                        <div class="text-gray-400 text-sm mb-4 md:mb-0">&copy; 2024 Apollo. All rights reserved.</div>
+                        <div class="text-gray-400 text-sm mb-4 md:mb-0">&copy; 2024 Apollo. Tous droits réservés.</div>
                         <div class="flex flex-wrap justify-center md:justify-end space-x-6 text-sm">
-                            <a routerLink="/privacy" class="text-gray-400 hover:text-white transition duration-300">Privacy Policy</a>
-                            <a routerLink="/terms" class="text-gray-400 hover:text-white transition duration-300">Terms of Service</a>
-                            <a routerLink="/about" class="text-gray-400 hover:text-white transition duration-300">About Us</a>
+                            <a routerLink="/privacy" class="text-gray-400 hover:text-white transition duration-300">Politique de Confidentialité</a>
+                            <a routerLink="/terms" class="text-gray-400 hover:text-white transition duration-300">Conditions d'Utilisation</a>
+                            <a routerLink="/about" class="text-gray-400 hover:text-white transition duration-300">À Propos</a>
                         </div>
                     </div>
                 </div>

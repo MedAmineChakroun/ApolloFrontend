@@ -14,14 +14,14 @@ import { Router, RouterModule } from '@angular/router';
 
             <div class="container mx-auto px-6 sm:px-8 h-full relative">
                 <div class="flex items-center justify-start h-screen">
-                    <div class="max-w-2xl text-white pt-20 md:pt-0">
+                    <div class="max-w-5xl text-white pt-20 md:pt-0">
                         <div class="mb-4 text-primary-400 font-medium tracking-widest uppercase text-sm">Apollo eCommerce</div>
-                        <h1 class="text-5xl sm:text-6xl md:text-7xl font-extrabold leading-tight mb-6 text-white tracking-tight uppercase" style="line-height: 1.2;">Smart Shopping, Smarter Choices</h1>
+                        <h1 class="text-5xl sm:text-6xl md:text-7xl font-extrabold leading-tight mb-6 text-white tracking-tight uppercase" style="line-height: 1.2;">Shopping Intelligent, Choix Plus Intelligents</h1>
                         <div class="w-20 h-1 bg-primary-500 mb-8"></div>
-                        <p class="text-lg sm:text-xl opacity-90 leading-relaxed mb-10 text-white font-light tracking-wide max-w-xl">Discover the future of e-commerce with AI-powered recommendations that personalize your shopping experience.</p>
+                        <p class="text-lg sm:text-xl opacity-90 leading-relaxed mb-10 text-white font-light tracking-wide max-w-xl">Découvrez l'avenir du e-commerce avec des recommandations alimentées par l'IA qui personnalisent votre expérience d'achat.</p>
                         <div class="flex flex-col sm:flex-row gap-4 sm:gap-6">
-                            <button (click)="navigate()" class="h-14 px-10 bg-white text-black hover:bg-gray-200 text-lg font-medium rounded-lg cursor-pointer transition-all duration-300 shadow-lg hover:shadow-xl">Start Shopping</button>
-                            <button class="h-14 px-10 border-2 border-white text-white hover:bg-white/20 text-lg font-medium rounded-lg cursor-pointer transition-all duration-300">Explore Features</button>
+                            <button (click)="navigate()" class="h-14 px-10 bg-white text-black hover:bg-gray-200 text-lg font-medium rounded-lg cursor-pointer transition-all duration-300 shadow-lg hover:shadow-xl">Commencer à Magasiner</button>
+                            <button class="h-14 px-10 border-2 border-white text-white hover:bg-white/20 text-lg font-medium rounded-lg cursor-pointer transition-all duration-300">Explorer les Fonctionnalités</button>
                         </div>
                     </div>
                 </div>

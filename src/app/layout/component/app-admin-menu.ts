@@ -139,7 +139,7 @@ import { filter } from 'rxjs/operators';
 
             <div class="menu-category menu-item-container">
                 <a
-                    href="http://localhost:3000/d/aspnetcore-metrics/asp-net-core-application-performance?orgId=1&from=now-30m&to=now&var-DS_PROMETHEUS=dekm8rqjnql1cd&var-server=DESKTOP-QD57IO2&var-app=ApolloBackend&var-env=development&refresh=5s"
+                    (click)="naviagteToDashboard()"
                     class="menu-item"
                     target="_blank"
                 >
@@ -297,5 +297,7 @@ export class AppAdminMenu implements OnInit {
         this.authService.logout();
         this.router.navigate(['/auth/login']);
     }
-    naviagteToMonitoring() {}
+    naviagteToDashboard() {
+        window.open('http://localhost:3000/d/production_sla_monitoring/monitoring-dashboard?orgId=1&from=now-30m&to=now&timezone=browser&refresh=10s', '_blank');
+    }
 }

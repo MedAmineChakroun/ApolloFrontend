@@ -67,7 +67,10 @@ export class TopRatedComponent implements OnInit {
         if (stock <= 10) return 'warn';
         return 'success';
     }
-
+    getTotalPriceWithTax(product: Product): number {
+        if (product == null) return 0;
+        return product.artPrixVente + (product.artPrixVente * product.artTvaTaux) / 100 + 0.001;
+    }
     getSeverityValue(stockQty: number | undefined): string {
         const stock = stockQty || 0;
         if (stock == 0) return 'Rupture';

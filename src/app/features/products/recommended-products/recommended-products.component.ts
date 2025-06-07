@@ -151,4 +151,8 @@ export class RecommendedProductsComponent {
         });
         this.router.navigate(['/store/products', product.artId]);
     }
+    getTotalPriceWithTax(product: Product): number {
+        if (product == null) return 0;
+        return product.artPrixVente + (product.artPrixVente * product.artTvaTaux) / 100;
+    }
 }

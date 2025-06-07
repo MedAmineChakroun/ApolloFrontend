@@ -33,13 +33,15 @@ export class RatingComponent implements OnInit {
     isLoggedIn: boolean = false;
     isPurchased: boolean = false;
     ratingCount: number = 0;
-    // Use inject() function with explicit types
-    private ratingService: RatingService = inject(RatingService);
-    private authService: AuthenticationService = inject(AuthenticationService);
-    private messageService: MessageService = inject(MessageService);
-    private store: Store = inject(Store);
-    private commandeService: CommandeService = inject(CommandeService);
-    private toastr = inject(ToastrService);
+    userRole: string = '';
+    constructor(
+        private authService: AuthenticationService,
+        private commandeService: CommandeService,
+        private messageService: MessageService,
+        private toastr: ToastrService,
+        private ratingService: RatingService,
+        private store: Store
+    ) {}
 
     ngOnInit(): void {
         this.isLoggedIn = this.authService.isAuthenticated();
@@ -47,6 +49,7 @@ export class RatingComponent implements OnInit {
         this.getTiersCode();
         this.loadProductRatingCount();
         this.loadProductRating();
+        this.getUserRole();
     }
 
     SetUserId() {
@@ -169,5 +172,8 @@ export class RatingComponent implements OnInit {
             console.error('Error checking purchase status:', error);
             return false;
         }
+    }
+    getUserRole() {
+        this.userRole = this.authService.getUserRole();
     }
 }

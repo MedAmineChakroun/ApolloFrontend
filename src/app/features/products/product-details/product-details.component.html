@@ -29,7 +29,7 @@
 
                 <div class="flex items-center mb-4">
                     <div class="text-2xl sm:text-3xl font-bold price">
-                        {{ product.artPrixVente | currency: 'DT ' : 'symbol' : '1.3-3' }}
+                        {{ getTotalPriceWithTax() | currency: 'DT ' : 'symbol' : '1.3-3' }}
                     </div>
                     <div *ngIf="product.artTvaTaux > 0" class="ml-3 text-sm bg-gray-100 text-gray-600 px-2 py-1 rounded">+ {{ product.artTvaTaux }}% TVA</div>
                 </div>
@@ -69,7 +69,7 @@
             </div>
 
             <!-- Actions Section -->
-            <div class="mt-auto space-y-4">
+            <div *ngIf="userRole != 'admin'" class="mt-auto space-y-4">
                 <div class="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
                     <div class="quantity-control">
                         <label for="quantity" class="block text-gray-600 text-sm mb-1">Quantité</label>
@@ -99,9 +99,108 @@
             </div>
         </div>
     </div>
+    <!-- More Info Section - Add this after your existing product details section -->
+    <div *ngIf="product && userRole === 'admin'" class="more-info-section bg-gradient-to-br from-primary-600 to-purple-600 text-white mt-3 rounded-xl p-6 mb-8 shadow-lg">
+        <h2 class="text-xl font-semibold mb-5 flex items-center text-white">
+            <i class="pi pi-chart-line mr-2"></i>
+            Informations supplémentaires
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Profit Margin Card -->
+            <div class="info-card bg-white bg-opacity-10 backdrop-blur-md rounded-lg p-4 border border-white border-opacity-20">
+                <div class="flex items-center mb-2">
+                    <i class="pi pi-money-bill mr-2 text-green-300"></i>
+                    <span class="text-sm font-medium opacity-90">Marge bénéficiaire</span>
+                </div>
+                <div class="text-2xl font-bold mb-1" [class]="getProfitMargin() >= 0 ? 'text-green-300' : 'text-red-300'">{{ getProfitMarginPercentage() }}%</div>
+                <div class="text-xs opacity-80">Profit: {{ getProfitMargin() | currency: 'DT ' : 'symbol' : '1.3-3' }}</div>
+            </div>
 
+            <!-- Creation Date Card -->
+            <div class="info-card bg-white bg-opacity-10 backdrop-blur-md rounded-lg p-4 border border-white border-opacity-20">
+                <div class="flex items-center mb-2">
+                    <i class="pi pi-calendar mr-2 text-blue-300"></i>
+                    <span class="text-sm font-medium opacity-90">Date de création</span>
+                </div>
+                <div class="text-2xl font-bold mb-1">
+                    {{ product.artDateCreate | date: 'dd/MM/yyyy' }}
+                </div>
+                <div class="text-xs opacity-80">Il y a {{ getDaysAgo() }} jours ({{ getProductAge() }})</div>
+            </div>
+
+            <!-- Tax Information Card -->
+            <div class="info-card bg-white bg-opacity-10 backdrop-blur-md rounded-lg p-4 border border-white border-opacity-20">
+                <div class="flex items-center mb-2">
+                    <i class="pi pi-percentage mr-2 text-yellow-300"></i>
+                    <span class="text-sm font-medium opacity-90">TVA</span>
+                </div>
+                <div class="text-2xl font-bold mb-1">{{ product.artTvaTaux }}%</div>
+                <div class="text-xs opacity-80">Montant TVA: {{ getTaxAmount() | currency: 'DT ' : 'symbol' : '1.3-3' }}</div>
+            </div>
+
+            <!-- Purchase Price Card -->
+            <div class="info-card bg-white bg-opacity-10 backdrop-blur-md rounded-lg p-4 border border-white border-opacity-20">
+                <div class="flex items-center mb-2">
+                    <i class="pi pi-shopping-bag mr-2 text-orange-300"></i>
+                    <span class="text-sm font-medium opacity-90">Prix d'achat</span>
+                </div>
+                <div class="text-2xl font-bold mb-1">
+                    {{ product.artPrixAchat | currency: 'DT ' : 'symbol' : '1.3-3' }}
+                </div>
+                <div class="text-xs opacity-80">Coût unitaire</div>
+            </div>
+
+            <!-- Price Ratio Card -->
+            <div class="info-card bg-white bg-opacity-10 backdrop-blur-md rounded-lg p-4 border border-white border-opacity-20">
+                <div class="flex items-center mb-2">
+                    <i class="pi pi-chart-bar mr-2 text-purple-300"></i>
+                    <span class="text-sm font-medium opacity-90">Ratio de prix</span>
+                </div>
+                <div class="text-2xl font-bold mb-1">{{ getPriceRatio() }}x</div>
+                <div class="text-xs opacity-80">Vente vs Achat</div>
+            </div>
+
+            <!-- Product Status & Identifiers Card -->
+            <div class="info-card bg-white bg-opacity-10 backdrop-blur-md rounded-lg p-4 border border-white border-opacity-20">
+                <div class="flex items-center mb-2">
+                    <i class="pi pi-info-circle mr-2 text-indigo-300"></i>
+                    <span class="text-sm font-medium opacity-90">Identifiants</span>
+                </div>
+                <div class="text-2xl font-bold mb-1">ID: {{ product.artId }}</div>
+            </div>
+        </div>
+
+        <!-- Additional insights row -->
+        <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Profit Status Card -->
+            <div class="info-card bg-white bg-opacity-10 backdrop-blur-md rounded-lg p-4 border border-white border-opacity-20">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <div class="text-sm font-medium opacity-90 mb-1">Prix THC</div>
+                        <div class="text-xl font-bold">
+                            {{ getTotalPriceWithoutTax() | currency: 'DT ' : 'symbol' : '1.3-3' }}
+                        </div>
+                    </div>
+                    <i class="pi pi-calculator text-2xl opacity-60"></i>
+                </div>
+            </div>
+
+            <!-- Total Price with Tax Card -->
+            <div class="info-card bg-white bg-opacity-10 backdrop-blur-md rounded-lg p-4 border border-white border-opacity-20">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <div class="text-sm font-medium opacity-90 mb-1">Prix TTC</div>
+                        <div class="text-xl font-bold text-teal-500">
+                            {{ getTotalPriceWithTax() | currency: 'DT ' : 'symbol' : '1.3-3' }}
+                        </div>
+                    </div>
+                    <i class="pi pi-calculator text-2xl opacity-60"></i>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Similar Products Section -->
-    <app-similar *ngIf="product" [productFamille]="product.artFamille" [productId]="product.artId"></app-similar>
+    <app-similar *ngIf="product && userRole != 'admin'" [productFamille]="product.artFamille" [productId]="product.artId"></app-similar>
 
     <!-- Loading State -->
     <div *ngIf="!product && !error" class="grid grid-cols-1 lg:grid-cols-12 gap-8">
