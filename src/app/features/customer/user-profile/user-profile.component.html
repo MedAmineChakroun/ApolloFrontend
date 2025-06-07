@@ -7,9 +7,9 @@
 
         <div class="container mx-auto max-w-6xl relative z-10">
             <div class="flex items-center justify-between">
-                <h1 class="text-3xl font-bold mb-2 text-white">{{ clientData?.tiersIntitule || 'User Profile' }}</h1>
+                <h1 class="text-3xl font-bold mb-2 text-white">{{ clientData?.tiersIntitule || 'Profil Utilisateur' }}</h1>
                 <div class="hidden md:flex items-center space-x-3">
-                    <p-button icon="pi pi-qrcode" styleClass="p-button-rounded" (click)="openQrCodeDialog()" pTooltip="Generate QR Code" tooltipPosition="left" severity="contrast"></p-button>
+                    <p-button icon="pi pi-qrcode" styleClass="p-button-rounded" (click)="openQrCodeDialog()" pTooltip="Générer le Code QR" tooltipPosition="left" severity="contrast"></p-button>
                 </div>
             </div>
             <p class="text-blue-100 text-sm flex items-center"><i class="pi pi-id-card mr-2"></i>Client #{{ clientData?.tiersCode || 'N/A' }}</p>
@@ -28,7 +28,7 @@
                                 <div *ngIf="isAvatarLoading" class="avatar-loading-overlay">
                                     <p-progressSpinner [style]="{ width: '50px', height: '50px' }"></p-progressSpinner>
                                 </div>
-                                <img [src]="avatarUrl" alt="Profile Picture" class="rounded-full border-4 border-white shadow-md" style="width: 128px; height: 128px; object-fit: cover" [class.opacity-50]="isAvatarLoading" />
+                                <img [src]="avatarUrl" alt="Photo de Profil" class="rounded-full border-4 border-white shadow-md" style="width: 128px; height: 128px; object-fit: cover" [class.opacity-50]="isAvatarLoading" />
 
                                 <input type="file" id="avatarInput" (change)="onAvatarChange($event)" accept="image/*" style="display: none" />
                             </div>
@@ -36,12 +36,12 @@
                     </div>
 
                     <div class="pt-16 pb-6 px-6 text-center mt-4">
-                        <h3 class="text-xl font-bold text-gray-800">{{ clientData?.tiersIntitule || 'User Name' }}</h3>
-                        <p class="text-blue-600 mb-4">{{ clientData?.tiersCode || 'Client ID' }}</p>
+                        <h3 class="text-xl font-bold text-gray-800">{{ clientData?.tiersIntitule || 'Nom Utilisateur' }}</h3>
+                        <p class="text-blue-600 mb-4">{{ clientData?.tiersCode || 'ID Client' }}</p>
 
                         <div class="user-stats flex justify-center space-x-4 mb-6">
                             <div class="text-center">
-                                <div class="text-gray-500 text-xs">JOINED</div>
+                                <div class="text-gray-500 text-xs">INSCRIT LE</div>
                                 <div class="font-semibold">{{ clientData?.tiersDateCreate | date: 'dd/MM/yyyy' }}</div>
                             </div>
                         </div>
@@ -54,7 +54,7 @@
                                 </div>
                                 <div class="contact-item flex items-center text-sm text-gray-600 px-3 py-2 rounded-lg hover:bg-gray-50">
                                     <i class="pi pi-envelope text-blue-500 mr-3"></i>
-                                    <span class="truncate">{{ userEmail || clientData?.tiersEmail || 'email@example.com' }}</span>
+                                    <span class="truncate">{{ userEmail || clientData?.tiersEmail || 'email@exemple.com' }}</span>
                                 </div>
                                 <div class="contact-item flex items-center text-sm text-gray-600 px-3 py-2 rounded-lg hover:bg-gray-50">
                                     <i class="pi pi-phone text-blue-500 mr-3"></i>
@@ -62,7 +62,7 @@
                                 </div>
                                 <div class="contact-item flex items-center text-sm text-gray-600 px-3 py-2 rounded-lg hover:bg-gray-50">
                                     <i class="pi pi-map-marker text-blue-500 mr-3"></i>
-                                    <span class="truncate">{{ clientData?.tiersVille || 'City' }}, {{ clientData?.tiersPays || 'Country' }}</span>
+                                    <span class="truncate">{{ clientData?.tiersVille || 'Ville' }}, {{ clientData?.tiersPays || 'Pays' }}</span>
                                 </div>
                             </div>
                         </div>
@@ -75,7 +75,7 @@
                 <div class="bg-white rounded-xl shadow-sm overflow-hidden">
                     <!-- Tabs navigation -->
                     <div class="flex border-b border-gray-200">
-                        <button class="px-6 py-4 text-blue-600 border-b-2 border-blue-600 font-medium text-sm">Profile Information</button>
+                        <button class="px-6 py-4 text-blue-600 border-b-2 border-blue-600 font-medium text-sm">Informations du Profil</button>
                     </div>
 
                     <!-- Form content -->
@@ -87,9 +87,9 @@
                                         <i class="pi pi-info-circle text-blue-500"></i>
                                     </div>
                                     <div class="ml-3">
-                                        <h3 class="text-sm font-medium text-blue-800">Personal Information</h3>
+                                        <h3 class="text-sm font-medium text-blue-800">Informations Personnelles</h3>
                                         <div class="mt-2 text-sm text-blue-700">
-                                            <p>This information will be displayed publicly so be careful what you share.</p>
+                                            <p>Vos informations sont sécurisées et ne seront accessibles qu’à vous.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -97,7 +97,7 @@
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                                 <div class="col-span-1">
-                                    <label for="userName" class="block text-sm font-medium text-gray-700 mb-1"> <i class="pi pi-user text-gray-400"></i> Full Name </label>
+                                    <label for="userName" class="block text-sm font-medium text-gray-700 mb-1"> <i class="pi pi-user text-gray-400"></i> Nom Complet </label>
                                     <div class="relative rounded-md shadow-sm">
                                         <input
                                             *ngIf="!routeUrl"
@@ -106,19 +106,19 @@
                                             type="text"
                                             pInputText
                                             class="pl-10 w-full"
-                                            placeholder="Enter your full name"
+                                            placeholder="Entrez votre nom complet"
                                             [class.ng-invalid]="profileForm.get('userName')?.invalid && profileForm.get('userName')?.touched"
                                         />
                                         <input *ngIf="routeUrl" type="text" pInputText class="pl-10 w-full" [value]="clientData?.tiersIntitule || ''" readonly />
                                     </div>
                                     <small *ngIf="!routeUrl && profileForm.get('userName')?.invalid && profileForm.get('userName')?.touched" class="text-red-500 text-xs mt-1">
-                                        <span *ngIf="profileForm.get('userName')?.errors?.['required']">Full name is required</span>
-                                        <span *ngIf="profileForm.get('userName')?.errors?.['minlength']">Full name must be at least 2 characters</span>
+                                        <span *ngIf="profileForm.get('userName')?.errors?.['required']">Le nom complet est requis</span>
+                                        <span *ngIf="profileForm.get('userName')?.errors?.['minlength']">Le nom complet doit contenir au moins 2 caractères</span>
                                     </small>
                                 </div>
 
                                 <div class="col-span-1">
-                                    <label for="email" class="block text-sm font-medium text-gray-700 mb-1"> <i class="pi pi-envelope text-gray-400"></i> Email Address </label>
+                                    <label for="email" class="block text-sm font-medium text-gray-700 mb-1"> <i class="pi pi-envelope text-gray-400"></i> Adresse Email </label>
                                     <div class="relative rounded-md shadow-sm">
                                         <input *ngIf="!routeUrl" id="email" formControlName="email" type="email" pInputText class="pl-10 w-full bg-gray-50" readonly />
                                         <input *ngIf="routeUrl" type="email" pInputText class="pl-10 w-full bg-gray-50" [value]="clientData?.tiersEmail || ''" readonly />
@@ -126,17 +126,17 @@
                                             <i class="pi pi-lock text-gray-400"></i>
                                         </div>
                                     </div>
-                                    <small class="text-gray-500 text-xs mt-1">Email address cannot be changed.</small>
+                                    <small class="text-gray-500 text-xs mt-1">L'adresse email ne peut pas être modifiée.</small>
                                 </div>
                             </div>
 
                             <h5 class="font-medium text-lg text-gray-700 mb-4 pb-2 border-b border-gray-200 flex items-center">
                                 <i class="pi pi-map-marker text-blue-500 mr-2"></i>
-                                Address Information
+                                Informations d'Adresse
                             </h5>
 
                             <div class="mb-6">
-                                <label class="block text-sm font-medium text-gray-700 mb-1"><i class="pi pi-home text-gray-400"></i> Street Address </label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1"><i class="pi pi-home text-gray-400"></i> Adresse </label>
                                 <div class="relative rounded-md shadow-sm">
                                     <input
                                         *ngIf="!routeUrl"
@@ -144,51 +144,51 @@
                                         pInputText
                                         formControlName="address"
                                         class="pl-10 w-full"
-                                        placeholder="Enter your street address"
+                                        placeholder="Entrez votre adresse"
                                         [class.ng-invalid]="profileForm.get('address')?.invalid && profileForm.get('address')?.touched"
                                     />
                                     <input *ngIf="routeUrl" type="text" pInputText class="pl-10 w-full" [value]="clientData?.tiersAdresse1 || ''" readonly />
                                 </div>
-                                <small *ngIf="!routeUrl && profileForm.get('address')?.invalid && profileForm.get('address')?.touched" class="text-red-500 text-xs mt-1"> Street address is required </small>
+                                <small *ngIf="!routeUrl && profileForm.get('address')?.invalid && profileForm.get('address')?.touched" class="text-red-500 text-xs mt-1"> L'adresse est requise </small>
                             </div>
 
                             <div class="grid grid-cols-2 md:grid-cols-3 gap-6 mb-6">
                                 <div class="col-span-1">
-                                    <label class="block text-sm font-medium text-gray-700 mb-1"> Postal Code </label>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1"> Code Postal </label>
                                     <div class="relative rounded-md shadow-sm">
-                                        <input *ngIf="!routeUrl" type="text" pInputText formControlName="postalCode" placeholder="Postal code" [class.ng-invalid]="profileForm.get('postalCode')?.invalid && profileForm.get('postalCode')?.touched" />
+                                        <input *ngIf="!routeUrl" type="text" pInputText formControlName="postalCode" placeholder="Code postal" [class.ng-invalid]="profileForm.get('postalCode')?.invalid && profileForm.get('postalCode')?.touched" />
                                         <input *ngIf="routeUrl" type="text" pInputText [value]="clientData?.tiersCodePostal || ''" readonly />
                                     </div>
-                                    <small *ngIf="!routeUrl && profileForm.get('postalCode')?.invalid && profileForm.get('postalCode')?.touched" class="text-red-500 text-xs mt-1"> Postal code is required </small>
+                                    <small *ngIf="!routeUrl && profileForm.get('postalCode')?.invalid && profileForm.get('postalCode')?.touched" class="text-red-500 text-xs mt-1"> Le code postal est requis </small>
                                 </div>
 
                                 <div class="col-span-1">
-                                    <label class="block text-sm font-medium text-gray-700 mb-1"> City </label>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1"> Ville </label>
                                     <div class="relative rounded-md shadow-sm">
-                                        <input *ngIf="!routeUrl" type="text" pInputText formControlName="city" placeholder="City" [class.ng-invalid]="profileForm.get('city')?.invalid && profileForm.get('city')?.touched" />
+                                        <input *ngIf="!routeUrl" type="text" pInputText formControlName="city" placeholder="Ville" [class.ng-invalid]="profileForm.get('city')?.invalid && profileForm.get('city')?.touched" />
                                         <input *ngIf="routeUrl" type="text" pInputText [value]="clientData?.tiersVille || ''" readonly />
                                     </div>
-                                    <small *ngIf="!routeUrl && profileForm.get('city')?.invalid && profileForm.get('city')?.touched" class="text-red-500 text-xs mt-1"> City is required </small>
+                                    <small *ngIf="!routeUrl && profileForm.get('city')?.invalid && profileForm.get('city')?.touched" class="text-red-500 text-xs mt-1"> La ville est requise </small>
                                 </div>
 
                                 <div class="col-span-1">
-                                    <label class="block text-sm font-medium text-gray-700 mb-1"> Country </label>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1"> Pays </label>
                                     <div class="relative rounded-md shadow-sm">
-                                        <input *ngIf="!routeUrl" type="text" pInputText formControlName="country" placeholder="Country" [class.ng-invalid]="profileForm.get('country')?.invalid && profileForm.get('country')?.touched" />
+                                        <input *ngIf="!routeUrl" type="text" pInputText formControlName="country" placeholder="Pays" [class.ng-invalid]="profileForm.get('country')?.invalid && profileForm.get('country')?.touched" />
                                         <input *ngIf="routeUrl" type="text" pInputText [value]="clientData?.tiersPays || ''" readonly />
                                     </div>
-                                    <small *ngIf="!routeUrl && profileForm.get('country')?.invalid && profileForm.get('country')?.touched" class="text-red-500 text-xs mt-1"> Country is required </small>
+                                    <small *ngIf="!routeUrl && profileForm.get('country')?.invalid && profileForm.get('country')?.touched" class="text-red-500 text-xs mt-1"> Le pays est requis </small>
                                 </div>
                             </div>
 
                             <h5 class="font-medium text-lg text-gray-700 mb-4 pb-2 border-b border-gray-200 flex items-center">
                                 <i class="pi pi-phone text-blue-500 mr-2"></i>
-                                Contact Information
+                                Informations de Contact
                             </h5>
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                                 <div class="col-span-1">
-                                    <label class="block text-sm font-medium text-gray-700 mb-1"><i class="pi pi-phone text-gray-400"></i> Phone Number </label>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1"><i class="pi pi-phone text-gray-400"></i> Numéro de Téléphone </label>
                                     <div class="relative rounded-md shadow-sm">
                                         <p-inputMask
                                             *ngIf="!routeUrl"
@@ -201,13 +201,13 @@
                                         </p-inputMask>
                                         <input *ngIf="routeUrl" type="text" pInputText class="pl-10 w-full" [value]="clientData?.tiersTel1 || ''" readonly />
                                     </div>
-                                    <small *ngIf="!routeUrl && profileForm.get('phone')?.invalid && profileForm.get('phone')?.touched" class="text-red-500 text-xs mt-1"> Phone number is required </small>
+                                    <small *ngIf="!routeUrl && profileForm.get('phone')?.invalid && profileForm.get('phone')?.touched" class="text-red-500 text-xs mt-1"> Le numéro de téléphone est requis </small>
                                 </div>
                             </div>
 
                             <div class="flex justify-end space-x-3 pt-4 border-t border-gray-100" *ngIf="!routeUrl">
-                                <p-button type="button" label="Cancel" styleClass="p-button-text"></p-button>
-                                <p-button type="submit" icon="pi pi-check" label="Save Changes" styleClass="px-4" [disabled]="profileForm.invalid" raised> </p-button>
+                                <p-button type="button" label="Annuler" styleClass="p-button-text"></p-button>
+                                <p-button type="submit" icon="pi pi-check" label="Enregistrer les Modifications" styleClass="px-4" [disabled]="profileForm.invalid" raised> </p-button>
                             </div>
                         </form>
                     </div>
@@ -225,7 +225,7 @@
     [resizable]="false"
     [style]="{width: '450px'}"
     [styleClass]="'rounded-lg'"
-    header="Your Profile QR Code"
+    header="Votre Code QR de Profil"
     [closeOnEscape]="true"
     [closable]="true">
     
@@ -242,13 +242,13 @@
             
         <div class="mt-2 text-center w-full">
             <p class="text-sm text-gray-600 mb-3">
-                This QR code contains your profile information.
-                <br>When scanned, all data will appear as text with line breaks.
+                Ce code QR contient vos informations de profil.
+                <br>Lorsqu'il est scanné, toutes les données apparaîtront sous forme de texte avec des sauts de ligne.
             </p>
             
             <div class="flex justify-content-center gap-2">
                 <p-button 
-                    label="Download" 
+                    label="Télécharger" 
                     icon="pi pi-download" 
                     styleClass="p-button-sm" 
                     (onClick)="downloadQrCode()">

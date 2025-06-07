@@ -151,7 +151,7 @@ import { filter } from 'rxjs/operators';
             <div class="menu-category menu-item-container">
                 <a (click)="logout()" class="menu-item">
                     <i class="pi pi-sign-out"></i>
-                    <span>Logout</span>
+                    <span>Déconnexion</span>
                 </a>
             </div>
         </div>

@@ -23,8 +23,8 @@
                 <!-- Bulk sync button for selected clients on non-sync route -->
                 <p-button *ngIf="isNonSyncRoute && selectedClients.length > 0" label="Sync selectionnées ({{ selectedClients.length }})" icon="pi pi-sync" severity="help" class="mr-2" (click)="synchronizeSelectedClients()"> </p-button>
 
-                <p-button label="Export  CSV" *ngIf="!isNonSyncRoute" icon="pi pi-download" styleClass="p-button-success mr-2" (click)="exportToCSV()"> </p-button>
-                <button pButton label="Refresh" icon="pi pi-refresh" class="p-button-outlined" (click)="loadClients()"></button>
+                <p-button label="Exporter  CSV" *ngIf="!isNonSyncRoute" icon="pi pi-download" styleClass="p-button-success mr-2" (click)="exportToCSV()"> </p-button>
+                <button pButton label="Rafraîchir" icon="pi pi-refresh" class="p-button-outlined" (click)="loadClients()"></button>
             </div>
         </p-toolbar>
 
@@ -45,11 +45,11 @@
                 <div class="flex flex-wrap gap-3 align-items-center">
                     <span class="p-input-icon-left">
                         <i class="pi pi-search"></i>
-                        <input class="ml-2" pInputText type="text" placeholder="ReChercher par Code" #codeFilter (input)="dt.filter(codeFilter.value, 'tiersCode', 'contains')" />
+                        <input class="ml-2" pInputText type="text" placeholder="Rechercher par Code" #codeFilter (input)="dt.filter(codeFilter.value, 'tiersCode', 'contains')" />
                     </span>
                     <span class="p-input-icon-left">
                         <i class="pi pi-search"></i>
-                        <input class="ml-2" pInputText type="text" placeholder="ReChercher par Intitulé" #intituleFilter (input)="dt.filter(intituleFilter.value, 'tiersIntitule', 'contains')" />
+                        <input class="ml-2" pInputText type="text" placeholder="Rechercher par Intitulé" #intituleFilter (input)="dt.filter(intituleFilter.value, 'tiersIntitule', 'contains')" />
                     </span>
                 </div>
             </ng-template>
@@ -61,11 +61,11 @@
                     </th>
                     <th style="min-width: 5rem"></th>
                     <th pSortableColumn="tiersCode" style="width: 6rem">Code <p-sortIcon field="tiersCode"></p-sortIcon></th>
-                    <th pSortableColumn="tiersIntitule" style="width: 8rem">Name <p-sortIcon field="tiersIntitule"></p-sortIcon></th>
-                    <th pSortableColumn="tiersDateCreate" style="min-width: 11rem">Creation Date<p-sortIcon field="tiersDateCreate"></p-sortIcon></th>
-                    <th pSortableColumn="tiersTel1" style="min-width: 10rem">Phone <p-sortIcon field="tiersTel1"></p-sortIcon></th>
+                    <th pSortableColumn="tiersIntitule" style="width: 8rem">Nom <p-sortIcon field="tiersIntitule"></p-sortIcon></th>
+                    <th pSortableColumn="tiersDateCreate" style="min-width: 11rem">Date de Création<p-sortIcon field="tiersDateCreate"></p-sortIcon></th>
+                    <th pSortableColumn="tiersTel1" style="min-width: 10rem">Num Tel <p-sortIcon field="tiersTel1"></p-sortIcon></th>
                     <th pSortableColumn="tiersEmail" style="width: 8rem">Email <p-sortIcon field="tiersEmail"></p-sortIcon></th>
-                    <th pSortableColumn="tiersFlag" style="min-width: 10rem">ERP Sync <p-sortIcon field="tiersFlag"></p-sortIcon></th>
+                    <th pSortableColumn="tiersFlag" style="min-width: 10rem">Sync ERP<p-sortIcon field="tiersFlag"></p-sortIcon></th>
                     <th style="min-width: 8rem">Actions</th>
                 </tr>
             </ng-template>

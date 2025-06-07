@@ -21,7 +21,7 @@ import { Router, RouterModule } from '@angular/router';
                         <p class="text-lg sm:text-xl opacity-90 leading-relaxed mb-10 text-white font-light tracking-wide max-w-xl">Découvrez l'avenir du e-commerce avec des recommandations alimentées par l'IA qui personnalisent votre expérience d'achat.</p>
                         <div class="flex flex-col sm:flex-row gap-4 sm:gap-6">
                             <button (click)="navigate()" class="h-14 px-10 bg-white text-black hover:bg-gray-200 text-lg font-medium rounded-lg cursor-pointer transition-all duration-300 shadow-lg hover:shadow-xl">Commencer à Magasiner</button>
-                            <button class="h-14 px-10 border-2 border-white text-white hover:bg-white/20 text-lg font-medium rounded-lg cursor-pointer transition-all duration-300">Explorer les Fonctionnalités</button>
+                            <button (click)="navigateToFeatures()" class="h-14 px-10 border-2 border-white text-white hover:bg-white/20 text-lg font-medium rounded-lg cursor-pointer transition-all duration-300">Explorer les Fonctionnalités</button>
                         </div>
                     </div>
                 </div>
@@ -34,5 +34,9 @@ export class HeroWidget {
 
     navigate() {
         this.router.navigate(['/store/products']);
+    }
+    
+    navigateToFeatures() {
+        this.router.navigate([''], { fragment: 'features' });
     }
 }

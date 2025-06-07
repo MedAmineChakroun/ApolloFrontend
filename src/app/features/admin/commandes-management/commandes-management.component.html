@@ -53,11 +53,11 @@
                     <div>
                         <span class="p-input-icon-left">
                             <i class="pi pi-search"></i>
-                            <input class="ml-2" pInputText type="text" placeholder="ReChercher par Code" #codeFilter (input)="dt.filter(codeFilter.value, 'docPiece', 'contains')" />
+                            <input class="ml-2" pInputText type="text" placeholder="Rechercher par Code" #codeFilter (input)="dt.filter(codeFilter.value, 'docPiece', 'contains')" />
                         </span>
                         <span class="p-input-icon-left ml-3">
                             <i class="pi pi-search"></i>
-                            <input class="ml-2" pInputText type="text" placeholder="ReChercher par client" #docTiersCodeFilter (input)="dt.filter(docTiersCodeFilter.value, 'docTiersCode', 'contains')" />
+                            <input class="ml-2" pInputText type="text" placeholder="Rechercher par client" #docTiersCodeFilter (input)="dt.filter(docTiersCodeFilter.value, 'docTiersCode', 'contains')" />
                         </span>
                     </div>
                     <div class="flex gap-2">
@@ -73,17 +73,17 @@
 
             <ng-template pTemplate="header">
                 <tr>
-                    <th pSortableColumn="docPiece" style="min-width: 8rem">Order # <p-sortIcon field="docPiece"></p-sortIcon></th>
-                    <th style="min-width: 4rem">Icon</th>
-                    <th pSortableColumn="docTiersIntitule" style="min-width: 8rem">Customer <p-sortIcon field="docTiersIntitule"></p-sortIcon></th>
+                    <th pSortableColumn="docPiece" style="min-width: 8rem">Commande # <p-sortIcon field="docPiece"></p-sortIcon></th>
+                    <th style="min-width: 4rem">Icône</th>
+                    <th pSortableColumn="docTiersIntitule" style="min-width: 8rem">Client <p-sortIcon field="docTiersIntitule"></p-sortIcon></th>
                     <th pSortableColumn="docDate" style="min-width: 8rem">Date <p-sortIcon field="docDate"></p-sortIcon></th>
                     <th pSortableColumn="articleCount" class="text-center" style="min-width: 6rem">
-                        lignes
+                        Lignes
                         <p-sortIcon field="articleCount"></p-sortIcon>
                     </th>
                     <th pSortableColumn="docTtc" class="text-right" style="min-width: 10rem">Total TTC <p-sortIcon field="docTtc"></p-sortIcon></th>
-                    <th pSortableColumn="docEtat" style="min-width: 5rem" class="text-center">Status <p-sortIcon field="docEtat"></p-sortIcon></th>
-                    <th pSortableColumn="docFlag" style="min-width: 10rem" class="text-center">Erp Sync <p-sortIcon field="docFlag"></p-sortIcon></th>
+                    <th pSortableColumn="docEtat" style="min-width: 5rem" class="text-center">Statut <p-sortIcon field="docEtat"></p-sortIcon></th>
+                    <th pSortableColumn="docFlag" style="min-width: 10rem" class="text-center">Sync ERP <p-sortIcon field="docFlag"></p-sortIcon></th>
                     <th style="min-width: 5rem" class="text-center">Actions</th>
                 </tr>
             </ng-template>

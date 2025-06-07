@@ -50,15 +50,15 @@ import { Router } from '@angular/router';
                         <ul class="space-y-2 text-gray-400">
                             <li class="flex items-center">
                                 <i class="pi pi-map-marker mr-2"></i>
-                                <span>123 Rue des Affaires</span>
+                                <span>10 Rue Hassen ibn Nouamane, Tunis</span>
                             </li>
                             <li class="flex items-center">
                                 <i class="pi pi-phone mr-2"></i>
-                                <span>+1 (555) 123-4567</span>
+                                <span>+216 99039892</span>
                             </li>
                             <li class="flex items-center">
                                 <i class="pi pi-envelope mr-2"></i>
-                                <span>supportapollo.com</span>
+                                <span>apollostore&#64;gmail.com</span>
                             </li>
                         </ul>
                     </div>
@@ -67,7 +67,7 @@ import { Router } from '@angular/router';
                 <!-- Bottom Bar -->
                 <div class="mt-12 pt-8 border-t border-gray-800">
                     <div class="flex flex-col md:flex-row justify-between items-center">
-                        <div class="text-gray-400 text-sm mb-4 md:mb-0">&copy; 2024 Apollo. Tous droits réservés.</div>
+                        <div class="text-gray-400 text-sm mb-4 md:mb-0">&copy; 2025 Apollo. Tous droits réservés.</div>
                         <div class="flex flex-wrap justify-center md:justify-end space-x-6 text-sm">
                             <a routerLink="/privacy" class="text-gray-400 hover:text-white transition duration-300">Politique de Confidentialité</a>
                             <a routerLink="/terms" class="text-gray-400 hover:text-white transition duration-300">Conditions d'Utilisation</a>
