@@ -20,6 +20,9 @@ import { Stock } from '../../../models/Stock';
 import { CommandeService } from '../../../core/services/commande.service';
 import { Store } from '@ngrx/store';
 import { AuthenticationService } from '../../../core/services/authentication.service';
+//p card
+import { CardModule } from 'primeng/card';
+import { PanelModule } from 'primeng/panel';
 
 //import lazy loading for the image module from primeng
 
@@ -28,7 +31,7 @@ type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | undefined;
 @Component({
     selector: 'app-product-details',
     standalone: true,
-    imports: [ImageModule, SimilarComponent, ImageModule, RatingComponent, RatingModule, CommonModule, RouterModule, ButtonModule, TagModule, SkeletonModule, TooltipModule, RippleModule, FormsModule],
+    imports: [ImageModule, SimilarComponent, CardModule,ImageModule,PanelModule, RatingComponent, RatingModule, CommonModule, RouterModule, ButtonModule, TagModule, SkeletonModule, TooltipModule, RippleModule, FormsModule],
     templateUrl: './product-details.component.html',
     styleUrls: ['./product-details.component.css']
 })

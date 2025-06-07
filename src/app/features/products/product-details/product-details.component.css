@@ -264,12 +264,83 @@
             0 10px 15px -3px rgba(239, 68, 68, 0.2),
             0 4px 6px -2px rgba(239, 68, 68, 0.1);
     }
+
+    /* PrimeNG Panel customization */
+    .p-panel {
+        .p-panel-header {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 1rem;
+        }
+
+        .p-panel-content {
+            padding: 1.5rem;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-top: none;
+            border-radius: 0 0 0.5rem 0.5rem;
+        }
+    }
+
+    /* Card customization */
+    .p-card {
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e5e7eb;
+
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .p-card-body {
+            padding: 1rem;
+        }
+
+        .p-card-content {
+            padding: 0;
+        }
+    }
+
+    /* Header background colors */
+    .bg-primary-50 {
+        background-color: #f0f9ff;
+    }
+
+    .bg-blue-50 {
+        background-color: #eff6ff;
+    }
+
+    .bg-yellow-50 {
+        background-color: #fefce8;
+    }
+
+    .bg-orange-50 {
+        background-color: #fff7ed;
+    }
+
+    .bg-purple-50 {
+        background-color: #faf5ff;
+    }
+
+    .bg-indigo-50 {
+        background-color: #eef2ff;
+    }
+
+    .bg-teal-50 {
+        background-color: #f0fdfa;
+    }
 }
 
 /* Media queries for better responsiveness */
 @media (max-width: 768px) {
     .product-image-wrapper {
         height: 300px;
+        padding: 1rem;
+    }
+
+    .more-info-section {
         padding: 1rem;
     }
 }
@@ -300,61 +371,10 @@
         padding: 4rem;
     }
 }
+
+/* Remove old more-info-section styles */
 .more-info-section {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    position: relative;
-    overflow: hidden;
-}
-
-.more-info-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)" /></svg>');
-    pointer-events: none;
-}
-
-.info-card {
-    backdrop-filter: blur(10px);
-    transition: all 0.3s ease;
-    position: relative;
-    z-index: 1;
-}
-
-.info-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-    background: rgba(255, 255, 255, 0.15);
-}
-
-/* Custom styling for the gradient backgrounds */
-.more-info-section h2 {
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-.info-card .text-2xl {
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-}
-
-/* Icon styling */
-.more-info-section .pi {
-    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .more-info-section {
-        margin-left: -1rem;
-        margin-right: -1rem;
-        border-radius: 0;
-    }
-
-    .info-card {
-        margin-bottom: 1rem;
-    }
+    background: white;
 }
 
 /* Animation for info cards */
@@ -461,10 +481,6 @@
 
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
-    .more-info-section {
-        background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
-    }
-
     .info-card {
         background: rgba(255, 255, 255, 0.05);
         border: 1px solid rgba(255, 255, 255, 0.1);
@@ -473,4 +489,11 @@
     .info-card:hover {
         background: rgba(255, 255, 255, 0.1);
     }
+}
+p-card{
+    transition:  0.3s ease-in-out;
+}
+p-card:hover {
+    transform: scale(1.05);
+
 }

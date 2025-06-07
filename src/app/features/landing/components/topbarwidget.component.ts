@@ -24,7 +24,7 @@ import { AuthenticationService } from '../../../core/services/authentication.ser
                 <nav class="hidden lg:flex space-x-8">
                     <a (click)="router.navigate([''], { fragment: 'hero' })" [ngClass]="{ 'text-white': !scrolled, 'text-black': scrolled }" class="hover:text-gray-300 transition cursor-pointer ">Accueil</a>
 
-                    <a (click)="router.navigate(['/store/products'])" [ngClass]="{ 'text-white': !scrolled, 'text-black': scrolled }" class="hover:text-gray-300 transition cursor-pointer">Boutique</a>
+                    <a (click)="router.navigate(['/store/products'])" [ngClass]="{ 'text-white': !scrolled, 'text-black': scrolled }" class="hover:text-gray-300 transition cursor-pointer">Magasin</a>
 
                     <a (click)="router.navigate([''], { fragment: 'features' })" [ngClass]="{ 'text-white': !scrolled, 'text-black': scrolled }" class="hover:text-gray-300 transition cursor-pointer">Fonctionnalités</a>
 
@@ -46,7 +46,7 @@ import { AuthenticationService } from '../../../core/services/authentication.ser
             <div *ngIf="mobileMenuOpen" class="lg:hidden mobile-menu">
                 <div class="flex flex-col p-4 bg-white/95 shadow-lg backdrop-blur-md">
                     <a (click)="navigateMobile([''], { fragment: 'hero' })" class="mobile-menu-item">Accueil</a>
-                    <a (click)="navigateMobile(['/store/products'])" class="mobile-menu-item">Boutique</a>
+                    <a (click)="navigateMobile(['/store/products'])" class="mobile-menu-item">Magasin</a>
                     <a (click)="navigateMobile([''], { fragment: 'features' })" class="mobile-menu-item">Fonctionnalités</a>
                     <a (click)="navigateMobile([''], { fragment: 'highlights' })" class="mobile-menu-item">À Propos</a>
 

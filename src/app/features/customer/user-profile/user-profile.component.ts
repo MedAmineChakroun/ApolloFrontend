@@ -62,14 +62,33 @@ export class UserProfileComponent implements OnInit {
     ) {
         this.profileForm = this.fb.group({
             id: [''],
-            userName: ['', [Validators.required, Validators.minLength(2)]],
+            userName: [
+                '',
+                [
+                    Validators.required,
+                    Validators.minLength(6),
+                    Validators.pattern('^[a-zA-Z]+$') // only letters
+                ]
+            ],
             email: ['', [Validators.required, Validators.email]],
             address: ['', Validators.required],
-            postalCode: ['', Validators.required],
+            postalCode: [
+                '',
+                [
+                    Validators.required,
+                    Validators.pattern('^[0-9]+$') // only numbers
+                ]
+            ],
             city: ['', Validators.required],
             country: ['', Validators.required],
-            phone: ['', Validators.required]
+            phone: [
+                '',
+                [
+                    Validators.required,
+                ]
+            ]
         });
+        
     }
 
     ngOnInit(): void {
