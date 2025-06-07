@@ -114,9 +114,9 @@ export class ProductManagementComponent implements OnInit {
                 });
             },
             error: (error) => {
-                console.error('Error loading products:', error);
+                console.error('Échec du chargement des produits', error);
                 this.loading = false;
-                this.toastr.error('Failed to load products', 'Error');
+                this.toastr.error('Échec du chargement des produits', 'Erreur');
             }
         });
     }

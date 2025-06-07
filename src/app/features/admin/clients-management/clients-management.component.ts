@@ -110,14 +110,14 @@ export class ClientsManagementComponent implements OnInit {
                         this.loading = false;
                     },
                     error: (error) => {
-                        this.toastr.error('Error loading clients', 'Error');
+                        this.toastr.error('Erreur lors du chargement des clients', 'Erreur');
                         console.error('Error loading clients:', error);
                         this.loading = false;
                     }
                 });
             },
             error: (error) => {
-                this.toastr.error('Error loading clients', 'Error');
+                this.toastr.error('Erreur lors du chargement des clients', 'Erreur');
                 console.error('Error loading clients:', error);
                 this.loading = false;
             }
@@ -206,7 +206,7 @@ export class ClientsManagementComponent implements OnInit {
     onChangePhoto() {
         // Placeholder for photo upload functionality
         // This would typically open a file picker and handle the upload
-        this.toastr.info('Photo upload functionality will be implemented soon', 'Information');
+        this.toastr.info('La fonctionnalité de téléchargement de photo sera bientôt implémentée', 'Information');
     }
 
     // Helper methods for flag status
@@ -224,7 +224,7 @@ export class ClientsManagementComponent implements OnInit {
     //exprot csv
     exportToCSV() {
         if (this.clients.length === 0) {
-            this.toastr.warning('No data to export', 'Warning');
+            this.toastr.warning('Aucune donnée à exporter', 'Attention');
             return;
         }
 
@@ -285,7 +285,7 @@ export class ClientsManagementComponent implements OnInit {
             }
         } catch (error) {
             console.error('Error exporting CSV:', error);
-            this.toastr.error('Failed to export CSV file', 'Error');
+            this.toastr.error('Échec de l\'exportation du fichier CSV', 'Erreur');
         }
     }
 

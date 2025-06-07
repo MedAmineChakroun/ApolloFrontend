@@ -489,7 +489,7 @@ export class ProductsListComponent implements OnInit {
         this.cartService.addToCart(product);
 
         // Show success toast
-        this.toastr.success(`${product.artIntitule} added to cart`, 'Added to Cart', {
+        this.toastr.success(`${product.artIntitule} ajouté au panier`, 'Ajouté au panier', {
             timeOut: 2000,
             progressBar: true,
             progressAnimation: 'increasing',

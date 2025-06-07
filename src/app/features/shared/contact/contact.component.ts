@@ -77,7 +77,7 @@ export class ContactComponent implements OnInit {
             this.contactService.sendEmail(this.contactForm.value).subscribe({
                 next: (response) => {
                     console.log('Email sent:', response);
-                    this.toast.success('Your message has been sent successfully!', 'Thank You', {
+                    this.toast.success('Votre message a été envoyé avec succès !', 'Merci', {
                         timeOut: 5000,
                         positionClass: 'toast-bottom-right',
                         progressBar: true
@@ -87,7 +87,7 @@ export class ContactComponent implements OnInit {
                 },
                 error: (err) => {
                     console.error('Email sending failed:', err);
-                    this.toast.error("We couldn't send your message. Please try again later.", 'Oops!', {
+                    this.toast.error("Nous n'avons pas pu envoyer votre message. Veuillez réessayer plus tard.", 'Oups !', {
                         timeOut: 5000,
                         positionClass: 'toast-bottom-right',
                         progressBar: true
@@ -102,7 +102,7 @@ export class ContactComponent implements OnInit {
             });
 
             // Show error toast
-            this.toast.warning('Please check the form for errors', 'Form Incomplete', {
+            this.toast.warning('Veuillez vérifier le formulaire pour les erreurs', 'Formulaire incomplet', {
                 timeOut: 3000,
                 positionClass: 'toast-bottom-right'
             });

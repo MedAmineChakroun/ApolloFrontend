@@ -85,7 +85,7 @@ export class OrdersComponent implements OnInit {
                         error: (err) => {
                             this.loading = false;
                             console.error('Error loading orders:', err.message);
-                            this.toast.error('Failed to load orders');
+                            this.toast.error('Échec du chargement des commandes');
                         }
                     });
                 }

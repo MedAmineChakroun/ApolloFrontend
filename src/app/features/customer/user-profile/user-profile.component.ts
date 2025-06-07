@@ -167,7 +167,7 @@ Role: ${this.role || 'Customer'}`;
     downloadQrCode(): void {
         const canvas = document.querySelector('canvas') as HTMLCanvasElement;
         if (!canvas) {
-            this.toastr.error('Cannot find QR code canvas to download');
+            this.toastr.error('Impossible de trouver le canvas du QR code pour le téléchargement');
             return;
         }
 
@@ -177,7 +177,7 @@ Role: ${this.role || 'Customer'}`;
         link.download = `${clientName}_profile_qrcode_${timestamp}.png`;
         link.href = canvas.toDataURL('image/png');
         link.click();
-        this.toastr.success('QR code downloaded successfully');
+        this.toastr.success('QR code téléchargé avec succès');
     }
 
     private getUserEmailFromToken(): void {
@@ -219,13 +219,13 @@ Role: ${this.role || 'Customer'}`;
             reader.onload = () => {
                 setTimeout(() => {
                     this.avatarUrl = reader.result as string;
-                    this.toastr.success('Avatar updated successfully!');
+                    this.toastr.success('Avatar mis à jour avec succès !');
                     this.isAvatarLoading = false;
                 }, 1000);
             };
 
             reader.onerror = (error) => {
-                this.toastr.error('Error updating avatar');
+                this.toastr.error('Erreur lors de la mise à jour de l\'avatar');
                 this.isAvatarLoading = false;
             };
 
@@ -237,20 +237,20 @@ Role: ${this.role || 'Customer'}`;
         this.isAvatarLoading = true;
         setTimeout(() => {
             this.avatarUrl = 'assets/general/default-avatar.jpg';
-            this.toastr.success('Avatar removed successfully!');
+            this.toastr.success('Avatar supprimé avec succès !');
             this.isAvatarLoading = false;
         }, 1000);
     }
 
     onSubmit() {
         if (!this.userId) {
-            this.toastr.error('User ID not found', 'Update Failed');
+            this.toastr.error('ID utilisateur non trouvé', 'Échec de la mise à jour');
             return;
         }
 
         if (this.profileForm.invalid) {
             this.markFormAsTouched();
-            this.toastr.error('Please fill all required fields', 'Form Invalid');
+            this.toastr.error('Veuillez remplir tous les champs obligatoires', 'Formulaire invalide');
             return;
         }
 
@@ -265,7 +265,7 @@ Role: ${this.role || 'Customer'}`;
 
         this.userService.updateUserProfile(this.userId, updateData).subscribe({
             next: () => {
-                this.toastr.success('Profile updated successfully');
+                this.toastr.success('Profil mis à jour avec succès');
                 this.updateStore();
                 if (this.userId !== null) {
                     this.userService.updateUserFlag(this.userId, 0).subscribe({
@@ -293,7 +293,7 @@ Role: ${this.role || 'Customer'}`;
     private handleUpdateError(error: any) {
         console.error('Update error:', error);
         const errorMessage = error.error?.message || 'Failed to update profile';
-        this.toastr.error(errorMessage, 'Update Error');
+        this.toastr.error(errorMessage, 'Erreur de mise à jour');
     }
     getRole(id: number) {
         this.userService.getUserRole(id).subscribe({
@@ -303,7 +303,7 @@ Role: ${this.role || 'Customer'}`;
             },
             error: (error) => {
                 console.error('Error fetching user role:', error);
-                this.toastr.error('Failed to fetch user role');
+                this.toastr.error('Échec de la récupération du rôle utilisateur');
             }
         });
     }
