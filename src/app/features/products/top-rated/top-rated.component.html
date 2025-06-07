@@ -18,7 +18,7 @@
                         <div class="flex justify-between items-center">
                             <div class="product-price">{{ getTotalPriceWithTax(ratedProduct.article) | currency: 'DT ' : 'symbol' : '1.3-3' }}</div>
                             <span>
-                                <p-button (onClick)="$event.stopPropagation(); addToCart(ratedProduct.article)" icon="pi pi-shopping-cart" styleClass="ml-2" (click)="navigateToProductDetails(ratedProduct.article.artId)" />
+                                <p-button [disabled]="ratedProduct.stockQuantity == 0" (onClick)="$event.stopPropagation(); addToCart(ratedProduct.article)" icon="pi pi-shopping-cart" styleClass="ml-2" (click)="navigateToProductDetails(ratedProduct.article.artId)" />
                             </span>
                         </div>
                         <div class="product-rating">

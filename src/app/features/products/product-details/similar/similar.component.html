@@ -21,7 +21,7 @@
                     <div class="product-price">
                         {{ getTotalPriceWithTax(product) | currency: 'DT ' : 'symbol' : '1.3-3' }}
                     </div>
-                    <p-button (onClick)="$event.stopPropagation(); addToCart(product)" icon="pi pi-shopping-cart" styleClass="p-button-rounded p-button-sm cart-button" (click)="navigateToProductDetails(product.artId)"> </p-button>
+                    <p-button [disabled]="product.stockQuantity == 0" (onClick)="$event.stopPropagation(); addToCart(product)" icon="pi pi-shopping-cart" styleClass="p-button-rounded p-button-sm cart-button" (click)="navigateToProductDetails(product.artId)"> </p-button>
                 </div>
             </div>
         </ng-template>
